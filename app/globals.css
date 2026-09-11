@@ -1,0 +1,324 @@
+@import "tailwindcss";
+
+@theme {
+  --color-paper: #ffffff;
+  --color-ink: #000000;
+  --color-muted: #666666;
+  --color-rule: #e2e2e2;
+  --color-live: #d42020;
+
+  /* Purple carries every interactive state. Red is reserved for one thing
+     only: a system that is live in production. Two accents, two jobs. */
+  --color-accent: #4a1fd1;
+  --color-accent-deep: #35158f;
+
+  --font-sans: var(--font-archivo), system-ui, sans-serif;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.30, 1);
+  --ease-quick: cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-variation-settings: "wdth" 100, "wght" 400;
+}
+
+/* Type scale. Width axis carries the personality: display is expanded,
+   body sits at normal width. One family, two voices. */
+.t-display {
+  font-size: clamp(2.15rem, 5vw, 4.6rem);
+  font-variation-settings: "wdth" 103, "wght" 640;
+  line-height: 1.02;
+  letter-spacing: -0.028em;
+}
+.t-display-sm {
+  font-size: clamp(1.55rem, 2.9vw, 2.5rem);
+  font-variation-settings: "wdth" 100, "wght" 600;
+  line-height: 1.1;
+  letter-spacing: -0.022em;
+}
+.t-h2 {
+  font-size: clamp(1.1rem, 1.5vw, 1.35rem);
+  font-variation-settings: "wdth" 100, "wght" 580;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+.t-lead {
+  font-size: clamp(1rem, 1.15vw, 1.15rem);
+  font-variation-settings: "wdth" 100, "wght" 400;
+  line-height: 1.55;
+}
+.t-body {
+  font-size: 1.0625rem;
+  font-variation-settings: "wdth" 100, "wght" 400;
+  line-height: 1.62;
+}
+.t-small {
+  font-size: 0.9375rem;
+  font-variation-settings: "wdth" 100, "wght" 450;
+  line-height: 1.5;
+}
+.t-index {
+  font-size: 0.9375rem;
+  font-variation-settings: "wdth" 92, "wght" 500;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The live dot. Red appears only where a system is running in production. */
+.live-dot {
+  width: 7px; height: 7px; border-radius: 999px;
+  background: var(--color-live);
+  box-shadow: 0 0 0 0 rgba(212, 32, 32, 0.45);
+  animation: pulse 2.8s var(--ease-quick) infinite;
+}
+@keyframes pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(212,32,32,0.40); }
+  70%  { box-shadow: 0 0 0 7px rgba(212,32,32,0); }
+  100% { box-shadow: 0 0 0 0 rgba(212,32,32,0); }
+}
+
+a { color: inherit; text-decoration: none; }
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .live-dot { animation: none; }
+}
+
+/* Motion.
+   Type rises out from behind a mask rather than fading in. Images wipe.
+   Rules draw. Nothing fades up, because everything fades up. */
+
+.mask {
+  display: block;
+  overflow: hidden;
+}
+.mask > span {
+  display: block;
+  transform: translate3d(0, 106%, 0);
+  transition: transform 1s var(--ease-out-expo);
+  will-change: transform;
+}
+[data-revealed="true"] .mask > span,
+.mask.is-in > span {
+  transform: none;
+}
+
+/* page-load sequence: masked lines, then supporting text, then actions */
+[data-hero] .mask > span {
+  transform: translate3d(0, 106%, 0);
+  animation: unmask 1s var(--ease-out-expo) forwards;
+}
+[data-hero="0"] .mask:nth-child(1) > span { animation-delay: 0.12s; }
+[data-hero="0"] .mask:nth-child(2) > span { animation-delay: 0.20s; }
+
+@keyframes unmask {
+  to { transform: none; }
+}
+
+[data-hero="1"],
+[data-hero="2"] {
+  opacity: 0;
+  animation: settle 0.9s var(--ease-out-expo) forwards;
+}
+[data-hero="1"] { animation-delay: 0.48s; }
+[data-hero="2"] { animation-delay: 0.62s; }
+
+@keyframes settle {
+  from { opacity: 0; transform: translate3d(0, 10px, 0); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* a rule that draws itself */
+.rule-draw {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.9s var(--ease-out-expo);
+}
+[data-revealed="true"] .rule-draw { transform: scaleX(1); }
+
+/* the connector down the work list */
+.connector {
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 1.4s var(--ease-out-expo);
+}
+[data-revealed="true"] .connector { transform: scaleY(1); }
+
+/* node markers appear after the line passes them */
+.node {
+  transform: scale(0);
+  transition: transform 0.5s var(--ease-out-expo), border-color 0.4s var(--ease-quick),
+    background-color 0.4s var(--ease-quick);
+}
+[data-revealed="true"] .node { transform: scale(1); }
+
+/* images wipe open from the bottom edge */
+.wipe {
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 1s var(--ease-out-expo);
+}
+[data-revealed="true"] .wipe { clip-path: inset(0 0 0 0); }
+
+/* quiet fallback for blocks that are just text */
+[data-reveal="soft"] {
+  opacity: 0;
+  transition: opacity 0.6s var(--ease-quick);
+}
+[data-reveal="soft"][data-revealed="true"] { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .mask > span,
+  [data-hero] .mask > span { transform: none; animation: none; }
+  [data-hero] { opacity: 1; animation: none; }
+  .rule-draw, .connector, .node { transform: none; transition: none; }
+  .wipe { clip-path: none; transition: none; }
+  [data-reveal="soft"] { opacity: 1; }
+}
+
+/* Mobile menu links share the mask reveal, driven by the panel's open state */
+#menu[data-open="true"] .mask > span { transform: none; }
+#menu[data-open="false"] .mask > span { transform: translate3d(0, 106%, 0); }
+
+/* Route change sweep: a panel crosses the viewport in one direction */
+.sweep {
+  transform: scaleX(0);
+  transform-origin: right;
+}
+.sweep[data-phase="cover"] {
+  transform: scaleX(1);
+  transform-origin: right;
+  transition: transform 420ms var(--ease-quick);
+}
+.sweep[data-phase="clear"] {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 620ms var(--ease-out-expo);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sweep { display: none; }
+}
+
+
+.sweep[data-phase="cover"],
+.sweep[data-phase="clear"] {
+  background: var(--color-accent);
+}
+
+.link-underline {
+  position: relative;
+}
+.link-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  height: 1px;
+  width: 100%;
+  background: var(--color-accent);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 400ms var(--ease-out-expo);
+}
+.link-underline:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* Justified prose. Hyphenation is doing the real work here: without it,
+   justifying a narrow measure opens rivers of white down the column. */
+.prose-justify {
+  text-align: justify;
+  text-justify: inter-word;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+
+/* Measures, applied where they are needed rather than baked into type. */
+.measure-read { max-width: 68ch; }   /* comfortable ragged-right reading */
+.measure-wide { max-width: 84ch; }   /* justified prose needs the extra room */
+
+/* ---- Work rows ------------------------------------------------------------
+   One state, two triggers. On a phone a row activates when it reaches the
+   middle of the screen. On a desktop it activates on hover. Same result, so
+   the interaction does not have to be learned twice. */
+
+.work-row .row-line {
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 700ms var(--ease-out-expo);
+}
+.work-row .row-title,
+.work-row .row-index,
+.work-row .node,
+.work-row .row-media-inner {
+  transition:
+    transform 800ms var(--ease-out-expo),
+    color 500ms var(--ease-quick),
+    border-color 500ms var(--ease-quick),
+    background-color 500ms var(--ease-quick);
+}
+.work-row .row-media {
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 900ms var(--ease-out-expo);
+}
+.work-row .row-media-inner {
+  transform: scale(1.14);
+}
+
+.work-row[data-active="true"] .row-line {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+.work-row[data-active="true"] .row-media {
+  clip-path: inset(0 0 0 0);
+}
+.work-row[data-active="true"] .row-media-inner {
+  transform: scale(1);
+}
+.work-row[data-active="true"] .row-index {
+  color: var(--color-accent);
+}
+.work-row[data-active="true"] .node {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+}
+.work-row[data-active="true"] .node .dot {
+  background: var(--color-paper);
+}
+
+/* desktop adds hover on top of the same state */
+@media (hover: hover) and (pointer: fine) {
+  .work-row:hover .row-line { transform: scaleX(1); transform-origin: left; }
+  .work-row:hover .row-media { clip-path: inset(0 0 0 0); }
+  .work-row:hover .row-media-inner { transform: scale(1.07); }
+  .work-row:hover .row-title { transform: translateX(10px); }
+  .work-row:hover .t-h2.row-title { transform: translateX(6px); }
+  .work-row:hover .row-index { color: var(--color-accent); }
+  .work-row:hover .node { border-color: var(--color-accent); background: var(--color-accent); }
+  .work-row:hover .node .dot { background: var(--color-paper); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .work-row .row-media { clip-path: none; }
+  .work-row .row-media-inner { transform: none; }
+  .work-row .row-line { transform: scaleX(1); }
+}

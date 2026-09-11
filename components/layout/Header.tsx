@@ -1,0 +1,134 @@
+"use client";
+
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+
+const links = [
+  { href: "/", label: "Home" },
+  { href: "/#work", label: "Work" },
+  { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
+];
+
+export default function Header() {
+  const [hidden, setHidden] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
+  const lastY = useRef(0);
+
+  useEffect(() => {
+    lastY.current = window.scrollY;
+
+    const onScroll = () => {
+      const y = window.scrollY;
+      const delta = y - lastY.current;
+
+      setScrolled(y > 24);
+
+      // ignore rubber-banding and tiny jitter
+      if (Math.abs(delta) > 6) {
+        setHidden(delta > 0 && y > 140);
+        lastY.current = y;
+      }
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  return (
+    <>
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:bg-ink focus:px-4 focus:py-2 focus:text-paper"
+      >
+        Skip to content
+      </a>
+
+      <header
+        data-hidden={hidden}
+        className={`fixed inset-x-0 top-0 z-40 transition-[transform,background-color,border-color] duration-500 [transition-timing-function:var(--ease-out-expo)] data-[hidden=true]:-translate-y-full ${
+          scrolled ? "border-b border-rule bg-paper/90 backdrop-blur-md" : "border-b border-transparent"
+        }`}
+      >
+        <div className="mx-auto flex max-w-[1180px] items-center justify-between px-6 py-5 md:px-8">
+          <Link
+            href="/"
+            className="t-small"
+            style={{ fontVariationSettings: '"wdth" 92, "wght" 560' }}
+          >
+            Olawale Olaonipekun
+          </Link>
+
+          <nav className="hidden items-center gap-8 md:flex">
+            {links.map((l) => (
+              <Link key={l.href} href={l.href} className="t-small group relative py-1">
+                {l.label}
+                <span className="absolute bottom-0 left-0 h-px w-full origin-right scale-x-0 bg-[var(--color-accent)] transition-transform duration-[400ms] [transition-timing-function:var(--ease-out-expo)] group-hover:origin-left group-hover:scale-x-100" />
+              </Link>
+            ))}
+          </nav>
+
+          <button
+            onClick={() => setOpen(true)}
+            className="t-small md:hidden"
+            aria-expanded={open}
+            aria-controls="menu"
+          >
+            Menu
+          </button>
+        </div>
+      </header>
+
+      <div
+        id="menu"
+        data-open={open}
+        className="fixed inset-0 z-50 flex flex-col bg-paper px-6 py-5 transition-[clip-path] duration-[620ms] [clip-path:inset(0_0_100%_0)] [transition-timing-function:var(--ease-out-expo)] data-[open=true]:[clip-path:inset(0_0_0_0)] md:hidden"
+        aria-hidden={!open}
+      >
+        <div className="flex items-center justify-between">
+          <span className="t-small text-muted">Menu</span>
+          <button onClick={() => setOpen(false)} className="t-small" tabIndex={open ? 0 : -1}>
+            Close
+          </button>
+        </div>
+
+        <nav className="mt-20 flex flex-col gap-5">
+          {links.map((l, i) => (
+            <span key={l.href} className="mask block">
+              <span style={{ transitionDelay: open ? `${160 + i * 70}ms` : "0ms" }}>
+                <Link
+                  href={l.href}
+                  onClick={() => setOpen(false)}
+                  className="t-display-sm"
+                  tabIndex={open ? 0 : -1}
+                >
+                  {l.label}
+                </Link>
+              </span>
+            </span>
+          ))}
+        </nav>
+
+        <div className="mt-auto flex gap-6">
+          <a href="mailto:olawaleemmanuel100@gmail.com" className="t-small text-muted">Email</a>
+          <a href="https://github.com/olawaleemmanuel09" className="t-small text-muted">GitHub</a>
+          <a href="https://x.com/LaoniAI" className="t-small text-muted">X</a>
+        </div>
+      </div>
+    </>
+  );
+}
