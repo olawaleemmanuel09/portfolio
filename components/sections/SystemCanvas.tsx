@@ -18,7 +18,30 @@ export default function SystemCanvas() {
         <p className="text-[0.72rem] font-medium uppercase tracking-[0.17em] text-[#b8a8ec]">Intent to dependable action</p>
         <p className="mt-2 max-w-[24ch] text-xl font-semibold leading-tight tracking-[-0.025em] text-white sm:text-2xl">AI connected to the systems that matter.</p>
 
-        <svg viewBox="0 0 540 362" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="systems-map-title systems-map-description" className="mt-4 block h-auto w-full">
+        <div className="system-canvas-mobile mt-6 grid grid-cols-2 gap-2.5 sm:hidden" aria-hidden="true">
+          <div className="rounded-lg border border-[#5d5576] bg-[#28233a] p-3.5">
+            <span className="block text-[0.61rem] font-bold tracking-[0.12em] text-[#c4adef]">01 / INPUT</span>
+            <strong className="mt-3 block text-sm font-semibold">User intent</strong>
+            <span className="mt-1 block text-xs text-[#c4bcd3]">Request or event</span>
+          </div>
+          <div className="rounded-lg border border-[#8d72c8] bg-[#34264d] p-3.5">
+            <span className="block text-[0.61rem] font-bold tracking-[0.12em] text-[#d5beff]">02 / AI</span>
+            <strong className="mt-3 block text-sm font-semibold">Reasoning</strong>
+            <span className="mt-1 block text-xs text-[#d4cbe3]">Interpretation</span>
+          </div>
+          <div className="rounded-lg border border-[#668c90] bg-[#242d35] p-3.5">
+            <span className="block text-[0.61rem] font-bold tracking-[0.12em] text-[#b1d9d3]">03 / DATA</span>
+            <strong className="mt-3 block text-sm font-semibold">Validation</strong>
+            <span className="mt-1 block text-xs text-[#c6d6d6]">Rules &amp; records</span>
+          </div>
+          <div className="rounded-lg border border-[#a18bd2] bg-[#28233a] p-3.5">
+            <span className="block text-[0.61rem] font-bold tracking-[0.12em] text-[#d5beff]">04 / ACTION</span>
+            <strong className="mt-3 block text-sm font-semibold">Operations</strong>
+            <span className="mt-1 block text-xs text-[#c4bcd3]">Controlled outcome</span>
+          </div>
+          <p className="col-span-2 mt-2 text-center text-[0.64rem] uppercase tracking-[0.1em] text-[#b1a6c8]">Observe / Retry / Audit</p>
+        </div>
+        <svg viewBox="0 0 540 362" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="systems-map-title systems-map-description" className="mt-4 hidden h-auto w-full sm:block">
           <title id="systems-map-title">Illustrative AI systems workflow</title>
           <desc id="systems-map-description">A customer or staff request enters a reasoning step, passes through validation and business data, then reaches an authorized business action. This is conceptual, not a screenshot or production metric.</desc>
           <defs>

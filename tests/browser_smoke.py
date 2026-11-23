@@ -24,6 +24,7 @@ with sync_playwright() as playwright:
                 assert page.locator(".featured-case-card img").count() == 6
                 assert page.get_by_role("link", name="Explore selected work").get_attribute("href") == "#work"
                 assert page.locator(".system-canvas svg[role='img']").count() == 1
+                assert page.locator(".system-canvas-mobile").is_visible() == (width < 640), width
                 assert page.locator(".featured-case-card").first.get_by_role("link").count() == 1
             if path == "/work":
                 assert page.locator(".work-index-card").count() == 16
