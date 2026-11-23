@@ -14,6 +14,12 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run build
+      - name: Smoke-test privacy scanning against actual generated build
+        run: |
+          private_terms="$(mktemp)"
+          trap 'rm -f "$private_terms"' EXIT
+          printf '%s\n' 'SyntheticReleaseMarkerNotPublishedAnywhere' > "$private_terms"
+          PORTFOLIO_PRIVATE_TERMS_FILE="$private_terms" npm run privacy:check
       - run: npm test
       - uses: actions/setup-python@v5
         with:
