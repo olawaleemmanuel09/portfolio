@@ -426,14 +426,30 @@ export const projects: Project[] = [
       title: "Filter before calling the model",
       body: "The teaching workflow filters and deduplicates job listings before structured Gemini scoring, reducing unnecessary model calls. It does not independently establish seven live source integrations."
     },
-    media: [{
-      src: "/architecture/job-intelligence.svg",
-      alt: "Architecture system map derived from documented implementation boundaries.",
-      caption: "Architecture summary; not a live dashboard screenshot.",
-      type: "image",
-      aspect: "wide"
-    }],
-    preview: "/architecture/job-intelligence.svg",
+    media: [
+      {
+        src: "/evidence/job-intelligence-workflow.png",
+        alt: "Archived screenshot of the multi-source n8n job alert workflow.",
+        caption: "Archived n8n editor capture showing seven named intake branches, including RSS, before normalization, Gemini scoring and Telegram. Not proof of current connectivity.",
+        type: "image",
+        aspect: "wide"
+      },
+      {
+        src: "/evidence/job-intelligence-telegram.jpg",
+        alt: "Archived Telegram bot alert examples with job source and match ratings.",
+        caption: "Archived example of notifications. Listings and scores reflect the captured run, not current opportunities.",
+        type: "image",
+        aspect: "tall"
+      },
+      {
+        src: "/architecture/job-intelligence.svg",
+        alt: "Conceptual job discovery architecture diagram.",
+        caption: "Conceptual map, not live execution evidence.",
+        type: "image",
+        aspect: "wide"
+      }
+    ],
+    preview: "/evidence/job-intelligence-workflow.png",
     repo: "https://github.com/olawaleemmanuel09/ai-job-alert-system"
   },
   {
@@ -467,7 +483,16 @@ export const projects: Project[] = [
       title: "A CRM write and a notification are different outcomes",
       body: "The form payload is normalized before the HubSpot upsert, but Gmail, Slack and Sheets can fail independently. A reliable production extension would track a persistent handoff, retries and reconciliation rather than promise zero missed leads from an export."
     },
-    media: [],
+    media: [
+      {
+        src: "/evidence/crm-capture-execution.png",
+        alt: "Archived n8n successful execution showing Tally, HubSpot, Gmail, Slack and Google Sheets.",
+        caption: "Historical successful demonstration. Delivery-service guarantees and customer adoption are not established.",
+        type: "image",
+        aspect: "wide"
+      }
+    ],
+    preview: "/evidence/crm-capture-execution.png",
     repo: "https://github.com/olawaleemmanuel09/lead-capture-crm-sync"
   },
   {
@@ -501,7 +526,30 @@ export const projects: Project[] = [
       title: "A reminder flag is not an exactly-once guarantee",
       body: "The 24-node workflow represents booking, cancellation, reminder and feedback lifecycles. Concurrent executions and downstream provider failures still require idempotent claiming and delivery logs. A trained no-show predictor is not contained in the public export."
     },
-    media: [],
+    media: [
+      {
+        src: "/evidence/smartbook-overview.png",
+        alt: "Archived SmartBook n8n booking, cancellation and reminder workflow.",
+        caption: "Capstone export overview; no standalone machine-learning inference service is bundled.",
+        type: "image",
+        aspect: "wide"
+      },
+      {
+        src: "/evidence/smartbook-booking-path.png",
+        alt: "SmartBook booking validation and confirmation branch.",
+        caption: "Archived booking intake subflow; includes its error response path.",
+        type: "image",
+        aspect: "wide"
+      },
+      {
+        src: "/evidence/smartbook-reminder-path.png",
+        alt: "SmartBook scheduled email and SMS reminder flow.",
+        caption: "Archived 24-hour and 2-hour reminder branches. Not proof of exactly-once delivery.",
+        type: "image",
+        aspect: "wide"
+      }
+    ],
+    preview: "/evidence/smartbook-overview.png",
     repo: "https://github.com/olawaleemmanuel09/smartbook-ai-automation"
   },
   {
@@ -568,7 +616,16 @@ export const projects: Project[] = [
       title: "A spoken confirmation must follow the committed record",
       body: "An assistant can sound confident while a booking write has failed. The prototype should verify storage success before reading back a confirmed reservation. Reproducible public call/export evidence is still pending."
     },
-    media: []
+    media: [
+      {
+        src: "/evidence/voice-booking-handoff.png",
+        alt: "Archived voice-booking webhook handoff to Google Sheets, Gmail and error paths.",
+        caption: "Prototype workflow screenshot; a verified live voice-call test remains outstanding.",
+        type: "image",
+        aspect: "wide"
+      }
+    ],
+    preview: "/evidence/voice-booking-handoff.png"
   },
   {
     slug: "christ-heart-foundation",
@@ -640,7 +697,23 @@ export const projects: Project[] = [
       title: "Student submissions need a trustworthy review state",
       body: "A cohort learning workflow must distinguish an uploaded or submitted assignment from a teacher's review and recorded feedback. Implementation details beyond the existing source and screenshots require further verification."
     },
-    media: []
+    media: [
+      {
+        src: "/evidence/academy-student-view.png",
+        alt: "Archived student dashboard showing Academy sessions, materials and calendar.",
+        caption: "Earlier Academy interface with the owner's personal test profile; not a CEFA production student screenshot.",
+        type: "image",
+        aspect: "wide"
+      },
+      {
+        src: "/evidence/academy-onboarding-flow.png",
+        alt: "Archived Academy onboarding n8n pipeline for student records and welcome email.",
+        caption: "Archived student-onboarding automation, distinct from the separate CEFA programme.",
+        type: "image",
+        aspect: "wide"
+      }
+    ],
+    preview: "/evidence/academy-student-view.png"
   }
 ];
 
