@@ -173,6 +173,10 @@ export default async function CaseStudy({
                     >
                       <source src={m.src} type="video/mp4" />
                     </video>
+                  ) : m.src.startsWith("/architecture/") ? (
+                    <div className="max-w-full overflow-x-auto border border-rule" tabIndex={0} role="region" aria-label={`Scrollable architecture diagram for ${project.title}`}>
+                      <Image src={m.src} alt={m.alt} width={1280} height={670} sizes="(max-width: 640px) 820px, 100vw" className="w-full min-w-[820px] sm:min-w-0" />
+                    </div>
                   ) : (
                     <Parallax className="wipe border border-rule" amount={m.aspect === "tall" ? 6 : 10}>
                       <Image
@@ -185,6 +189,7 @@ export default async function CaseStudy({
                       />
                     </Parallax>
                   )}
+                  {m.src.startsWith("/architecture/") && <p className="t-small mt-2 text-muted sm:hidden">Swipe horizontally to inspect the system diagram. The implementation details are also written above.</p>}
                   <figcaption className="t-small mt-3 text-muted">
                     {m.caption ?? m.alt}
                   </figcaption>

@@ -15,7 +15,7 @@ test("repository public-content snapshot does not include retired private brand 
   // Keep identifiers out of committed source; assemble test-only values from fragments.
   const restricted = [["ama", "lasky"], ["amala", "ride"], ["secure", "point"]].map(xs => xs.join(""));
   for (const file of files) {
-    const normalized = read(file).toLowerCase().replace(/[\\s-]/g, "");
+    const normalized = read(file).toLowerCase().replace(/[\s-]/g, "");
     for (const word of restricted) assert.equal(normalized.includes(word), false, "Restricted identity found in " + file);
   }
 });

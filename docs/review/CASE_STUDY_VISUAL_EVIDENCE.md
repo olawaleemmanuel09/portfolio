@@ -15,3 +15,7 @@ All files in this list are original conceptual system maps authored for the publ
 | Personal job intelligence | `public/architecture/job-intelligence.svg` | Historical public workflow versus private owner-reported operation |
 
 The illustrations should be viewed at 320px, 375px, 768px, 1024px and 1440px for legibility and overflow. They may need horizontal scrolling or a responsive vertical alternative on very small screens. **Do not add client screenshots to cover an evidence gap without explicit clearance.**
+
+## Responsive reading
+
+The diagrams retain their full original width inside a horizontally scrollable, keyboard-focusable region on narrow screens. Project explanations appear in accessible HTML text and do not depend on reading small labels in the illustration. CSS motion effects are not applied to diagrams.
