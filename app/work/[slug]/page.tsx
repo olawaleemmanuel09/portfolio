@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { projects, getProject } from "@/lib/data/projects";
+import { engineeringEvidence } from "@/lib/data/engineeringEvidence";
 import Reveal from "@/components/motion/Reveal";
 import Parallax from "@/components/motion/Parallax";
 
@@ -40,6 +41,7 @@ export default async function CaseStudy({
   const project = getProject(slug);
   if (!project) notFound();
 
+  const evidence = engineeringEvidence[project.slug];
   const index = projects.findIndex((p) => p.slug === slug);
   const next = projects[(index + 1) % projects.length];
 
@@ -123,6 +125,19 @@ export default async function CaseStudy({
         </div>
       </div>
 
+      {evidence && (
+        <section aria-labelledby="system-boundaries" className="border-t border-rule py-14 md:py-20">
+          <div className="grid gap-12 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:gap-20">
+            <div><p className="t-small text-muted">System evidence</p><h2 id="system-boundaries" className="t-h2 mt-3">Boundaries and responsibilities</h2><p className="t-body mt-5 text-muted">{evidence.boundaries}</p></div>
+            <div><h3 className="t-h2">Engineering implementation</h3><div className="mt-6 divide-y divide-rule border-t border-rule">
+              {evidence.implementation.map((item) => <div key={item.title} className="py-5"><h4 className="t-body font-semibold">{item.title}</h4><p className="t-body mt-2 text-muted">{item.detail}</p></div>)}
+            </div></div>
+          </div>
+          <div className="mt-12"><h3 className="t-h2">Delivery and verification boundaries</h3><div className="mt-6 grid gap-4 md:grid-cols-3">
+            {evidence.verification.map((item) => <div key={item.area} className="border border-rule p-5"><p className="t-small text-muted">{item.state === "documented" ? "Documented" : item.state === "planned" ? "Planned" : "Verification pending"}</p><h4 className="t-body mt-2 font-semibold">{item.area}</h4><p className="t-small mt-3 text-muted">{item.detail}</p></div>)}
+          </div>{evidence.publicationNote && <p className="t-small mt-5 text-muted">{evidence.publicationNote}</p>}</div>
+        </section>
+      )}
       {project.decision && (
         <Reveal>
           <section className="-mx-6 border-y border-ink px-6 py-14 md:-mx-8 md:px-10 md:py-20">

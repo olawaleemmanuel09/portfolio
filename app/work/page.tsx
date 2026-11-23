@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Metadata } from "next";
 import { projects } from "@/lib/data/projects";
 
@@ -43,6 +44,7 @@ export default async function Work({ searchParams }: {
           <ul className="mt-8 grid gap-x-12 md:grid-cols-2">
             {group.items.map((p) => (
               <li key={p.slug} className="border-t border-rule py-6">
+                {p.preview && <Image src={p.preview} alt="" width={1280} height={670} sizes="(max-width: 768px) 100vw, 45vw" className="mb-5 w-full border border-rule object-cover" />}
                 <p className="t-small text-muted">{p.statusLabel}</p>
                 <h3 className="t-h2 mt-2"><Link className="link-underline" href={`/work/${p.slug}`}>{p.title}</Link></h3>
                 <p className="t-body mt-3">{p.summary}</p>
