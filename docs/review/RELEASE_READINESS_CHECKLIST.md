@@ -24,3 +24,9 @@ One cold Chromium context per URL, production server on loopback, 375 × 812, re
 | AI Job Intelligence | 664 ms | 1,773 ms | 313,067 | 0 |
 
 The three routes painted within 0.74 s in this sample. JavaScript and other resources continue loading after paint. Real-device CPU, Vercel edge latency and production Core Web Vitals remain unmeasured.
+
+## Follow-up implementation branch: evidence and anonymization
+
+The original local QA figures above belong to the previous candidate, not this branch. A separate review branch now adds nine static, source-derived architecture diagrams, expanded technical evidence sections, and public-client anonymization. Its **new build, automated route tests, interactive browser checks, and hosted preview must run again** before merge. Do not transfer the previous candidate's pass counts to this new commit.
+
+Outstanding: confirm that the nine SVGs load, that responsive views stay within width, that all 16 routes render and that restricted client labels are absent from public output. Obtain approval for any future client screenshots; do not restore retired media automatically. Production data, client deployments, password stores and payment providers remain untouched.

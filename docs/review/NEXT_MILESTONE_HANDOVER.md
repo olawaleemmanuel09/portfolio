@@ -27,3 +27,9 @@ After the draft PRs exist, confirm the Vercel preview belongs to the candidate S
 ## Rollback
 
 Main and production were untouched. To decline the release, leave the feature branches unmerged. To revert just the application changes from this milestone, revert 712c2a5 on the portfolio feature branch and rerun checks; that revert also restores the retired public files, so review media clearance before proposing it. The six documentation branches can be reviewed or declined independently.
+
+## Separate engineering-evidence implementation
+
+A separate review branch `feature/portfolio-evidence-anonymization-20261123` extends this earlier candidate. It changes case-study copy, client-safe public slugs, nine conceptual SVG architecture diagrams, and role/verification narratives without modifying business systems or launching production. The four restaurant dashboard responsibilities are described as an owner-approved model, **not** as an assertion that all dashboards or gateway payments have been certified. The security company case uses a generic public identity, and existing approved client names remain separately documented.
+
+Inspect `docs/review/CODEX_REVIEW_REQUEST.md`, `docs/review/CLIENT_ANONYMIZATION_AUDIT.md`, `docs/review/CASE_STUDY_VISUAL_EVIDENCE.md` and the new static tests. The checked branch head and draft PR contain the authoritative revision; the original figures in this handover refer to the previous candidate, and need to be rerun for the new code.

@@ -1,0 +1,39 @@
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { readFileSync, existsSync } from "node:fs";
+const read = path => readFileSync(new URL("../" + path, import.meta.url), "utf8");
+const catalog = read("lib/data/projects.ts");
+const evidence = read("lib/data/engineeringEvidence.ts");
+const files = ["lib/data/projects.ts", "lib/data/engineeringEvidence.ts", "docs/PORTFOLIO_CLAIMS_REGISTER.md", "docs/review/CONTENT_EVIDENCE_MATRIX.md", "app/layout.tsx", "components/sections/Hero.tsx"];
+test("all project case studies and approved public aliases remain available", () => {
+  assert.equal((catalog.match(/    slug: "/g) || []).length, 16);
+  for (const name of ["Three-Branch Restaurant Operations Platform", "Security Workforce & Operations Management Platform", "Christ Heart Empowerment Foundation", "Elion Homes"]) assert.ok(catalog.includes(name), name);
+  assert.ok(catalog.includes('slug: "security-workforce-operations"'));
+  assert.ok(catalog.includes("Accountant") || evidence.includes("Accountant dashboard"));
+});
+test("repository public-content snapshot does not include retired private brand identifiers", () => {
+  // Keep identifiers out of committed source; assemble test-only values from fragments.
+  const restricted = [["ama", "lasky"], ["amala", "ride"], ["secure", "point"]].map(xs => xs.join(""));
+  for (const file of files) {
+    const normalized = read(file).toLowerCase().replace(/[\\s-]/g, "");
+    for (const word of restricted) assert.equal(normalized.includes(word), false, "Restricted identity found in " + file);
+  }
+});
+test("architecture diagrams are valid named, text-described public assets", () => {
+  const paths = [...catalog.matchAll(/preview: "(\/architecture\/[^"]+\.svg)"/g)].map(x => x[1]);
+  assert.equal(paths.length, 9);
+  for (const path of paths) {
+    const file = "public" + path;
+    assert.equal(existsSync(new URL("../" + file, import.meta.url)), true, file);
+    const svg = read(file);
+    assert.match(svg, /<svg[^>]+viewBox=/);
+    assert.match(svg, /<title id="diagramTitle">/);
+    assert.match(svg, /<desc id="diagramDesc">/);
+    assert.match(svg, /not a real dashboard screenshot|conceptual/i);
+  }
+});
+test("release-scope boundaries are explicit", () => {
+  for (const section of ["Management dashboard", "Branch Manager dashboard", "Kitchen dashboard", "Accountant dashboard", "Manual dispatch"]) assert.ok(evidence.includes(section), section);
+  assert.match(evidence, /requires-verification/);
+  assert.match(evidence, /not independently verified screenshots/);
+});
