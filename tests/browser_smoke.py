@@ -17,6 +17,17 @@ with sync_playwright() as playwright:
             page.locator("h1").wait_for()
             assert page.locator("h1").count() == 1
             assert page.evaluate("document.documentElement.scrollWidth <= innerWidth"), (path, width)
+            if path == "/":
+                assert page.locator(".hero-statement").count() == 1
+                assert page.get_by_role("figure", name="Illustrative AI systems architecture").count() == 1
+                assert page.locator(".featured-case-card").count() == 6
+                assert page.locator(".featured-case-card img").count() == 6
+                assert page.get_by_role("link", name="Explore selected work").get_attribute("href") == "#work"
+                assert page.locator(".system-canvas svg[role='img']").count() == 1
+                assert page.locator(".featured-case-card").first.get_by_role("link").count() == 1
+            if path == "/work":
+                assert page.locator(".work-index-card").count() == 16
+                assert page.locator(".work-index-card img").count() == 9
             assert page.evaluate("matchMedia('(prefers-reduced-motion: reduce)').matches")
             assert not page.locator("html.lenis").count()
             for img in page.locator("main img").all():
