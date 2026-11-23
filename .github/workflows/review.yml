@@ -27,8 +27,19 @@ jobs:
       - run: pip install playwright==1.56.0
       - run: python -m playwright install --with-deps chromium
       - name: Browser smoke checks
+        env:
+          REVIEW_SCREENSHOTS: ${{ runner.temp }}/portfolio-visual-screenshots
         run: |
+          mkdir -p "$REVIEW_SCREENSHOTS"
           npm run start -- -H 127.0.0.1 -p 3198 &
           trap 'kill $!' EXIT
           curl --retry 15 --retry-connrefused --retry-delay 1 -fsS http://127.0.0.1:3198/ -o /dev/null
           python tests/browser_smoke.py
+      - name: Save responsive design screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: portfolio-design-qa-screenshots
+          path: ${{ runner.temp }}/portfolio-visual-screenshots
+          retention-days: 7
+          if-no-files-found: warn

@@ -17,13 +17,30 @@ with sync_playwright() as playwright:
             page.locator("h1").wait_for()
             assert page.locator("h1").count() == 1
             assert page.evaluate("document.documentElement.scrollWidth <= innerWidth"), (path, width)
+            if path == "/":
+                assert page.locator(".hero-statement").count() == 1
+                assert page.get_by_role("figure", name="Illustrative AI systems architecture").count() == 1
+                assert page.locator(".featured-case-card").count() == 6
+                if width == 320:
+                    assert page.locator(".featured-artboard").first.evaluate("el => el.getBoundingClientRect().height >= 200")
+                assert page.locator(".featured-case-card img").count() == 6
+                assert page.get_by_role("link", name="Explore selected work").get_attribute("href") == "#work"
+                assert page.get_by_role("link", name="Explore selected work").evaluate("el => getComputedStyle(el).color") == "rgb(255, 255, 255)"
+                assert page.locator(".system-canvas svg[role='img']").count() == 1
+                assert page.locator(".system-canvas-mobile").is_visible() == (width < 640), width
+                assert page.locator(".system-canvas-mobile").get_attribute("aria-hidden") is None
+                assert page.locator(".system-canvas-mobile li").count() == 5
+                assert page.locator(".featured-case-card").first.get_by_role("link").count() == 1
+            if path == "/work":
+                assert page.locator(".work-index-card").count() == 16
+                assert page.locator(".work-index-card img").count() == 9
             assert page.evaluate("matchMedia('(prefers-reduced-motion: reduce)').matches")
             assert not page.locator("html.lenis").count()
             for img in page.locator("main img").all():
                 assert img.get_attribute("alt") is not None
-            if screens and width in (320, 768, 1440) and javascript and path in ["/", "/work/cefa", "/work/ai-job-scraper"]:
+            if screens and width in (320, 768, 1440) and javascript and path in ["/", "/work", "/work/cefa", "/work/ai-job-scraper"]:
                 name = path.strip("/").replace("/", "-") or "home"
-                page.screenshot(path=Path(screens) / f"{name}-{width}.png")
+                page.screenshot(path=Path(screens) / f"{name}-{width}.png", full_page=(path in ("/", "/work")))
         if width == 320 and javascript:
             toggle = page.get_by_role("button", name="Menu")
             toggle.focus()

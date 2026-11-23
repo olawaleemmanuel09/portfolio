@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     type: "website",
     title: "Olawale Emmanuel Olaonipekun — AI Engineer — Growth & Automation Systems",
     description:
-      "Case studies in conversational ordering, sales qualification and event operations.",
+      "Applied AI engineering, secure business platforms, CRM infrastructure, systems architecture and reliable operational workflows.",
     images: ["/work/headshot.jpg"],
     siteName: "Olawale Emmanuel Olaonipekun",
   },

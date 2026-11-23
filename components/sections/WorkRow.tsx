@@ -1,93 +1,56 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { Project } from "@/lib/data/types";
-import { useActive } from "@/lib/animations/useActive";
 
-export default function WorkRow({ project: p }: { project: Project }) {
-  const { ref, active } = useActive<HTMLLIElement>();
-  const img = useRef<HTMLDivElement>(null);
+const tones: Record<string, string> = {
+  "cefa": "featured-artboard--lavender",
+  "web-ordering-and-payments": "featured-artboard--pearl",
+  "elion-sales-command-centre": "featured-artboard--slate",
+  "security-workforce-operations": "featured-artboard--mist",
+  "elion-homes": "featured-artboard--sand",
+  "christ-heart-foundation": "featured-artboard--blush",
+};
 
-  useEffect(() => {
-    if (!img.current) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    gsap.registerPlugin(ScrollTrigger);
-
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        img.current,
-        { yPercent: -7 },
-        {
-          yPercent: 7,
-          ease: "none",
-          scrollTrigger: {
-            trigger: img.current,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true,
-          },
-        }
-      );
-    }, img);
-
-    return () => ctx.revert();
-  }, []);
-
+export default function WorkRow({ project: p, index, total }: { project: Project; index: number; total: number }) {
   return (
-    <li ref={ref} data-active={active} className="work-row group relative">
-      <span
-        aria-hidden
-        className="node absolute left-0 top-[3.6rem] hidden h-[11px] w-[11px] rounded-full border border-rule bg-paper md:block"
-        style={{ transitionDelay: `${p.order * 110}ms` }}
-      >
-        {p.status === "production" && (
-          <span className="dot absolute left-1/2 top-1/2 h-[5px] w-[5px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-live" />
-        )}
-      </span>
-
-      <span aria-hidden className="row-line absolute inset-x-0 bottom-0 h-px bg-[var(--color-accent)]" />
-
-      <Link
-        href={`/work/${p.slug}`}
-        className="grid items-start gap-x-10 gap-y-7 border-b border-rule py-10 md:grid-cols-[auto_minmax(0,1fr)_minmax(0,330px)] md:py-14 md:pl-10"
-      >
-        <span className="row-index t-index text-muted md:pt-2">
-          {String(p.order).padStart(2, "0")}
-        </span>
-
-        <span className="order-2 md:order-none">
-          <span className="row-title t-display-sm block">{p.title}</span>
-          <span className="t-small mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-muted">
-            {p.status === "production" && <span className="live-dot" aria-hidden />}
-            {p.statusLabel}
-            <span className="text-rule">/</span>
-            {p.period}
+    <li className="featured-case-card min-w-0">
+      <Link href={"/work/" + p.slug} className="featured-case-link group flex h-full min-w-0 flex-col overflow-hidden rounded-[1.2rem] border border-[#e2e0ea] bg-white" aria-label={"Explore case study: " + p.title}>
+        <div className={"featured-artboard relative isolate flex aspect-[4/3] items-center justify-center overflow-hidden px-6 pb-7 pt-12 sm:aspect-[16/9] sm:px-10 " + (tones[p.slug] || "featured-artboard--lavender")}>
+          <div className="absolute inset-x-6 top-5 z-10 flex items-center justify-between gap-3 text-[0.63rem] font-bold uppercase tracking-[0.14em] text-[#484354] sm:inset-x-9">
+            <span>System / {String(index + 1).padStart(2, "0")}</span>
+            <span className="hidden sm:inline">Architecture study</span>
+          </div>
+          <div className="featured-architecture-frame relative z-[1] w-full max-w-[570px] overflow-hidden rounded-lg border border-[#ddd9e6] bg-[#f8fafc] shadow-[0_26px_50px_-34px_rgba(26,19,52,0.65)]">
+            {p.preview ? (
+              <Image src={p.preview} alt="" width={1280} height={670} sizes="(max-width: 768px) 100vw, 45vw" className="block h-auto w-full" />
+            ) : (
+              <div className="flex aspect-[16/9] items-center justify-center px-6 text-center text-sm text-[#5c566d]">
+                Engineering project — detailed case study
+              </div>
+            )}
+          </div>
+          <span className="pointer-events-none absolute bottom-3 right-5 text-[0.6rem] font-medium tracking-[0.07em] text-[#5f5a6a]">
+            Conceptual visualization
           </span>
-          <span className="t-body prose-justify mt-5 block max-w-[52ch] text-muted">
-            {p.summary}
-          </span>
-          <span className="t-small mt-5 block text-muted">{p.stack.join(", ")}</span>
-        </span>
+        </div>
 
-        {p.preview && (
-          <span className="row-media order-1 block overflow-hidden border border-rule md:order-none">
-            <span ref={img} className="row-media-inner block">
-              <Image
-                src={p.preview}
-                alt=""
-                width={680}
-                height={520}
-                sizes="(max-width: 768px) 100vw, 330px"
-                className="h-[210px] w-full object-cover object-top md:h-[230px]"
-              />
+        <div className="flex flex-1 flex-col p-6 sm:p-8">
+          <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 text-[0.68rem] font-semibold uppercase tracking-[0.13em] text-muted">
+            <span>{String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</span>
+            <span>{p.statusLabel}</span>
+          </div>
+          <h3 className="featured-case-title mt-5 max-w-[24ch] text-[clamp(1.45rem,2.4vw,2.1rem)] font-semibold leading-[1.14] tracking-[-0.028em] text-ink">{p.title}</h3>
+          <p className="mt-4 max-w-[58ch] text-[0.94rem] leading-[1.65] text-muted">{p.summary}</p>
+          <div className="mt-auto flex flex-wrap items-end justify-between gap-4 border-t border-rule pt-5">
+            <span className="text-[0.72rem] leading-[1.55] text-[#625c6b]">{p.stack.slice(0, 3).join(" · ")}</span>
+            <span className="featured-case-action inline-flex items-center gap-2 text-[0.8rem] font-semibold text-[var(--color-accent-deep)]">
+              Explore project
+              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" aria-hidden="true">
+                <path d="M5 16L17 4M8 4H17V13" stroke="currentColor" strokeWidth="1.65" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
             </span>
-          </span>
-        )}
+          </div>
+        </div>
       </Link>
     </li>
   );
