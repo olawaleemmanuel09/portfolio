@@ -329,3 +329,111 @@ a { color: inherit; text-decoration: none; }
   [data-reveal], [data-hero] { opacity: 1; }
   .wipe, .work-row .row-media { clip-path: none; }
 }
+
+/* ---- Editorial engineering visual system: homepage and case cards ------ */
+.hero-shell {
+  background: linear-gradient(116deg, #fff 0%, #fff 57%, #f9f7ff 100%);
+}
+.hero-shell-halo {
+  background: radial-gradient(circle, rgba(135, 97, 228, 0.13), rgba(135, 97, 228, 0) 72%);
+}
+.hero-statement {
+  color: var(--color-ink);
+  font-size: clamp(2.9rem, 5.5vw, 5.9rem);
+  font-variation-settings: "wdth" 102, "wght" 650;
+  line-height: 1.03;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+}
+.hero-statement-accent { color: var(--color-accent); }
+.hero-primary-cta {
+  transition: background-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+}
+.hero-primary-cta:hover {
+  background: var(--color-accent-deep);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 27px -14px rgba(74,31,209,0.65);
+}
+.system-canvas-grid {
+  background-image:
+    radial-gradient(circle at 46% 40%, rgba(123, 83, 204, 0.13), transparent 54%),
+    linear-gradient(rgba(215, 199, 255, 0.047) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(215, 199, 255, 0.047) 1px, transparent 1px);
+  background-size: 100% 100%, 26px 26px, 26px 26px;
+  mask-image: linear-gradient(to bottom, transparent, black 13%, black 88%, transparent);
+}
+.featured-case-link {
+  transition: border-color 220ms ease, transform 280ms var(--ease-out-expo), box-shadow 280ms ease;
+}
+.featured-case-link:hover {
+  border-color: #bbb1d4;
+  transform: translateY(-4px);
+  box-shadow: 0 26px 52px -38px rgba(36, 24, 77, 0.45);
+}
+.featured-case-link:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 3px;
+}
+.featured-artboard {
+  background-image: radial-gradient(circle at 75% 20%, rgba(255,255,255,.9), transparent 49%);
+}
+.featured-artboard--lavender { background-color: #e9e5f5; }
+.featured-artboard--pearl { background-color: #eee9f0; }
+.featured-artboard--slate { background-color: #e3e9f1; }
+.featured-artboard--mist { background-color: #e0eae9; }
+.featured-artboard--sand { background-color: #f3ece4; }
+.featured-artboard--blush { background-color: #efe6e7; }
+.featured-architecture-frame {
+  transform: perspective(900px) rotateX(3deg) rotateY(-2deg);
+  transform-origin: center center;
+  transition: transform 480ms var(--ease-out-expo), box-shadow 480ms ease;
+}
+.featured-case-link:hover .featured-architecture-frame,
+.featured-case-link:focus-visible .featured-architecture-frame {
+  transform: perspective(900px) rotateX(0deg) rotateY(0deg) scale(1.015);
+  box-shadow: 0 28px 60px -32px rgba(26,19,52,.5);
+}
+.featured-case-title {
+  transition: color 240ms ease;
+}
+.featured-case-link:hover .featured-case-title { color: var(--color-accent-deep); }
+.featured-case-action svg {
+  transition: transform 280ms var(--ease-out-expo);
+}
+.featured-case-link:hover .featured-case-action svg,
+.featured-case-link:focus-visible .featured-case-action svg {
+  transform: translate(3px, -3px);
+}
+.work-index-card {
+  transition: transform 220ms var(--ease-out-expo), border-color 220ms ease, box-shadow 220ms ease;
+}
+.work-index-card:hover {
+  transform: translateY(-3px);
+  border-color: #bfb4dc;
+  box-shadow: 0 19px 40px -31px rgba(40,29,81,0.45);
+}
+.work-index-card:focus-visible { outline: 3px solid var(--color-accent); outline-offset: 4px; }
+.work-index-preview {
+  background: linear-gradient(135deg, #e8e5f0, #f5f3f8);
+}
+.work-index-card:hover .work-index-preview img {
+  transform: scale(1.02);
+}
+.work-index-preview img {
+  transition: transform 480ms var(--ease-out-expo);
+}
+@media (max-width: 639px) {
+  .hero-statement { font-size: clamp(2.85rem, 11vw, 4.45rem); }
+  .hero-eyebrow { line-height: 1.65; }
+  .featured-architecture-frame { transform: none; }
+  .featured-case-link:hover .featured-architecture-frame { transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-primary-cta,
+  .featured-case-link,
+  .featured-architecture-frame,
+  .featured-case-title,
+  .featured-case-action svg,
+  .work-index-card,
+  .work-index-preview img { transition: none !important; transform: none !important; }
+}
