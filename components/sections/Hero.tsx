@@ -19,7 +19,7 @@ export default function Hero() {
             My focus is what keeps working after launch.
           </p>
           <div className="mt-9 flex flex-wrap items-center gap-4">
-            <Link href="#work" className="hero-primary-cta inline-flex min-h-12 items-center gap-5 rounded-md bg-[var(--color-ink)] px-5 py-3 text-sm font-semibold text-white">
+            <Link href="#work" className="hero-primary-cta inline-flex min-h-12 items-center gap-5 rounded-md bg-[var(--color-ink)] px-5 py-3 text-sm font-semibold text-white" style={{ color: "#ffffff" }}>
               Explore selected work
               <svg viewBox="0 0 24 24" width="19" height="19" fill="none" aria-hidden="true">
                 <path d="M5 12H19M13 6L19 12L13 18" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
