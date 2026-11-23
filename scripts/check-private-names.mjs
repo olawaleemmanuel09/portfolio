@@ -1,55 +1,85 @@
 /**
- * Review-only public identifier scan. The private terms list must be held
- * outside the repository and is never printed or committed.
+ * Release-only restricted identifier scanner.
  *
- * PORTFOLIO_PRIVATE_TERMS_FILE=/path/outside/repo/private-terms.txt
- * node scripts/check-private-names.mjs
+ * Do not commit the identifier file, put it in CI logs, or run against
+ * untrusted input. Store it outside this repository and set:
+ * PORTFOLIO_PRIVATE_TERMS_FILE=/secure/location/private-terms.txt
+ * npm run privacy:check
+ *
+ * This scans source and every public/static/generated output file. It never
+ * prints matching identifiers or paths that could themselves contain them.
  */
-import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
-import { resolve, join, sep, extname } from "node:path";
+import { existsSync, lstatSync, readFileSync, readdirSync, realpathSync } from "node:fs";
+import { resolve, sep, join, relative } from "node:path";
 
-const root = resolve(process.cwd());
-const listPath = process.env.PORTFOLIO_PRIVATE_TERMS_FILE;
-if (!listPath) {
-  console.error("Missing PORTFOLIO_PRIVATE_TERMS_FILE; private-name verification has not run.");
+const root = realpathSync(resolve(process.cwd()));
+const inputVar = process.env.PORTFOLIO_PRIVATE_TERMS_FILE;
+function abort(reason) {
+  console.error(reason);
   process.exit(2);
 }
-const input = resolve(listPath);
+if (!inputVar) abort("Private identifier input is required; scan not performed.");
+let input;
+try {
+  input = realpathSync(resolve(inputVar));
+} catch {
+  abort("Private identifier input is missing or unreadable.");
+}
 if (input === root || input.startsWith(root + sep)) {
-  console.error("Refusing private identifier input inside the repository.");
-  process.exit(2);
+  abort("Private identifier input cannot reside inside the repository.");
 }
-if (!existsSync(input)) {
-  console.error("Private input file does not exist.");
-  process.exit(2);
+let terms;
+try {
+  terms = [...new Set(
+    readFileSync(input, "utf8").split(/\r?\n/)
+      .map(x => x.trim())
+      .filter(x => x && !x.startsWith("#"))
+      .map(x => x.toLowerCase().replace(/[^a-z0-9]/g, ""))
+      .filter(Boolean)
+  )];
+} catch {
+  abort("Private identifier input could not be read.");
 }
-const normalize = value => String(value).toLowerCase().replace(/[^a-z0-9]/g, "");
-const terms = readFileSync(input, "utf8").split(/\r?\n/).map(line => line.trim())
-  .filter(line => line && !line.startsWith("#")).map(normalize).filter(Boolean);
-if (!terms.length) {
-  console.error("Private input contains no identifiers; verification has not run.");
-  process.exit(2);
+if (!terms.length || terms.some(x => x.length < 3)) {
+  abort("Private identifier input must contain nonempty terms of at least three normalized characters.");
 }
-const allowed = new Set([".md", ".tsx", ".ts", ".js", ".mjs", ".cjs", ".json", ".svg", ".css", ".html", ".xml", ".txt"]);
-const targets = ["README.md", "app", "components", "lib", "docs", "public/architecture", ".next/server/app"];
-let scanned = 0;
-const flagged = [];
-function scan(target) {
-  if (!existsSync(target)) return;
-  if (statSync(target).isDirectory()) {
-    for (const item of readdirSync(target)) scan(join(target, item));
+const normalize = text => text.toLowerCase().replace(/[^a-z0-9]/g, "");
+const roots = ["README.md", "app", "components", "lib", "docs", "public", ".next", "out"];
+const required = ["public", ".next/server", ".next/static"];
+for (const path of required) {
+  if (!existsSync(join(root, path))) {
+    abort("Production build outputs or public assets are missing; run the production build first.");
+  }
+}
+let inspected = 0;
+let violations = 0;
+const scan = path => {
+  const entry = lstatSync(path);
+  if (entry.isSymbolicLink()) throw new Error("Unexpected symlink in release scan scope");
+  if (entry.isDirectory()) {
+    for (const child of readdirSync(path)) scan(join(path, child));
     return;
   }
-  if (!allowed.has(extname(target))) return;
-  scanned += 1;
-  const normalized = normalize(readFileSync(target, "utf8"));
-  if (terms.some(term => normalized.includes(term))) {
-    flagged.push(target.startsWith(root + sep) ? target.slice(root.length + 1) : target);
+  if (!entry.isFile()) return;
+  // Include all file types: .rsc, .body, JS chunks, XML, SVG and embedded
+  // textual metadata in binary assets can all reach the browser.
+  const content = normalize(readFileSync(path).toString("utf8"));
+  const pathText = normalize(relative(root, path));
+  inspected++;
+  if (terms.some(term => content.includes(term) || pathText.includes(term))) {
+    violations++;
+    // Never output the filename or full path: those can contain the identifier.
+    console.error("Restricted public material detected (file reference #" + inspected + ").");
   }
+};
+try {
+  for (const item of roots) {
+    const target = join(root, item);
+    if (existsSync(target)) scan(target);
+  }
+} catch {
+  abort("Privacy scan could not inspect all release files; no certification granted.");
 }
-for (const target of targets) scan(join(root, target));
-console.log("Private-name scan completed: " + scanned + " files; violations: " + flagged.length);
-if (flagged.length) {
-  for (const file of flagged) console.error("Restricted public content in: " + file);
-  process.exit(1);
-}
+if (inspected === 0) abort("No release files scanned; no certification granted.");
+console.log("Private-name scan: " + inspected + " files inspected; " + violations + " violations.");
+if (violations) process.exit(1);

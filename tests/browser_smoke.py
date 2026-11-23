@@ -38,5 +38,24 @@ with sync_playwright() as playwright:
             page.locator("#menu").get_by_role("link", name="Engineering lab").click()
             page.wait_for_url("**/work#lab")
         page.close()
+    # Full project-catalog route coverage supplements the 36 viewport checks.
+    # Keep slugs explicit so a rename requires an intentional test update.
+    slugs = [
+        "cefa", "whatsapp-ordering-system", "web-ordering-and-payments",
+        "elion-sales-command-centre", "security-workforce-operations",
+        "b2b-revenue-engine", "elion-homes", "leadreach",
+        "foc-inc-operations", "ai-job-scraper", "lead-capture-crm-sync",
+        "smartbook-ai", "lead-intelligence-pipeline", "voice-booking-agent",
+        "christ-heart-foundation", "academy-platform"
+    ]
+    page = browser.new_page(viewport={"width": 390, "height": 844}, reduced_motion="reduce")
+    for slug in slugs:
+        response = page.goto(origin + "/work/" + slug, wait_until="domcontentloaded")
+        assert response is not None and response.status == 200, slug
+        assert page.locator("main h1").count() == 1, slug
+        assert page.evaluate("document.documentElement.scrollWidth <= innerWidth"), slug
+    legacy = page.goto(origin + "/work/securepoint", wait_until="domcontentloaded")
+    assert legacy is not None and legacy.status == 404
+    page.close()
     browser.close()
-print("Passed 36 responsive route checks, reduced-motion, image alternatives and mobile keyboard navigation.")
+print("Passed 36 responsive route checks, all 16 project routes, legacy 404, reduced-motion and mobile keyboard navigation.")

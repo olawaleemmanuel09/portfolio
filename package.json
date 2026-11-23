@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --test tests/review.test.mjs tests/portfolio-evidence.test.mjs"
+    "test": "node --test tests/review.test.mjs tests/portfolio-evidence.test.mjs tests/privacy-scan.test.mjs",
+    "privacy:check": "node scripts/check-private-names.mjs"
   },
   "dependencies": {
     "gsap": "^3.15.0",

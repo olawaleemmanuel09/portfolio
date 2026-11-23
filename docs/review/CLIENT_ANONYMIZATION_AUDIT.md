@@ -21,3 +21,11 @@
 ## Private-term scan implementation
 
 `scripts/check-private-names.mjs` accepts `PORTFOLIO_PRIVATE_TERMS_FILE`, a newline-separated list of private identifiers stored **outside the repository**. It scans public source/docs and locally built server output without echoing the restricted values. Invoke it after a clean build; failure exits nonzero with file paths only. It intentionally does not run with placeholder names or embed private identities in committed tests. An owner-provided external input is required to certify the full scan. Prior commits on the review branch and historical deployments remain separate exposure concerns.
+
+## Follow-up: Codex review P2 fixes
+
+The release scanner now inspects all files under `public` and `.next`, including browser chunks and RSC payloads, as well as documented source paths and optional static exports. File content and filename checks are normalized. Scanner output contains only an opaque file reference and counts, never the matching path or identifier. It refuses to certify when production build outputs are absent.
+
+Synthetic tests independently verify clean scans, leaked public assets, compiled JavaScript/RSC leaks, filename-only leaks, missing build outputs, and private input stored inside the checkout. These fixtures intentionally use an invented organization; **the real restricted-name input remains external and must be supplied and run by the owner before publication**.
+
+This checks normalized cleartext and embedded UTF-8 metadata, not encoded/base64 content, previously deployed versions, or Git history. A clean result does not confer client publication permission.

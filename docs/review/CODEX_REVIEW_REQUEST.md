@@ -18,3 +18,7 @@ Review the implementation critically, **do not implement fixes or merge** withou
 ## Output contract
 
 Return **BLOCKER / HIGH / MEDIUM / LOW** findings with file paths, line references, reproducible reasoning, and minimum safe fixes. Distinguish proven defects from unverified claims. State tests actually run. Do not approve a merge solely because the Vercel deployment says READY. Do not silently publish or expose any client system.
+
+## Focus for next review
+
+Verify the P2 privacy scanner changes on the latest PR head. The scanner must catch leaks in `public` and `.next/static`/RSC output and remain silent about matching identifiers or filenames. Check synthetic test completeness, exceptional filesystem behavior, missing-build fail-closed behavior and performance. Confirm all 16 case-study routes and the intentionally retired slug pass the expanded browser smoke checks.
