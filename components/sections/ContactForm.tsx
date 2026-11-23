@@ -104,6 +104,8 @@ export default function ContactForm() {
 
       <p className="t-small text-muted">Your contact details and message are emailed to Olawale so he can reply. Please leave out confidential client information.</p>
 
+      <noscript><p className="t-small text-muted">This form requires JavaScript. Please use <a className="underline" href="mailto:olawaleemmanuel100@gmail.com">direct email</a> instead.</p></noscript>
+
       {/* spam trap, never shown to a person */}
       <input
         type="text"

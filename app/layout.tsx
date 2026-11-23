@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     template: "%s — Olawale Emmanuel Olaonipekun",
   },
   description:
-    "Olawale Emmanuel Olaonipekun builds AI solutions and CRM integrations in Lagos. Explore CEFA cohort operations, restaurant commerce and growth systems.",
+    "AI Engineer building production AI systems, CRM architecture, secure business platforms and growth automation. Explore engineering case studies and verified project evidence.",
   twitter: { card: "summary_large_image", creator: "@LaoniAI" },
   robots: { index: true, follow: true },
 };

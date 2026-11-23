@@ -7,7 +7,7 @@ export default function Hero() {
         <p className="t-small text-muted">Olawale Emmanuel Olaonipekun · Lagos, Nigeria</p>
         <h1 className="t-display mt-6 max-w-[18ch]">AI Engineer — Growth &amp; Automation Systems</h1>
         <p className="t-small mt-5 text-muted">AI Solutions · CRM Engineering</p>
-        <p className="t-lead mt-6 max-w-[52ch]">I build the systems behind customer orders, sales follow-up and team operations. At CEFA, that means giving students a place to submit work and staff a way to review it across groups.</p>
+        <p className="t-lead mt-6 max-w-[52ch]">I engineer AI-powered business systems—from customer ordering and CRM infrastructure to secure databases, operational dashboards and production automation. I build for the decisions, failures and people that matter after launch.</p>
         <div className="mt-8 flex flex-wrap gap-7">
           <Link className="link-underline t-small" href="/work/cefa">Explore CEFA</Link>
           <Link className="link-underline t-small" href="/work">Browse projects</Link>

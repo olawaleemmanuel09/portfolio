@@ -8,7 +8,7 @@ export const projects: Project[] = [
     status: "production",
     statusLabel: "Production programme",
     period: "Reviewed November 2026",
-    summary: "Students activate an account, enter their assigned group and submit work. Staff review assignments and publish programme updates without mixing announcements into student chat.",
+    summary: "A learning operations platform connecting student access, group-scoped conversations, assignment submission, staff review and announcements. The central challenge is protecting group boundaries while maintaining reliable sessions during backend interruptions.",
     stack: [
       "Supabase Auth",
       "PostgreSQL",
@@ -33,23 +33,34 @@ export const projects: Project[] = [
     outcome: [
       "The November onboarding record documents student activation. Nine transactional chat checks covered group access and rolled back their writes. Those tests measure permissions. Peak concurrent capacity and deployment of each recovery change need separate verification."
     ],
-    media: []
+    decision: {
+      title: "A failed lookup is not a revoked session",
+      body: "After a November availability incident, source-level fixes distinguished temporary infrastructure failure from loss of authorization and reduced overlapping refreshes. Their successful deployment and live-load behavior require separate verification."
+    },
+    media: [{
+      src: "/architecture/cefa-learning-operations.svg",
+      alt: "Architecture system map derived from documented implementation boundaries.",
+      caption: "Architecture summary; not a live dashboard screenshot.",
+      type: "image",
+      aspect: "wide"
+    }],
+    preview: "/architecture/cefa-learning-operations.svg"
   },
   {
     slug: "whatsapp-ordering-system",
-    title: "Restaurant ordering on WhatsApp",
-    client: "Multi-branch restaurant",
+    title: "AI-Assisted Restaurant Ordering on WhatsApp",
+    client: "Three-branch restaurant (anonymized)",
     status: "production",
     statusLabel: "Production ordering",
     period: "Reviewed November 2026",
-    summary: "Customers order in chat and staff confirm the bank transfer before the kitchen fulfils the order. The October handover records real trading on this platform.",
+    summary: "A historical operating channel translating customer messages into branch-specific orders, checking authoritative menu prices and passing staff-verified transfers to the kitchen.",
     stack: [
       "n8n",
       "Twilio",
       "Google Sheets",
       "Telegram"
     ],
-    featured: true,
+    featured: false,
     order: 2,
     problem: [
       "Staff need an order total they can verify against the branch menu, even when a customer types a request informally."
@@ -67,22 +78,33 @@ export const projects: Project[] = [
     outcome: [
       "The operating handover documents manual transfer confirmation. Order volumes and payment totals are private."
     ],
-    media: []
+    decision: {
+      title: "The model never sets the final bill",
+      body: "AI interprets a message, while branch menus, order totals and staff payment confirmation remain authoritative. Idempotency and branch checks matter more than conversational fluency."
+    },
+    media: [{
+      src: "/architecture/restaurant-conversation.svg",
+      alt: "Architecture system map derived from documented implementation boundaries.",
+      caption: "Architecture summary; not a live dashboard screenshot.",
+      type: "image",
+      aspect: "wide"
+    }],
+    preview: "/architecture/restaurant-conversation.svg"
   },
   {
     slug: "web-ordering-and-payments",
-    title: "Web ordering and Amala Ride",
-    client: "Restaurant operations",
+    title: "Three-Branch Restaurant Operations Platform",
+    client: "Three-branch restaurant (anonymized)",
     status: "staging",
-    statusLabel: "Live predecessor · rebuild in staging",
+    statusLabel: "Dashboard and payment release candidate",
     period: "Reviewed November 2026",
-    summary: "Web customers can read their total and payment instructions in the browser. Amala Ride extends the design into separate cashier and kitchen workflows.",
+    summary: "Web ordering with a management oversight layer, branch-manager operations, kitchen preparation and an accountant-led reconciliation scope. New payment and dashboard certification are not established by the historically live ordering workflow.",
     stack: [
       "n8n",
       "Supabase",
       "Monnify"
     ],
-    featured: false,
+    featured: true,
     order: 3,
     problem: [
       "A web customer may never have opened a WhatsApp conversation. The order must carry enough information for payment on its own."
@@ -100,7 +122,18 @@ export const projects: Project[] = [
     outcome: [
       "The earlier system took real orders. Live-money gateway activation and owner acceptance for Ride remain outstanding."
     ],
-    media: []
+    decision: {
+      title: "Keep financial decisions and delivery responsibilities explicit",
+      body: "Management oversees branches, managers operate within a branch, kitchen acts on authorized orders, and accountants reconcile payment exceptions. Manual dispatch remains approved; no rider or dispatcher dashboard or automatic delivery fee belongs to this release."
+    },
+    media: [{
+      src: "/architecture/restaurant-operations.svg",
+      alt: "Architecture system map derived from documented implementation boundaries.",
+      caption: "Architecture summary; not a live dashboard screenshot.",
+      type: "image",
+      aspect: "wide"
+    }],
+    preview: "/architecture/restaurant-operations.svg"
   },
   {
     slug: "elion-sales-command-centre",
@@ -109,7 +142,7 @@ export const projects: Project[] = [
     status: "staging",
     statusLabel: "Hosted acceptance pending",
     period: "Reviewed November 2026",
-    summary: "The foundation of a shared sales workspace gives each organisation control over its property and campaign records.",
+    summary: "A tenant-isolated sales operations foundation using API boundaries, restricted data access, auditability and transaction-aware property and campaign updates; hosted release and AI messaging integrations remain unverified.",
     stack: [
       "TypeScript",
       "Next.js",
@@ -134,16 +167,27 @@ export const projects: Project[] = [
     outcome: [
       "The local contracts are documented. Hosted runtime login and user acceptance remain open. WhatsApp integration and AI qualification are future work."
     ],
-    media: []
+    decision: {
+      title: "Permissions cannot live only in the interface",
+      body: "Membership checks, restricted database roles and auditable writes provide stronger organizational separation than a client-side list filter. Current hosted acceptance is distinct from local contract tests."
+    },
+    media: [{
+      src: "/architecture/crm-tenant-foundation.svg",
+      alt: "Architecture system map derived from documented implementation boundaries.",
+      caption: "Architecture summary; not a live dashboard screenshot.",
+      type: "image",
+      aspect: "wide"
+    }],
+    preview: "/architecture/crm-tenant-foundation.svg"
   },
   {
-    slug: "securepoint",
-    title: "SecurePoint field operations",
-    client: "Security operations",
+    slug: "security-workforce-operations",
+    title: "Security Workforce & Operations Management Platform",
+    client: "Security company (anonymized)",
     status: "staging",
     statusLabel: "Staged demo",
     period: "Reviewed November 2026",
-    summary: "Supervisors need a defensible record of where a guard checked in and which events still need review.",
+    summary: "A staged guard, supervisor, operations and HQ platform using geospatial attendance checks and permission-based records. Indoor GPS uncertainty and real-device field acceptance remain open.",
     stack: [
       "TypeScript",
       "Supabase",
@@ -167,16 +211,27 @@ export const projects: Project[] = [
     outcome: [
       "The delivery manifest marks deployment pending. Real-device GPS and connected hosted acceptance remain review gates."
     ],
-    media: []
+    decision: {
+      title: "A coordinate is not proof of attendance",
+      body: "A phone's reported position has uncertainty; site boundaries, GPS accuracy, shift context and server-side authorization must be considered. Synthetic-location success does not certify real field conditions."
+    },
+    media: [{
+      src: "/architecture/security-operations.svg",
+      alt: "Architecture system map derived from documented implementation boundaries.",
+      caption: "Architecture summary; not a live dashboard screenshot.",
+      type: "image",
+      aspect: "wide"
+    }],
+    preview: "/architecture/security-operations.svg"
   },
   {
     slug: "b2b-revenue-engine",
-    title: "Amala Sky Prospect Intelligence",
-    client: "Commercial prospect research",
+    title: "Prospect Intelligence for a Restaurant Group",
+    client: "Three-branch restaurant (anonymized)",
     status: "prototype",
     statusLabel: "Certification pending",
     period: "Reviewed November 2026",
-    summary: "A field marketer needs a short list of accounts worth investigating and a record of what happened on the last call.",
+    summary: "A sourced business-research and marketer follow-up design intended to prioritize candidates and record call outcomes. Hosted certification and attributable conversion remain unverified.",
     stack: [
       "PostgreSQL",
       "n8n",
@@ -200,22 +255,26 @@ export const projects: Project[] = [
     outcome: [
       "The earlier portfolio documents the sales brief. Current hosted operation and revenue attributable to this work await verification."
     ],
+    decision: {
+      title: "Research is not a customer acquisition result",
+      body: "Candidate sources, prioritization signals and recorded conversations are distinct records. Do not conflate collected prospects with verified contact permission or won sales."
+    },
     media: []
   },
   {
     slug: "elion-homes",
-    title: "Elion Homes website",
+    title: "Elion Homes — Responsive Property Website",
     client: "Property discovery",
     status: "staging",
     statusLabel: "Release candidate",
     period: "Reviewed November 2026",
-    summary: "A lightweight property website gives buyers a direct path from an estate overview to a call, text or email enquiry.",
+    summary: "A mobile-first property website release candidate combining editorial content, responsive navigation, optimized video, static media fallbacks and direct contact paths. Public launch awaits the documented approvals.",
     stack: [
       "HTML",
       "CSS",
       "JavaScript"
     ],
-    featured: false,
+    featured: true,
     order: 7,
     problem: [
       "Prospective buyers may browse on a phone with a slow connection. Property information and contact details need to work before video finishes loading."
@@ -233,7 +292,18 @@ export const projects: Project[] = [
     outcome: [
       "The source records design approval and production SEO changes. The readiness documents retain hosting and domain gates. Public launch status needs confirmation."
     ],
-    media: []
+    decision: {
+      title: "The page must work without video",
+      body: "Network, Save-Data, reduced-motion and low-memory fallbacks keep content and contact actions usable. Video polish does not substitute for verified domain, SEO and lead-intake readiness."
+    },
+    media: [{
+      src: "/architecture/property-website.svg",
+      alt: "Architecture system map derived from documented implementation boundaries.",
+      caption: "Architecture summary; not a live dashboard screenshot.",
+      type: "image",
+      aspect: "wide"
+    }],
+    preview: "/architecture/property-website.svg"
   },
   {
     slug: "leadreach",
@@ -242,7 +312,7 @@ export const projects: Project[] = [
     status: "prototype",
     statusLabel: "Owner pilot",
     period: "Reviewed November 2026",
-    summary: "A local research workspace helps one operator trace a buyer record to its source, prepare a draft and log a follow-up.",
+    summary: "A source-aware research and outreach workspace with human-reviewed message drafts and an owner-local pilot. The repository does not establish public SaaS adoption.",
     stack: [
       "Python",
       "FastAPI",
@@ -266,6 +336,10 @@ export const projects: Project[] = [
     outcome: [
       "The first-user milestone describes a local package. The repository documents a pilot. Customer adoption has yet to be measured."
     ],
+    decision: {
+      title: "A draft is not a sent message",
+      body: "Provenance, editing, suppression and actual delivery need separate state; synthetic tests are not proof of customer outreach volume."
+    },
     media: []
   },
   {
@@ -275,7 +349,7 @@ export const projects: Project[] = [
     status: "production",
     statusLabel: "Operations platform",
     period: "Reviewed November 2026",
-    summary: "Staff coordinate event dates, brand projects, tasks and briefs across Lagos and Abuja. CEFA shares the broader organisational context.",
+    summary: "An event and team operations workspace connecting assignments, briefs, notifications and shared organizational work; it supplies context for the separate learning programme.",
     stack: [
       "PostgreSQL",
       "Supabase",
@@ -299,7 +373,18 @@ export const projects: Project[] = [
     outcome: [
       "The command centre provides the operating context for CEFA. Outcomes are described at the workflow level."
     ],
-    media: []
+    decision: {
+      title: "Keep the operating record durable",
+      body: "An internal task or event cannot depend on whether an email or push message reaches the recipient; delivery failures should remain recoverable and observable."
+    },
+    media: [{
+      src: "/architecture/foc-operations.svg",
+      alt: "Architecture system map derived from documented implementation boundaries.",
+      caption: "Architecture summary; not a live dashboard screenshot.",
+      type: "image",
+      aspect: "wide"
+    }],
+    preview: "/architecture/foc-operations.svg"
   },
   {
     slug: "ai-job-scraper",
@@ -308,7 +393,7 @@ export const projects: Project[] = [
     status: "personal",
     statusLabel: "Private system · public teaching export",
     period: "Reviewed November 2026",
-    summary: "I run a seven-source job discovery system privately. The public teaching edition shows how a single Adzuna feed becomes a ranked Telegram shortlist.",
+    summary: "A private seven-source job discovery operation reported by the owner, with Telegram notifications. The public evidence verifies an older Adzuna/Gemini export; the current private sources and executions await independent verification.",
     stack: [
       "n8n",
       "Adzuna",
@@ -337,7 +422,18 @@ export const projects: Project[] = [
     outcome: [
       "Seven-source operation is owner-reported. The public artifact verifies the earlier graph and does not establish private source availability or scoring accuracy."
     ],
-    media: [],
+    decision: {
+      title: "Filter before calling the model",
+      body: "The teaching workflow filters and deduplicates job listings before structured Gemini scoring, reducing unnecessary model calls. It does not independently establish seven live source integrations."
+    },
+    media: [{
+      src: "/architecture/job-intelligence.svg",
+      alt: "Architecture system map derived from documented implementation boundaries.",
+      caption: "Architecture summary; not a live dashboard screenshot.",
+      type: "image",
+      aspect: "wide"
+    }],
+    preview: "/architecture/job-intelligence.svg",
     repo: "https://github.com/olawaleemmanuel09/ai-job-alert-system"
   },
   {
@@ -367,6 +463,10 @@ export const projects: Project[] = [
     outcome: [
       "The export establishes the integration design. Delivery latency and conversion impact require monitored runs."
     ],
+    decision: {
+      title: "A CRM write and a notification are different outcomes",
+      body: "The form payload is normalized before the HubSpot upsert, but Gmail, Slack and Sheets can fail independently. A reliable production extension would track a persistent handoff, retries and reconciliation rather than promise zero missed leads from an export."
+    },
     media: [],
     repo: "https://github.com/olawaleemmanuel09/lead-capture-crm-sync"
   },
@@ -397,6 +497,10 @@ export const projects: Project[] = [
     outcome: [
       "The export contains a high-risk branch. Reproducing the proposed model inference requires a separate service."
     ],
+    decision: {
+      title: "A reminder flag is not an exactly-once guarantee",
+      body: "The 24-node workflow represents booking, cancellation, reminder and feedback lifecycles. Concurrent executions and downstream provider failures still require idempotent claiming and delivery logs. A trained no-show predictor is not contained in the public export."
+    },
     media: [],
     repo: "https://github.com/olawaleemmanuel09/smartbook-ai-automation"
   },
@@ -427,6 +531,10 @@ export const projects: Project[] = [
     outcome: [
       "The output is a research shortlist. Contact and conversion require separate evidence."
     ],
+    decision: {
+      title: "AI identifies signals; code computes the ranking",
+      body: "Keeping the weighted final score in deterministic JavaScript makes the model's extracted business signals inspectable and ranking criteria repeatable. Prospect research remains distinct from consent, outreach and conversion."
+    },
     media: [],
     repo: "https://github.com/olawaleemmanuel09/lead-intelligence-pipeline"
   },
@@ -456,21 +564,25 @@ export const projects: Project[] = [
     outcome: [
       "A sanitized export and repeatable call test are pending."
     ],
+    decision: {
+      title: "A spoken confirmation must follow the committed record",
+      body: "An assistant can sound confident while a booking write has failed. The prototype should verify storage success before reading back a confirmed reservation. Reproducible public call/export evidence is still pending."
+    },
     media: []
   },
   {
     slug: "christ-heart-foundation",
-    title: "Foundation website",
-    client: "Foundation communications",
+    title: "Christ Heart Empowerment Foundation — Digital Platform",
+    client: "Christ Heart Empowerment Foundation",
     status: "delivered",
     statusLabel: "Delivered website",
     period: "Reviewed November 2026",
-    summary: "A foundation website brings programme information and enquiry forms together.",
+    summary: "A privacy-sensitive nonprofit application combining public programmes, an admin gallery, validated forms and restricted database access. Its public repository documents 61 tests focused on security and content correctness.",
     stack: [
       "TypeScript",
       "Next.js"
     ],
-    featured: false,
+    featured: true,
     order: 15,
     problem: [
       "Visitors need to find the correct form for the programme they want."
@@ -484,7 +596,19 @@ export const projects: Project[] = [
     outcome: [
       "Public client assets and current deployment details are withheld pending clearance."
     ],
-    media: []
+    decision: {
+      title: "Never promise assistance that has not been approved",
+      body: "Assistance enquiries are sensitive. Backend validation, restricted submission access and truthful acknowledgement wording matter more than form completion visuals; gallery permissions are enforced at the database boundary."
+    },
+    media: [{
+      src: "/architecture/foundation-platform.svg",
+      alt: "Architecture system map derived from documented implementation boundaries.",
+      caption: "Architecture summary; not a live dashboard screenshot.",
+      type: "image",
+      aspect: "wide"
+    }],
+    preview: "/architecture/foundation-platform.svg",
+    repo: "https://github.com/olawaleemmanuel09/Christ-Heart-Empowerment-Foundation"
   },
   {
     slug: "academy-platform",
@@ -512,6 +636,10 @@ export const projects: Project[] = [
     outcome: [
       "Teaching work is presented separately from commercial case studies."
     ],
+    decision: {
+      title: "Student submissions need a trustworthy review state",
+      body: "A cohort learning workflow must distinguish an uploaded or submitted assignment from a teacher's review and recorded feedback. Implementation details beyond the existing source and screenshots require further verification."
+    },
     media: []
   }
 ];
