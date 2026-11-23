@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { projects, getProject } from "@/lib/data/projects";
 import { engineeringEvidence } from "@/lib/data/engineeringEvidence";
 import Reveal from "@/components/motion/Reveal";
-import Parallax from "@/components/motion/Parallax";
+import EvidenceGallery from "@/components/sections/EvidenceGallery";
 
 export function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }));
@@ -98,6 +98,8 @@ export default async function CaseStudy({
         )}
       </header>
 
+      <EvidenceGallery project={project} />
+
       <div className="grid gap-14 py-14 md:py-20 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:gap-20">
         <div className="lg:sticky lg:top-32 lg:self-start">
           <h2 className="t-h2">The problem</h2>
@@ -150,54 +152,6 @@ export default async function CaseStudy({
             <p className="t-body prose-justify measure-wide mt-6">{project.decision.body}</p>
           </section>
         </Reveal>
-      )}
-
-      {project.media.length > 0 && (
-        <section className="py-14 md:py-20">
-          <div
-            className={
-              project.media[0].aspect === "tall" && project.media.length > 1
-                ? "grid gap-8 sm:grid-cols-2 lg:grid-cols-3"
-                : "flex flex-col gap-14"
-            }
-          >
-            {project.media.map((m, i) => (
-              <Reveal key={m.src} delay={i * 60}>
-                <figure>
-                  {m.type === "video" ? (
-                    <video
-                      className="mx-auto w-full max-w-[380px] border border-rule"
-                      controls
-                      playsInline
-                      preload="metadata"
-                    >
-                      <source src={m.src} type="video/mp4" />
-                    </video>
-                  ) : m.src.startsWith("/architecture/") ? (
-                    <div className="max-w-full overflow-x-auto border border-rule" tabIndex={0} role="region" aria-label={`Scrollable architecture diagram for ${project.title}`}>
-                      <Image src={m.src} alt={m.alt} width={1280} height={670} sizes="(max-width: 640px) 820px, 100vw" className="w-full min-w-[820px] lg:min-w-0" />
-                    </div>
-                  ) : (
-                    <Parallax className="wipe border border-rule" amount={m.aspect === "tall" ? 6 : 10}>
-                      <Image
-                        src={m.src}
-                        alt={m.alt}
-                        width={m.aspect === "tall" ? 700 : 1366}
-                        height={m.aspect === "tall" ? 1400 : 640}
-                        sizes={m.aspect === "tall" ? "(max-width: 640px) 100vw, 33vw" : "100vw"}
-                        className="w-full"
-                      />
-                    </Parallax>
-                  )}
-                  {m.src.startsWith("/architecture/") && <p className="t-small mt-2 text-muted sm:hidden">Swipe horizontally to inspect the system diagram. The implementation details are also written above.</p>}
-                  <figcaption className="t-small mt-3 text-muted">
-                    {m.caption ?? m.alt}
-                  </figcaption>
-                </figure>
-              </Reveal>
-            ))}
-          </div>
-        </section>
       )}
 
       <section className="grid gap-12 border-t border-rule py-14 md:py-20 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:gap-20">
