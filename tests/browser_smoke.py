@@ -9,21 +9,34 @@ screens = os.environ.get("REVIEW_SCREENSHOTS")
 
 with sync_playwright() as playwright:
     browser = playwright.chromium.launch(executable_path=os.environ.get("CHROMIUM_PATH"))
-    for width, javascript in [(1440, True), (320, True), (320, False)]:
+    for width, javascript in [(w, True) for w in (320, 375, 768, 1024, 1440)] + [(320, False)]:
         page = browser.new_page(viewport={"width": width, "height": 900},
                                 java_script_enabled=javascript, reduced_motion="reduce")
-        for path in ["/", "/work", "/work/cefa", "/work/ai-job-scraper", "/contact"]:
+        for path in ["/", "/work", "/work/cefa", "/work/ai-job-scraper", "/contact", "/resume"]:
             page.goto(origin + path)
             page.locator("h1").wait_for()
             assert page.locator("h1").count() == 1
             assert page.evaluate("document.documentElement.scrollWidth <= innerWidth"), (path, width)
-            if screens and javascript and path in ["/", "/work/cefa", "/work/ai-job-scraper"]:
+            assert page.evaluate("matchMedia('(prefers-reduced-motion: reduce)').matches")
+            assert not page.locator("html.lenis").count()
+            for img in page.locator("main img").all():
+                assert img.get_attribute("alt") is not None
+            if screens and width in (320, 768, 1440) and javascript and path in ["/", "/work/cefa", "/work/ai-job-scraper"]:
                 name = path.strip("/").replace("/", "-") or "home"
                 page.screenshot(path=Path(screens) / f"{name}-{width}.png")
         if width == 320 and javascript:
-            page.get_by_role("button", name="Menu").click()
+            toggle = page.get_by_role("button", name="Menu")
+            toggle.focus()
+            page.keyboard.press("Enter")
+            assert page.evaluate("document.querySelector('#menu').contains(document.activeElement)")
+            for _ in range(12):
+                page.keyboard.press("Tab")
+                assert not page.evaluate("document.querySelector('main').contains(document.activeElement)")
+            page.keyboard.press("Escape")
+            assert toggle.evaluate("el => el === document.activeElement")
+            toggle.click()
             page.locator("#menu").get_by_role("link", name="Engineering lab").click()
             page.wait_for_url("**/work#lab")
         page.close()
     browser.close()
-print("Passed 15 responsive route checks and mobile lab navigation.")
+print("Passed 36 responsive route checks, reduced-motion, image alternatives and mobile keyboard navigation.")
