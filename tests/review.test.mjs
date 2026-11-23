@@ -38,7 +38,7 @@ test("landing page and job case distinguish role, flagship and workflow editions
   assert.match(home, /AI Engineer — Growth &amp; Automation Systems/);
   assert.match(home, /href="\/work\/cefa"/);
   const job = await (await fetch(origin + "/work/ai-job-scraper")).text();
-  for (const evidence of ["seven-source", "owner-reported", "10-node", "Adzuna", "inactive", "seven-node classroom", "one We Work Remotely RSS feed"]) {
+  for (const evidence of ["seven job-source branches", "archived", "10-node", "Adzuna", "inactive", "seven-node classroom", "one We Work Remotely RSS feed"]) {
     assert.ok(job.includes(evidence), evidence);
   }
 });

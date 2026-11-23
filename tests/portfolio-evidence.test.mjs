@@ -4,7 +4,6 @@ import { readFileSync, existsSync } from "node:fs";
 const read = path => readFileSync(new URL("../" + path, import.meta.url), "utf8");
 const catalog = read("lib/data/projects.ts");
 const evidence = read("lib/data/engineeringEvidence.ts");
-const files = ["lib/data/projects.ts", "lib/data/engineeringEvidence.ts", "docs/PORTFOLIO_CLAIMS_REGISTER.md", "docs/review/CONTENT_EVIDENCE_MATRIX.md", "app/layout.tsx", "components/sections/Hero.tsx"];
 test("all project case studies and approved public aliases remain available", () => {
   assert.equal((catalog.match(/    slug: "/g) || []).length, 16);
   for (const name of ["Three-Branch Restaurant Operations Platform", "Security Workforce & Operations Management Platform", "Christ Heart Empowerment Foundation", "Elion Homes"]) assert.ok(catalog.includes(name), name);
