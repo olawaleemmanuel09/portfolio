@@ -13,7 +13,7 @@ Reviewed 23 November 2026. The [claim register](../PORTFOLIO_CLAIMS_REGISTER.md)
 | Elion Homes | Static property site and contact paths. Source and readiness documents disagree on launch. | Confirm domain, release revision and launch approval. |
 | LeadReach | Documented local owner pilot for research and reviewed drafts. | Executable source package, hosted multi-user acceptance and any adoption claim. |
 | Restaurant Prospect Intelligence | Public concept and earlier sales brief cover candidate sourcing, ranking and follow-up. | Independently verified current source revision, hosted status and commercial outcomes. |
-| Job Intelligence | Public graph has ten nodes and one Adzuna source. A separate historical seven-node graph uses one RSS source. Owner reports seven private sources. | See the [job README](https://github.com/olawaleemmanuel09/ai-job-alert-system/blob/667469b/README.md) for the seven verification steps. |
+| Job Intelligence | Public graph has ten nodes and one Adzuna source. A separate historical seven-node graph uses one RSS source. An archived seven-branch editor screenshot and Telegram alert sample are available from the older portfolio; current private execution remains unverified. | See the [job README](https://github.com/olawaleemmanuel09/ai-job-alert-system/blob/667469b/README.md) for the seven verification steps. |
 | SmartBook, lead capture and lead intelligence | Public graphs document a capstone and integration demos. | Provider acceptance and commercial impact require separate evidence. |
 | Voice Booking, academy and foundation | Portfolio describes a voice prototype, teaching platform and delivered foundation site. | Current voice export, client media consent, updated deployment and outcome evidence. |
 

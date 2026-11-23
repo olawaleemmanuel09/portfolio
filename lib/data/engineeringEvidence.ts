@@ -266,7 +266,7 @@ export const engineeringEvidence: Record<string, EngineeringEvidence> = {
       },
       {
         "title": "Private edition",
-        "detail": "The owner reports seven connected sources and live alerts; sanitized current execution evidence has not been supplied."
+        "detail": "The old portfolio screenshot shows seven named source branches connected in n8n and a historical Telegram alert sample. The current private source graph and dated run proof are still outstanding."
       }
     ],
     "verification": [
@@ -278,7 +278,7 @@ export const engineeringEvidence: Record<string, EngineeringEvidence> = {
       {
         "area": "Current operations",
         "state": "requires-verification",
-        "detail": "Current source graph, dated runs and alert receipts remain outstanding."
+        "detail": "Current source graph, authenticated dated runs, source health and recent delivery receipts remain outstanding."
       }
     ]
   },
