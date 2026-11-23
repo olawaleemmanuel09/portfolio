@@ -463,6 +463,10 @@ export const projects: Project[] = [
     outcome: [
       "The export establishes the integration design. Delivery latency and conversion impact require monitored runs."
     ],
+    decision: {
+      title: "A CRM write and a notification are different outcomes",
+      body: "The form payload is normalized before the HubSpot upsert, but Gmail, Slack and Sheets can fail independently. A reliable production extension would track a persistent handoff, retries and reconciliation rather than promise zero missed leads from an export."
+    },
     media: [],
     repo: "https://github.com/olawaleemmanuel09/lead-capture-crm-sync"
   },
@@ -493,6 +497,10 @@ export const projects: Project[] = [
     outcome: [
       "The export contains a high-risk branch. Reproducing the proposed model inference requires a separate service."
     ],
+    decision: {
+      title: "A reminder flag is not an exactly-once guarantee",
+      body: "The 24-node workflow represents booking, cancellation, reminder and feedback lifecycles. Concurrent executions and downstream provider failures still require idempotent claiming and delivery logs. A trained no-show predictor is not contained in the public export."
+    },
     media: [],
     repo: "https://github.com/olawaleemmanuel09/smartbook-ai-automation"
   },
@@ -523,6 +531,10 @@ export const projects: Project[] = [
     outcome: [
       "The output is a research shortlist. Contact and conversion require separate evidence."
     ],
+    decision: {
+      title: "AI identifies signals; code computes the ranking",
+      body: "Keeping the weighted final score in deterministic JavaScript makes the model's extracted business signals inspectable and ranking criteria repeatable. Prospect research remains distinct from consent, outreach and conversion."
+    },
     media: [],
     repo: "https://github.com/olawaleemmanuel09/lead-intelligence-pipeline"
   },
@@ -552,6 +564,10 @@ export const projects: Project[] = [
     outcome: [
       "A sanitized export and repeatable call test are pending."
     ],
+    decision: {
+      title: "A spoken confirmation must follow the committed record",
+      body: "An assistant can sound confident while a booking write has failed. The prototype should verify storage success before reading back a confirmed reservation. Reproducible public call/export evidence is still pending."
+    },
     media: []
   },
   {
@@ -591,7 +607,8 @@ export const projects: Project[] = [
       type: "image",
       aspect: "wide"
     }],
-    preview: "/architecture/foundation-platform.svg"
+    preview: "/architecture/foundation-platform.svg",
+    repo: "https://github.com/olawaleemmanuel09/Christ-Heart-Empowerment-Foundation"
   },
   {
     slug: "academy-platform",
@@ -619,6 +636,10 @@ export const projects: Project[] = [
     outcome: [
       "Teaching work is presented separately from commercial case studies."
     ],
+    decision: {
+      title: "Student submissions need a trustworthy review state",
+      body: "A cohort learning workflow must distinguish an uploaded or submitted assignment from a teacher's review and recorded feedback. Implementation details beyond the existing source and screenshots require further verification."
+    },
     media: []
   }
 ];
