@@ -15,10 +15,10 @@ export default function WorkRow({ project: p, index, total }: { project: Project
   return (
     <li className="featured-case-card min-w-0">
       <Link href={"/work/" + p.slug} className="featured-case-link group flex h-full min-w-0 flex-col overflow-hidden rounded-[1.2rem] border border-[#e2e0ea] bg-white" aria-label={"Explore case study: " + p.title}>
-        <div className={"featured-artboard relative isolate flex aspect-[16/10] items-center justify-center overflow-hidden px-6 pb-7 pt-12 sm:aspect-[16/9] sm:px-10 " + (tones[p.slug] || "featured-artboard--lavender")}>
+        <div className={"featured-artboard relative isolate flex aspect-[4/3] items-center justify-center overflow-hidden px-6 pb-7 pt-12 sm:aspect-[16/9] sm:px-10 " + (tones[p.slug] || "featured-artboard--lavender")}>
           <div className="absolute inset-x-6 top-5 z-10 flex items-center justify-between gap-3 text-[0.63rem] font-bold uppercase tracking-[0.14em] text-[#484354] sm:inset-x-9">
             <span>System / {String(index + 1).padStart(2, "0")}</span>
-            <span>Architecture study</span>
+            <span className="hidden sm:inline">Architecture study</span>
           </div>
           <div className="featured-architecture-frame relative z-[1] w-full max-w-[570px] overflow-hidden rounded-lg border border-[#ddd9e6] bg-[#f8fafc] shadow-[0_26px_50px_-34px_rgba(26,19,52,0.65)]">
             {p.preview ? (

@@ -21,6 +21,8 @@ with sync_playwright() as playwright:
                 assert page.locator(".hero-statement").count() == 1
                 assert page.get_by_role("figure", name="Illustrative AI systems architecture").count() == 1
                 assert page.locator(".featured-case-card").count() == 6
+                if width == 320:
+                    assert page.locator(".featured-artboard").first.evaluate("el => el.getBoundingClientRect().height >= 200")
                 assert page.locator(".featured-case-card img").count() == 6
                 assert page.get_by_role("link", name="Explore selected work").get_attribute("href") == "#work"
                 assert page.get_by_role("link", name="Explore selected work").evaluate("el => getComputedStyle(el).color") == "rgb(255, 255, 255)"
