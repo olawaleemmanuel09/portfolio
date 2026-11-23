@@ -7,10 +7,8 @@ export default function SelectedWork() {
     <section id="work" className="mx-auto max-w-[1180px] px-6 pb-8 pt-24 md:px-8 md:pt-32">
       <Reveal>
         <div className="mb-14 flex items-baseline justify-between gap-6">
-          <span className="mask block">
-            <span className="t-h2">Selected work</span>
-          </span>
-          <span className="t-small text-muted">Six systems in production</span>
+          <h2 className="t-h2">Selected systems</h2>
+
         </div>
         <span className="rule-draw mb-4 block h-px w-full bg-rule" />
       </Reveal>

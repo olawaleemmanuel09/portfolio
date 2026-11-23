@@ -67,6 +67,10 @@ logs: every failure path logs a line beginning `[contact]`.
 - `lib/animations/` — `useReveal` (enter once) and `useActive` (active while in
   the middle band of the viewport, which is what drives the work list on mobile)
 
+## Search and sharing
+
+Set `SITE_URL` to the public production origin before building to generate canonical URLs, the sitemap and social image links for that domain. It defaults to https://olawaleolaonipekun.vercel.app.
+
 ## Deploying
 
 Push to GitHub, import the repo on Vercel, add the two environment variables,

@@ -58,7 +58,8 @@ export async function POST(request: Request) {
   // Only accept submissions from this site's own pages.
   const origin = request.headers.get("origin");
   const host = request.headers.get("host");
-  if (origin) {
+  if (!origin) return NextResponse.json({ error: "Request rejected." }, { status: 403 });
+  {
     try {
       if (new URL(origin).host !== host) {
         return NextResponse.json({ error: "Request rejected." }, { status: 403 });
@@ -92,6 +93,10 @@ export async function POST(request: Request) {
   }
 
   // Honeypot. Answer 200 so the bot believes it worked and does not retry.
+  if (!body || typeof body !== "object" || Array.isArray(body)) {
+    return NextResponse.json({ error: "Malformed request." }, { status: 400 });
+  }
+
   if (clean(body.website, 50)) {
     return NextResponse.json({ ok: true });
   }
@@ -144,8 +149,7 @@ export async function POST(request: Request) {
   ].join("\n");
 
   try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10_000);
+
 
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -160,14 +164,14 @@ export async function POST(request: Request) {
         subject: `Portfolio enquiry from ${name}`,
         text,
       }),
-      signal: controller.signal,
+      signal: AbortSignal.timeout(10_000),
     });
 
-    clearTimeout(timeout);
+
 
     if (!res.ok) {
       // Log the provider's reason, never return it: it can echo configuration.
-      console.error("[contact] Resend rejected the message", res.status, await res.text());
+      console.error("[contact] Resend rejected the message", res.status);
       return NextResponse.json(
         { error: "That did not send. Please email me directly." },
         { status: 502 }
@@ -175,8 +179,8 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json({ ok: true });
-  } catch (error) {
-    console.error("[contact] Request to Resend failed", error);
+  } catch {
+    console.error("[contact] Request to Resend failed");
     return NextResponse.json(
       { error: "That did not send. Please email me directly." },
       { status: 502 }

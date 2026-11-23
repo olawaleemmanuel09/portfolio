@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { siteUrl } from "@/lib/site";
 import localFont from "next/font/local";
 import "./globals.css";
 import SmoothScroll from "@/components/motion/SmoothScroll";
@@ -14,20 +15,13 @@ const archivo = localFont({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://olawaleemmanuel09.github.io"),
+  metadataBase: siteUrl,
   title: {
-    default: "Olawale Emmanuel Olaonipekun — AI Automation Engineer",
+    default: "Olawale Emmanuel Olaonipekun — AI Engineer — Growth & Automation Systems",
     template: "%s — Olawale Emmanuel Olaonipekun",
   },
   description:
-    "I build automation systems that run in production: ordering pipelines, lead engines and operations platforms for businesses in Nigeria and beyond.",
-  openGraph: {
-    type: "website",
-    title: "Olawale Emmanuel Olaonipekun — AI Automation Engineer",
-    description:
-      "Automation systems that run in production. n8n, Supabase, Python and LLMs.",
-    siteName: "Olawale Emmanuel Olaonipekun",
-  },
+    "Olawale Emmanuel Olaonipekun builds AI solutions and CRM integrations in Lagos. Explore CEFA cohort operations, restaurant commerce and growth systems.",
   twitter: { card: "summary_large_image", creator: "@LaoniAI" },
   robots: { index: true, follow: true },
 };

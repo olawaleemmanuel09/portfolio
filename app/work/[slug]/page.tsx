@@ -19,9 +19,15 @@ export async function generateMetadata({
   const project = getProject(slug);
   if (!project) return {};
   return {
+    alternates: { canonical: `/work/${project.slug}` },
     title: `${project.title} — Case study`,
     description: project.summary,
-    openGraph: { title: project.title, description: project.summary },
+    openGraph: {
+      type: "article",
+      title: project.title,
+      description: project.summary,
+      images: project.preview ? [project.preview] : [],
+    },
   };
 }
 
@@ -40,7 +46,7 @@ export default async function CaseStudy({
   return (
     <article className="mx-auto max-w-[1180px] px-6 pb-24 pt-32 md:px-8 md:pt-40">
       <header className="border-b border-rule pb-12 md:pb-14">
-        <Link href="/#work" className="link-underline t-small text-muted">
+        <Link href="/work" className="link-underline t-small text-muted">
           Back to work
         </Link>
 
@@ -175,14 +181,14 @@ export default async function CaseStudy({
       )}
 
       <section className="grid gap-12 border-t border-rule py-14 md:py-20 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:gap-20">
-        <h2 className="t-h2">Where it stands</h2>
+        <h2 className="t-h2">Delivery and evidence</h2>
         <div>
           {project.outcome.map((o, i) => (
             <p key={i} className="t-body prose-justify mt-5 text-muted first:mt-0">
               {o}
             </p>
           ))}
-          <p className="t-body prose-justify measure-wide mt-10">{project.demonstrates}</p>
+
         </div>
       </section>
 

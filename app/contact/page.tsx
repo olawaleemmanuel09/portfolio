@@ -3,6 +3,7 @@ import ContactForm from "@/components/sections/ContactForm";
 import MaskLines from "@/components/motion/MaskLines";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/contact" },
   title: "Contact",
   description:
     "Get in touch about automation engineering roles or contract work. Based in Lagos, working remotely.",
@@ -27,7 +28,7 @@ export default function Contact() {
 
         <aside data-hero="1">
           <p className="t-body prose-justify text-muted">
-            Open to automation engineer roles, remote or Lagos-based, and to
+            Open to AI engineering roles, remote or Lagos-based, and to
             contract work. I reply to everything within a day.
           </p>
 

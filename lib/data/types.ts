@@ -25,7 +25,7 @@ export type Project = {
   approach: Block[];
   decision?: Block;
   outcome: string[];
-  demonstrates: string;
+  demonstrates?: string;
   media: Media[];
   preview?: string;
   repo?: string;

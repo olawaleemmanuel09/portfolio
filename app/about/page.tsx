@@ -5,9 +5,10 @@ import Parallax from "@/components/motion/Parallax";
 import MaskLines from "@/components/motion/MaskLines";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/about" },
   title: "About",
   description:
-    "Automation engineer in Lagos. I build systems that run production operations for restaurants, event companies and foundations.",
+    "AI Engineer — Growth & Automation Systems in Lagos. I build systems that run production operations for restaurants, event companies and foundations.",
 };
 
 const process = [
@@ -34,8 +35,8 @@ export default function About() {
             sales pipelines, and internal workflows that keep teams moving.
           </p>
           <p className="t-body prose-justify mt-5 text-muted">
-            Six systems I have built are currently in production across a
-            multi-branch restaurant group, an events company and a foundation.
+            At FOC I worked on event operations and CEFA cohort access. In commerce,
+            I connected ordering and payment confirmation so kitchen staff can act on the same record.
           </p>
           <p className="t-body prose-justify mt-5 text-muted">
             My focus is the unglamorous part: idempotency, error paths,

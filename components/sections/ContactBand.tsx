@@ -15,7 +15,7 @@ export default function ContactBand() {
         <Reveal delay={120} variant="soft">
           <div className="md:text-right">
             <p className="t-body measure-read text-muted md:ml-auto">
-              Open to automation engineer roles and contract work.
+              Open to AI engineering roles and contract work.
             </p>
             <Link
               href="/contact"

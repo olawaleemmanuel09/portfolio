@@ -322,3 +322,9 @@ a { color: inherit; text-decoration: none; }
   .work-row .row-media-inner { transform: none; }
   .work-row .row-line { transform: scaleX(1); }
 }
+
+@media (scripting: none) {
+  .mask > span, .rule-draw { transform: none; }
+  [data-reveal], [data-hero] { opacity: 1; }
+  .wipe, .work-row .row-media { clip-path: none; }
+}

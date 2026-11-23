@@ -1,17 +1,28 @@
+import type { Metadata } from "next";
 import Hero from "@/components/sections/Hero";
 import AboutPreview from "@/components/sections/AboutPreview";
-import ProofVideo from "@/components/sections/ProofVideo";
 import SelectedWork from "@/components/sections/SelectedWork";
 import MoreWork from "@/components/sections/MoreWork";
 import ContactBand from "@/components/sections/ContactBand";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    title: "Olawale Emmanuel Olaonipekun — AI Engineer — Growth & Automation Systems",
+    description:
+      "Case studies in conversational ordering, sales qualification and event operations.",
+    images: ["/work/headshot.jpg"],
+    siteName: "Olawale Emmanuel Olaonipekun",
+  },
+};
 
 export default function Home() {
   return (
     <>
       <Hero />
-      <AboutPreview />
-      <ProofVideo />
       <SelectedWork />
+      <AboutPreview />
       <MoreWork />
       <ContactBand />
     </>

@@ -11,29 +11,23 @@ export default function AboutPreview() {
           <Reveal>
             <span className="mask block">
               <span className="t-display-sm">
-                Building systems that stay up.
+                Making a workflow recoverable
               </span>
             </span>
           </Reveal>
 
           <Reveal delay={80} variant="soft">
             <p className="t-body prose-justify mt-7">
-              I am Olawale Emmanuel Olaonipekun. I build the automation that
-              businesses depend on between nine and nine: ordering pipelines
-              that take money, lead engines that fill a sales calendar,
-              operations platforms that tell a team what is happening before
-              anyone has to ask.
+              A workflow patch can change how a live order moves through the business.
+              Before editing it, I want a known state to recover and a way to verify the restore.
             </p>
             <p className="t-body prose-justify mt-4 text-muted">
-              Six systems of mine are in production right now for a
-              multi-branch restaurant group, an events company and a
-              foundation. I care most about the unglamorous half: idempotency,
-              error paths, credential handling, and what happens at 2am when a
-              third-party API returns something nobody planned for.
+              My published n8n playbook chapter walks through taking a snapshot before a change.
+              It gives the next engineer a concrete starting point for a rollback.
             </p>
 
-            <Link href="/about" className="link-underline t-small mt-8 inline-block" style={{ fontVariationSettings: '"wdth" 100, "wght" 560' }}>
-              More about how I work
+            <Link href="https://github.com/olawaleemmanuel09/n8n-production-playbook" className="link-underline t-small mt-8 inline-block" style={{ fontVariationSettings: '"wdth" 100, "wght" 560' }}>
+              Read the production playbook on GitHub
             </Link>
           </Reveal>
         </div>

@@ -1,21 +1,17 @@
-import { others } from "@/lib/data/projects";
-import Reveal from "@/components/motion/Reveal";
-import MoreRow from "@/components/sections/MoreRow";
+import Link from "next/link";
+import { getProject } from "@/lib/data/projects";
 
 export default function MoreWork() {
+  const jobs = getProject("ai-job-scraper")!;
   return (
-    <section className="mx-auto max-w-[1180px] px-6 pb-24 pt-24 md:px-8 md:pb-32 md:pt-28">
-      <Reveal>
-        <div className="mb-12">
-          <span className="mask block"><span className="t-h2">Also built</span></span>
-          <span className="rule-draw mt-6 block h-px w-full bg-rule" />
-        </div>
-      </Reveal>
-      <ul className="grid gap-x-12 gap-y-0 md:grid-cols-2">
-        {others.map((p) => (
-          <MoreRow key={p.slug} project={p} />
-        ))}
-      </ul>
+    <section id="engineering-lab" className="mx-auto max-w-[1180px] px-6 py-20 md:px-8">
+      <h2 className="t-small text-muted">Engineering lab</h2>
+      <h3 className="t-display-sm mt-4">{jobs.title}</h3>
+      <p className="t-body mt-5 max-w-[60ch]">{jobs.summary}</p>
+      <div className="mt-7 flex flex-wrap gap-6">
+        <Link className="link-underline" href={`/work/${jobs.slug}`}>Compare the two editions</Link>
+        <Link className="link-underline" href="/work#lab">Explore the lab</Link>
+      </div>
     </section>
   );
 }
