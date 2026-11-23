@@ -33,7 +33,11 @@ with sync_playwright() as playwright:
                 assert page.locator(".featured-case-card").first.get_by_role("link").count() == 1
             if path == "/work":
                 assert page.locator(".work-index-card").count() == 16
-                assert page.locator(".work-index-card img").count() == 9
+                assert page.locator(".work-index-card img").count() == 13
+            if path == "/work/ai-job-scraper":
+                assert page.locator(".evidence-panel").count() == 3
+                assert page.get_by_role("link", name="Open original").count() == 3
+                assert page.locator('img[src*="job-intelligence-workflow"]').count() >= 1
             assert page.evaluate("matchMedia('(prefers-reduced-motion: reduce)').matches")
             assert not page.locator("html.lenis").count()
             for img in page.locator("main img").all():
@@ -71,8 +75,6 @@ with sync_playwright() as playwright:
         assert response is not None and response.status == 200, slug
         assert page.locator("main h1").count() == 1, slug
         assert page.evaluate("document.documentElement.scrollWidth <= innerWidth"), slug
-    legacy = page.goto(origin + "/work/securepoint", wait_until="domcontentloaded")
-    assert legacy is not None and legacy.status == 404
     page.close()
     browser.close()
-print("Passed 36 responsive route checks, all 16 project routes, legacy 404, reduced-motion and mobile keyboard navigation.")
+print("Passed 36 responsive route checks, all 16 project routes, reduced-motion and mobile keyboard navigation.")

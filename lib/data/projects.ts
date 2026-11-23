@@ -393,7 +393,7 @@ export const projects: Project[] = [
     status: "personal",
     statusLabel: "Private system · public teaching export",
     period: "Reviewed November 2026",
-    summary: "A private seven-source job discovery operation reported by the owner, with Telegram notifications. The public evidence verifies an older Adzuna/Gemini export; the current private sources and executions await independent verification.",
+    summary: "An archived n8n screenshot shows seven job-source branches feeding deduplication, Gemini scoring and Telegram alerts. The public repository contains an older one-source teaching export; current private operations require separate verification.",
     stack: [
       "n8n",
       "Adzuna",
@@ -420,7 +420,7 @@ export const projects: Project[] = [
       }
     ],
     outcome: [
-      "Seven-source operation is owner-reported. The public artifact verifies the earlier graph and does not establish private source availability or scoring accuracy."
+      "Archived screenshots document seven editor source branches and example Telegram alerts. They do not verify the current deployed graph, authenticated recent executions or scoring accuracy."
     ],
     decision: {
       title: "Filter before calling the model",

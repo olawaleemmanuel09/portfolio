@@ -26,7 +26,7 @@ test("only independently public GitHub repositories are linked as proof", () => 
 });
 test("architecture diagrams are valid named, text-described public assets", () => {
   const paths = [...catalog.matchAll(/preview: "(\/architecture\/[^"]+\.svg)"/g)].map(x => x[1]);
-  assert.equal(paths.length, 9);
+  assert.equal(paths.length, 8);
   for (const path of paths) {
     const file = "public" + path;
     assert.equal(existsSync(new URL("../" + file, import.meta.url)), true, file);
@@ -41,4 +41,12 @@ test("release-scope boundaries are explicit", () => {
   for (const section of ["Management dashboard", "Branch Manager dashboard", "Kitchen dashboard", "Accountant dashboard", "Manual dispatch"]) assert.ok(evidence.includes(section), section);
   assert.match(evidence, /requires-verification/);
   assert.match(evidence, /not independently verified screenshots/);
+});
+
+test("archived media files exist and have provenance entries", () => {
+  const media = [...catalog.matchAll(/src: "(\/evidence\/[^"]+\.(?:png|jpg))"/g)].map(x => x[1]);
+  assert.equal(media.length, 9);
+  assert.equal(new Set(media).size, 9);
+  for (const src of media) assert.ok(existsSync(new URL("../public" + src, import.meta.url)), src);
+  assert.match(read("docs/review/CASE_STUDY_VISUAL_EVIDENCE.md"), /original Git blobs/);
 });
