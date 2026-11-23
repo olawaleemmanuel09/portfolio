@@ -17,3 +17,7 @@
 - **Not remediated by this branch:** historical Git commits, old Vercel deployments and previously shared assets. Investigate exposure separately with owner authorization; do not rewrite Git history, purge or remove any production resources from this task.
 
 **Review state:** source substitutions completed on the implementation branch. Automated and hosted rendering checks, historical exposures and client publication permissions remain separate release gates.
+
+## Private-term scan implementation
+
+`scripts/check-private-names.mjs` accepts `PORTFOLIO_PRIVATE_TERMS_FILE`, a newline-separated list of private identifiers stored **outside the repository**. It scans public source/docs and locally built server output without echoing the restricted values. Invoke it after a clean build; failure exits nonzero with file paths only. It intentionally does not run with placeholder names or embed private identities in committed tests. An owner-provided external input is required to certify the full scan. Prior commits on the review branch and historical deployments remain separate exposure concerns.

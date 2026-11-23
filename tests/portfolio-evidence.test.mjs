@@ -11,13 +11,18 @@ test("all project case studies and approved public aliases remain available", ()
   assert.ok(catalog.includes('slug: "security-workforce-operations"'));
   assert.ok(catalog.includes("Accountant") || evidence.includes("Accountant dashboard"));
 });
-test("repository public-content snapshot does not include retired private brand identifiers", () => {
-  // Keep identifiers out of committed source; assemble test-only values from fragments.
-  const restricted = [["ama", "lasky"], ["amala", "ride"], ["secure", "point"]].map(xs => xs.join(""));
-  for (const file of files) {
-    const normalized = read(file).toLowerCase().replace(/[\s-]/g, "");
-    for (const word of restricted) assert.equal(normalized.includes(word), false, "Restricted identity found in " + file);
-  }
+test("only independently public GitHub repositories are linked as proof", () => {
+  const linked = [...catalog.matchAll(/    repo: "(https:\/\/github\.com\/[^"]+)"/g)].map(x => x[1]).sort();
+  const approved = [
+    "https://github.com/olawaleemmanuel09/Christ-Heart-Empowerment-Foundation",
+    "https://github.com/olawaleemmanuel09/ai-job-alert-system",
+    "https://github.com/olawaleemmanuel09/lead-capture-crm-sync",
+    "https://github.com/olawaleemmanuel09/lead-intelligence-pipeline",
+    "https://github.com/olawaleemmanuel09/smartbook-ai-automation"
+  ].sort();
+  assert.deepEqual(linked, approved);
+  assert.ok(evidence.includes("reconciliation"), "Accounting scope is described");
+  assert.ok(evidence.includes("real-device"), "Field acceptance limitations are described");
 });
 test("architecture diagrams are valid named, text-described public assets", () => {
   const paths = [...catalog.matchAll(/preview: "(\/architecture\/[^"]+\.svg)"/g)].map(x => x[1]);
