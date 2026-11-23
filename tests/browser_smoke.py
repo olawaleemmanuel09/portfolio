@@ -34,6 +34,8 @@ with sync_playwright() as playwright:
             if path == "/work":
                 assert page.locator(".work-index-card").count() == 16
                 assert page.locator(".work-index-card img").count() == 13
+            if path in ("/work/cefa", "/work/ai-job-scraper"):
+                assert page.locator("[data-case-hero] img").count() == 1
             if path == "/work/ai-job-scraper":
                 assert page.locator(".evidence-panel").count() == 3
                 assert page.get_by_role("link", name="Open original").count() == 3

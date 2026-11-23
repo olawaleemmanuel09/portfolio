@@ -54,13 +54,13 @@ export default async function CaseStudy({
 
         <div className={project.preview ? "mt-8 grid items-center gap-9 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-14" : "mt-8"}>
           <div>
-          <h1 className="t-display max-w-[18ch]" data-hero="0">
+            <h1 className="t-display max-w-[18ch]" data-hero="0">
             <span className="mask block">
               <span>{project.title}</span>
             </span>
           </h1>
   
-          <p className="t-lead mt-6 max-w-[60ch] text-muted" data-hero="1">{project.summary}</p>
+            <p className="t-lead mt-6 max-w-[60ch] text-muted" data-hero="1">{project.summary}</p>
   
           </div>
           {project.preview && <CaseHeroVisual project={project} />}

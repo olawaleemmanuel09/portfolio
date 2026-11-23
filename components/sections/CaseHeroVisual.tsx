@@ -25,11 +25,11 @@ export default function CaseHeroVisual({ project }: { project: Project }) {
             priority
           />
         </div>
-        <figcaption className="mt-4 flex items-center justify-between gap-4 text-[0.76rem] leading-[1.45] text-[#615972]">
-          <span>{archived ? "Earlier implementation; current verification below" : "Illustrative system model; not a live dashboard"}</span>
-          <span className="shrink-0 font-semibold text-[var(--color-accent-deep)]">Explore evidence ↓</span>
-        </figcaption>
       </a>
+      <figcaption className="flex flex-wrap items-center justify-between gap-3 px-4 pb-5 text-[0.76rem] leading-[1.45] text-[#615972] sm:px-6">
+        <span>{archived ? "Earlier implementation; current verification below" : "Illustrative system model; not a live dashboard"}</span>
+        <a className="link-underline font-semibold text-[var(--color-accent-deep)]" href="#case-visual-evidence">Explore evidence ↓</a>
+      </figcaption>
     </figure>
   );
 }
