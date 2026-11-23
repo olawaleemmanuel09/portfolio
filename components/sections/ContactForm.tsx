@@ -61,14 +61,14 @@ export default function ContactForm() {
       <div className="border-t border-ink pt-8" data-hero="1">
         <p className="t-display-sm">Message received.</p>
         <p className="t-body mt-4 text-muted">
-          I will reply within a day. If it is urgent, email is faster.
+          Thank you for sharing the details.
         </p>
       </div>
     );
   }
 
   return (
-    <form onSubmit={onSubmit} className="grid gap-7" data-hero="1" noValidate>
+    <form method="post" action="/api/contact" onSubmit={onSubmit} className="grid gap-7" data-hero="1" noValidate>
       <Field name="name" label="Name" required />
       <Field name="email" label="Email" type="email" required />
       <Field name="company" label="Company" />
@@ -101,6 +101,8 @@ export default function ContactForm() {
           className="t-body resize-none border-b border-rule bg-transparent py-2 outline-none transition-colors focus:border-[var(--color-accent)]"
         />
       </div>
+
+      <p className="t-small text-muted">Your contact details and message are emailed to Olawale so he can reply. Please leave out confidential client information.</p>
 
       {/* spam trap, never shown to a person */}
       <input

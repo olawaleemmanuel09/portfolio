@@ -17,3 +17,7 @@ Review snapshot. Repository references identify the checked-out revision and evi
 ## Implementation and review
 
 Retain the App Router, existing case-study template and legacy slugs. Serve business systems and personal work from one typed catalog. Put CEFA first and distinguish release maturity in each entry. Keep technical walkthroughs readable without client-side effects. Gate new client media, testimonials, public tenant links and CV on owner clearance. Intended canonical domain comes from the brief; Vercel project mapping requires account access.
+
+## Current CEFA test observation
+
+At 9e5e41b, a local read-only execution of tests/cefa-chat-recovery.test.mjs passed four of five tests. The visibility-change test stops at a missing refreshStudentNotifications callback in its VM fixture. The callback exists in the application module. This result does not certify deployed reconnect behavior. No external requests or production tests were run.

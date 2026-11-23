@@ -8,6 +8,7 @@ const links = [
   { href: "/work", label: "Work" },
   { href: "/work#lab", label: "Engineering lab" },
   { href: "/about", label: "About" },
+  { href: "/resume", label: "CV" },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -83,6 +84,7 @@ export default function Header() {
             ))}
           </nav>
 
+          <noscript><Link className="md:hidden" href="/work">Work</Link></noscript>
           <button
             onClick={() => setOpen(true)}
             className="t-small md:hidden"
@@ -98,6 +100,7 @@ export default function Header() {
         id="menu"
         data-open={open}
         className="fixed inset-0 z-50 flex flex-col bg-paper px-6 py-5 transition-[clip-path] duration-[620ms] [clip-path:inset(0_0_100%_0)] [transition-timing-function:var(--ease-out-expo)] data-[open=true]:[clip-path:inset(0_0_0_0)] md:hidden"
+        inert={!open}
         aria-hidden={!open}
       >
         <div className="flex items-center justify-between">

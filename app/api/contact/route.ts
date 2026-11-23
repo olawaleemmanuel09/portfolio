@@ -58,15 +58,8 @@ export async function POST(request: Request) {
   // Only accept submissions from this site's own pages.
   const origin = request.headers.get("origin");
   const host = request.headers.get("host");
-  if (!origin) return NextResponse.json({ error: "Request rejected." }, { status: 403 });
-  {
-    try {
-      if (new URL(origin).host !== host) {
-        return NextResponse.json({ error: "Request rejected." }, { status: 403 });
-      }
-    } catch {
-      return NextResponse.json({ error: "Request rejected." }, { status: 403 });
-    }
+  if (!host || !origin || ![`https://${host}`, `http://${host}`].includes(origin)) {
+    return NextResponse.json({ error: "Request rejected." }, { status: 403 });
   }
 
   if (!request.headers.get("content-type")?.includes("application/json")) {

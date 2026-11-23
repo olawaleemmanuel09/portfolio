@@ -1,4 +1,4 @@
-export type ProjectStatus = "production" | "build" | "capstone";
+export type ProjectStatus = "production" | "staging" | "prototype" | "delivered" | "capstone" | "personal";
 
 export type Media = {
   src: string;
