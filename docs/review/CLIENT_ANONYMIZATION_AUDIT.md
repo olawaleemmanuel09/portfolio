@@ -29,3 +29,7 @@ The release scanner now inspects all files under `public` and `.next`, including
 Synthetic tests independently verify clean scans, leaked public assets, compiled JavaScript/RSC leaks, filename-only leaks, missing build outputs, and private input stored inside the checkout. These fixtures intentionally use an invented organization; **the real restricted-name input remains external and must be supplied and run by the owner before publication**.
 
 This checks normalized cleartext and embedded UTF-8 metadata, not encoded/base64 content, previously deployed versions, or Git history. A clean result does not confer client publication permission.
+
+## Finished-build verification
+
+After Codex's third review, the private-name scanner requires a nonempty Next.js build ID, parseable route/prerender manifests, a compiled server app and browser JS/CSS output. Empty directories no longer qualify as a completed build. Two synthetic regression tests verify that empty or interrupted build trees fail closed. The CI synthetic check also scans a genuine `next build` output; an actual release still requires the externally held private identifiers.

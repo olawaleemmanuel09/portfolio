@@ -45,11 +45,38 @@ if (!terms.length || terms.some(x => x.length < 3)) {
 }
 const normalize = text => text.toLowerCase().replace(/[^a-z0-9]/g, "");
 const roots = ["README.md", "app", "components", "lib", "docs", "public", ".next", "out"];
-const required = ["public", ".next/server", ".next/static"];
+const required = ["public", ".next/server/app", ".next/static"];
 for (const path of required) {
   if (!existsSync(join(root, path))) {
     abort("Production build outputs or public assets are missing; run the production build first.");
   }
+}
+// Empty output directories are not evidence that Next.js finished its build.
+for (const marker of [".next/BUILD_ID", ".next/routes-manifest.json", ".next/prerender-manifest.json"]) {
+  try {
+    const path = join(root, marker);
+    if (!lstatSync(path).isFile() || !readFileSync(path).length) {
+      abort("Incomplete production build: required artifact is missing.");
+    }
+    if (marker.endsWith(".json")) JSON.parse(readFileSync(path, "utf8"));
+  } catch {
+    abort("Incomplete production build: required artifact is missing or invalid.");
+  }
+}
+function hasCompiledOutput(directory, extensions) {
+  function visit(path) {
+    const info = lstatSync(path);
+    if (info.isSymbolicLink()) return false;
+    if (info.isFile()) return info.size > 0 && extensions.some(ext => path.endsWith(ext));
+    if (!info.isDirectory()) return false;
+    return readdirSync(path).some(name => visit(join(path, name)));
+  }
+  try { return visit(join(root, directory)); }
+  catch { return false; }
+}
+if (!hasCompiledOutput(".next/server/app", [".js", ".html", ".rsc"]) ||
+    !hasCompiledOutput(".next/static", [".js", ".css"])) {
+  abort("Incomplete production build: compiled application or browser output absent.");
 }
 let inspected = 0;
 let violations = 0;

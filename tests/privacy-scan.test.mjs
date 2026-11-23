@@ -17,6 +17,11 @@ function setup(t, withBuild = true) {
   if (withBuild) {
     mkdirSync(join(root, ".next", "server", "app"), { recursive: true });
     mkdirSync(join(root, ".next", "static", "chunks"), { recursive: true });
+    writeFileSync(join(root, ".next", "BUILD_ID"), "synthetic-build-revision");
+    writeFileSync(join(root, ".next", "routes-manifest.json"), "{}");
+    writeFileSync(join(root, ".next", "prerender-manifest.json"), "{}");
+    writeFileSync(join(root, ".next", "server", "app", "page.js"), "export default function Page() {}");
+    writeFileSync(join(root, ".next", "static", "chunks", "framework.js"), "console.log('synthetic')");
   }
   writeFileSync(terms, syntheticIdentity + "\n");
   return { root, terms };
@@ -74,4 +79,21 @@ test("refuses to use a private identifier file kept inside the repository", t =>
   const result = run(root, unsafe);
   assert.equal(result.status, 2);
   assert.match(result.stderr, /inside the repository/i);
+});
+
+test("rejects empty output directories despite public content", t => {
+  const {root, terms} = setup(t, false);
+  mkdirSync(join(root, ".next", "server", "app"), { recursive: true });
+  mkdirSync(join(root, ".next", "static", "chunks"), { recursive: true });
+  put(root, "public/index.html", "Safe public content");
+  const result = run(root, terms);
+  assert.equal(result.status, 2);
+  assert.match(result.stderr, /build/i);
+});
+test("rejects interrupted build missing browser output", t => {
+  const {root, terms} = setup(t);
+  rmSync(join(root, ".next", "static", "chunks", "framework.js"));
+  const result = run(root, terms);
+  assert.equal(result.status, 2);
+  assert.match(result.stderr, /compiled application|incomplete production/i);
 });
