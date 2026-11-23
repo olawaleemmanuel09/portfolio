@@ -326,6 +326,10 @@ export const projects: Project[] = [
         body: "In the 10-node export, a scheduled request collects Adzuna results. Subsequent nodes filter roles, remove seen jobs, request a Gemini score and send strong matches to Telegram."
       },
       {
+        title: "A second teaching example",
+        body: "A separate seven-node classroom exercise reads one We Work Remotely RSS feed. Its archived graph shows filtering, duplicate removal, Gemini and Telegram. The archive contains the structure only."
+      },
+      {
         title: "Verify the editions separately",
         body: "The public JSON is saved inactive. Independent verification of the private edition requires a redacted current graph and dated run record."
       }
