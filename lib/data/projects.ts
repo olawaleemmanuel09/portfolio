@@ -880,6 +880,12 @@ export const projects: Project[] = [
     client: "Independent lead-intelligence product",
     status: "prototype",
     statusLabel: "Private research pipeline · evidence review",
+    ownerReportedProgress: {
+      value: "50,000",
+      label: "Prospects discovered",
+      asOf: "November 2026",
+      note: "Owner-reported progress. Live database and qualified-for-call totals have not been independently verified."
+    },
     period: "Owner progress report, November 2026",
     summary: "LeadReach is an independent prospect-discovery effort. The owner reports 50,000 prospects discovered; the current live database and number qualified for calls are not yet independently verified.",
     stack: ["n8n", "API integrations", "Data qualification"],

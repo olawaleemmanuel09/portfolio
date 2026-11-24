@@ -117,6 +117,17 @@ export default async function CaseStudy({
               </section>
             )}
 
+            {project.ownerReportedProgress && (
+              <aside className="case-owner-progress" aria-label="Owner-reported project progress">
+                <div>
+                  <p className="case-owner-progress-label">OWNER-REPORTED PROGRESS / {project.ownerReportedProgress.asOf}</p>
+                  <strong>{project.ownerReportedProgress.value}</strong>
+                  <span>{project.ownerReportedProgress.label}</span>
+                </div>
+                <p>{project.ownerReportedProgress.note}</p>
+              </aside>
+            )}
+
             {(project.live || project.repo) && (
               <div className="case-cinema-external">
                 {project.live && <a href={project.live} target="_blank" rel="noopener noreferrer">Visit published site ↗</a>}

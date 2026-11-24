@@ -61,6 +61,20 @@ with sync_playwright() as playwright:
                 assert page.get_by_text("Verified operating snapshot", exact=True).count() == 1
                 for number in ("127", "10", "113"):
                     assert page.locator('[aria-label="Verified project metrics"]').get_by_text(number, exact=True).count() == 1
+            if path == "/work/cefa" and javascript and width == 375:
+                opener = page.locator(".evidence-image-link").first
+                opener.click()
+                viewer = page.locator(".evidence-theatre-dialog")
+                assert viewer.is_visible(), "Evidence theatre did not open"
+                assert "01" in viewer.locator(".evidence-theatre-dialog-count").inner_text()
+                page.keyboard.press("ArrowRight")
+                assert "02" in viewer.locator(".evidence-theatre-dialog-count").inner_text()
+                page.keyboard.press("Escape")
+                assert not viewer.is_visible(), "Escape did not close image theatre"
+                assert opener.evaluate("el => el === document.activeElement"), "Focus must return to opening image"
+            if path == "/work/cefa" and not javascript:
+                assert page.locator(".evidence-image-link").first.get_attribute("href").endswith("learning-portal-sign-in.jpg")
+                assert page.locator(".evidence-theatre-index-link").count() == 4
             if path == "/work/ai-job-scraper":
                 assert page.locator(".evidence-panel").count() == 4
                 assert page.get_by_role("link", name="Open original").count() == 3
