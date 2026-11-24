@@ -70,18 +70,18 @@ export default function Header() {
           scrolled ? "border-b border-rule bg-paper/90 backdrop-blur-md" : "border-b border-transparent"
         }`}
       >
-        <div className="mx-auto flex max-w-[1180px] items-center justify-between px-6 py-5 md:px-8">
+        <div className="mx-auto flex max-w-[1320px] items-center justify-between px-6 py-4 md:px-8 lg:px-12">
           <Link
             href="/"
-            className="t-small"
-            style={{ fontVariationSettings: '"wdth" 92, "wght" 560' }}
+            className="studio-header-brand"
           >
-            Olawale Olaonipekun
+            <span className="studio-header-monogram" aria-hidden="true">OO.</span>
+            <span>Olawale Olaonipekun</span>
           </Link>
 
-          <nav className="hidden items-center gap-8 md:flex">
+          <nav className="hidden items-center gap-4 md:flex lg:gap-7">
             {links.map((l) => (
-              <Link key={l.href} href={l.href} className="t-small group relative py-1">
+              <Link key={l.href} href={l.href} className="t-small group relative py-1 studio-nav-link">
                 {l.label}
                 <span className="absolute bottom-0 left-0 h-px w-full origin-right scale-x-0 bg-[var(--color-accent)] transition-transform duration-[400ms] [transition-timing-function:var(--ease-out-expo)] group-hover:origin-left group-hover:scale-x-100" />
               </Link>
@@ -91,7 +91,7 @@ export default function Header() {
           <noscript><Link className="md:hidden" href="/work">Work</Link></noscript>
           <button
             onClick={() => { menu.current?.showModal(); setOpen(true); }}
-            className="t-small md:hidden"
+            className="t-small md:hidden studio-mobile-menu"
             aria-expanded={open}
             aria-controls="menu"
           >
