@@ -5,6 +5,8 @@ export const dynamic = "force-dynamic";
 
 const WINDOW_MS = 10 * 60 * 1000;
 const MAX_PER_WINDOW = 3;
+const MAX_TRACKED_IPS = 500;
+const MAX_BODY_BYTES = 32 * 1024;
 
 /**
  * Per-IP throttle. Serverless instances are not shared, so this is a speed
@@ -15,6 +17,14 @@ const hits = new Map<string, number[]>();
 
 function rateLimited(ip: string) {
   const now = Date.now();
+  // Bound the map even under a burst of distinct addresses. Fail closed for
+  // new addresses at capacity; existing entries still follow their window.
+  if (hits.size >= MAX_TRACKED_IPS) {
+    for (const [key, times] of hits) {
+      if (times.every((t) => now - t >= WINDOW_MS)) hits.delete(key);
+    }
+    if (!hits.has(ip) && hits.size >= MAX_TRACKED_IPS) return true;
+  }
   const recent = (hits.get(ip) ?? []).filter((t) => now - t < WINDOW_MS);
 
   if (recent.length >= MAX_PER_WINDOW) {
@@ -24,13 +34,6 @@ function rateLimited(ip: string) {
 
   recent.push(now);
   hits.set(ip, recent);
-
-  // keep the map from growing without bound on a long-lived instance
-  if (hits.size > 500) {
-    for (const [key, times] of hits) {
-      if (times.every((t) => now - t >= WINDOW_MS)) hits.delete(key);
-    }
-  }
 
   return false;
 }
@@ -62,8 +65,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Request rejected." }, { status: 403 });
   }
 
-  if (!request.headers.get("content-type")?.includes("application/json")) {
+  if (request.headers.get("content-type")?.split(";")[0].trim().toLowerCase() !== "application/json") {
     return NextResponse.json({ error: "Unsupported content type." }, { status: 415 });
+  }
+
+  // Check the declared size before reading, and enforce the same limit on
+  // the actual stream for requests without a trustworthy Content-Length.
+  if (Number(request.headers.get("content-length")) > MAX_BODY_BYTES) {
+    return NextResponse.json({ error: "Message is too large." }, { status: 413 });
   }
 
   const ip =
@@ -79,10 +88,29 @@ export async function POST(request: Request) {
   }
 
   let body: Record<string, unknown>;
+  const reader = request.body?.getReader();
+  if (!reader) return NextResponse.json({ error: "Malformed request." }, { status: 400 });
   try {
-    body = await request.json();
+    const decoder = new TextDecoder("utf-8", { fatal: true });
+    let bytes = 0;
+    let raw = "";
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      bytes += value.byteLength;
+      if (bytes > MAX_BODY_BYTES) {
+        void reader.cancel().catch(() => {});
+        return NextResponse.json({ error: "Message is too large." }, { status: 413 });
+      }
+      raw += decoder.decode(value, { stream: true });
+    }
+    raw += decoder.decode();
+    body = JSON.parse(raw);
   } catch {
+    void reader.cancel().catch(() => {});
     return NextResponse.json({ error: "Malformed request." }, { status: 400 });
+  } finally {
+    reader.releaseLock();
   }
 
   // Honeypot. Answer 200 so the bot believes it worked and does not retry.

@@ -13,7 +13,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 export default function SmoothScroll() {
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced) return;
+    const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true;
+    // Native touch scrolling remains available; avoid a continuous animation loop on phones.
+    if (reduced || saveData || !window.matchMedia("(min-width: 1024px) and (pointer: fine)").matches) return;
 
     gsap.registerPlugin(ScrollTrigger);
 
@@ -32,7 +34,7 @@ export default function SmoothScroll() {
     return () => {
       gsap.ticker.remove(tick);
       lenis.destroy();
-      ScrollTrigger.getAll().forEach((t) => t.kill());
+      // Route-level motion owns and disposes its own triggers.
     };
   }, []);
 

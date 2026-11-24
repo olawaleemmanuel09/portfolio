@@ -117,10 +117,11 @@ export default function MotionDirector() {
         };
       });
 
-      const refresh = () => ScrollTrigger.refresh();
+      let disposed = false;
+      const refresh = () => { if (!disposed) ScrollTrigger.refresh(); };
       document.fonts?.ready.then(refresh).catch(() => {});
       window.addEventListener("load", refresh, { once: true });
-      return () => window.removeEventListener("load", refresh);
+      return () => { disposed = true; window.removeEventListener("load", refresh); };
     }, document.body);
 
     return () => {
