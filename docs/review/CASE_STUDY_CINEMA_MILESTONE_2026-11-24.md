@@ -41,3 +41,9 @@ Carry the original editorial and scroll-responsive design from the homepage into
 ## Explicitly not in this milestone
 
 No merge to `main`. No production deployment. No external client API, credentials, Supabase or other application write. No fabricated product screenshots, fictional customer quotes, revenue or growth figures. No new third-party motion dependency.
+
+## Independent review fixes
+
+- Gallery anchor: moved `#case-visual-evidence` to the containing section; distinct heading ID maintains `aria-labelledby`. Native anchor navigation now picks up the existing sticky-header `scroll-margin-top` rule, including without JS.
+- Case scroll image: GSAP now targets the actual **image container** `.case-hero-panel > a > div`, not a nonexistent nested copy of the figure. The opening timeline still controls the outer figure, so the two animations do not compete for the same transform.
+- The review's numbered chapter-link selector issue was already corrected in commit `a13b87b0` by selecting the real anchor href.

@@ -43,10 +43,10 @@ export default function CaseStudyMotion({ slug }: { slug: string }) {
       });
 
       media.add("(min-width: 1024px)", () => {
-        const frame = root.querySelector<HTMLElement>("[data-case-hero] .case-hero-panel");
+        const frame = root.querySelector<HTMLElement>(".case-hero-panel > a > div");
         if (!frame) return;
         gsap.fromTo(frame, { y: 0, rotate: 0 }, {
-          y: -54, rotate: -1.15, ease: "none",
+          y: -28, rotate: -0.65, ease: "none",
           scrollTrigger: {
             trigger: ".case-cinema-cover",
             start: "top top", end: "bottom top",

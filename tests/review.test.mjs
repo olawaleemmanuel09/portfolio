@@ -74,6 +74,7 @@ test("case studies preserve semantic chapter navigation and evidence boundaries"
     const html = await (await fetch(origin + "/work/" + slug)).text();
     assert.match(html, /aria-label="Case-study chapters"/);
     assert.match(html, /href="#case-challenge"/);
+    assert.match(html, /id="case-visual-evidence" aria-labelledby="case-visual-evidence-title"/);
     assert.match(html, /href="#case-results"/);
     assert.match(html, /id="case-system"/);
     assert.match(html, /class="case-cinema-response/);

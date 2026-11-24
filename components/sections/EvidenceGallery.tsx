@@ -11,11 +11,11 @@ export default function EvidenceGallery({ project }: { project: Project }) {
   const actualImages = project.media.filter((m) => m.type !== "video" && !m.src.startsWith("/architecture/")).length;
 
   return (
-    <section aria-labelledby="case-visual-evidence" className="border-b border-rule py-12 md:py-20">
+    <section id="case-visual-evidence" aria-labelledby="case-visual-evidence-title" className="border-b border-rule py-12 md:py-20">
       <div data-case-reveal className="mb-7 flex flex-wrap items-end justify-between gap-5 md:mb-10">
         <div>
           <p className="text-[0.68rem] font-semibold uppercase tracking-[0.17em] text-[var(--color-accent-deep)]">Visual record</p>
-          <h2 id="case-visual-evidence" className="mt-3 text-[clamp(1.75rem,3.1vw,3.1rem)] font-semibold leading-[1.12] tracking-[-0.035em]">Inside the system.</h2>
+          <h2 id="case-visual-evidence-title" className="mt-3 text-[clamp(1.75rem,3.1vw,3.1rem)] font-semibold leading-[1.12] tracking-[-0.035em]">Inside the system.</h2>
         </div>
         <p className="max-w-[39ch] text-[0.82rem] leading-[1.6] text-muted">
           {actualImages > 0
