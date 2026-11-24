@@ -584,6 +584,14 @@ export const projects: Project[] = [
         aspect: "tall"
       },
       {
+        src: "/evidence/approved/job-alert-notifications.mp4",
+        poster: "/evidence/approved/job-alert-notifications-poster.jpg",
+        alt: "Historical Telegram notifications from the job-intelligence automation.",
+        caption: "Sanitized earlier Telegram alert recording; source labels and scores are historical and do not establish current running integrations.",
+        type: "video",
+        aspect: "tall"
+      },
+      {
         src: "/architecture/job-intelligence.svg",
         alt: "Conceptual job discovery architecture diagram.",
         caption: "Conceptual map, not live execution evidence.",
@@ -865,7 +873,7 @@ export const projects: Project[] = [
       }
     ],
     preview: "/evidence/academy-student-view.png"
-  }
+  },
   {
     slug: "leadreach-prospect-intelligence",
     title: "LeadReach — Prospect Discovery and Sales Readiness",
