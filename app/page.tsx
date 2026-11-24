@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Hero from "@/components/sections/Hero";
+import Manifesto from "@/components/sections/Manifesto";
+import MotionDirector from "@/components/motion/MotionDirector";
 import ProofStrip from "@/components/sections/ProofStrip";
 import ProblemExplorer from "@/components/sections/ProblemExplorer";
 import SelectedWork from "@/components/sections/SelectedWork";
@@ -21,7 +23,9 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <>
+      <MotionDirector />
       <Hero />
+      <Manifesto />
       <ProofStrip />
       <ProblemExplorer />
       <SelectedWork />

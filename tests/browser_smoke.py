@@ -20,7 +20,9 @@ with sync_playwright() as playwright:
             assert page.evaluate("document.documentElement.scrollWidth <= innerWidth"), (path, width)
             if path == "/":
                 assert page.locator(".hero-statement").count() == 1
-                assert page.locator(".studio-hero-proof img").count() == 1
+                assert page.locator(".cinematic-image-frame img").count() == 1
+                assert page.locator(".cinematic-line-inner").count() == 3
+                assert page.locator(".cinematic-manifesto .cinematic-word").count() == 15
                 assert page.locator(".studio-proof-stat").count() == 3
                 assert page.locator(".studio-problem-option").count() == 3
                 assert page.locator(".featured-case-card").count() == 6
@@ -93,5 +95,25 @@ with sync_playwright() as playwright:
         assert page.locator("main h1").count() == 1, slug
         assert page.evaluate("document.documentElement.scrollWidth <= innerWidth"), slug
     page.close()
+    # Static motion is a first-class path, including the screenshot's 1366x635 viewport.
+    # A clipped sticky frame must never hide the evidence disclaimer or case-study link.
+    for width, height in ((1366, 635), (1440, 900)):
+        static_page = browser.new_page(
+            viewport={"width": width, "height": height},
+            reduced_motion="reduce", java_script_enabled=False
+        )
+        resp = static_page.goto(origin, wait_until="domcontentloaded", timeout=45000)
+        assert resp is not None and resp.status == 200
+        caption = static_page.locator(".cinematic-image-caption")
+        assert caption.count() == 1
+        assert caption.is_visible()
+        assert static_page.locator(".cinematic-image-caption a").get_attribute("href") == "/work/ai-job-scraper"
+        box = caption.bounding_box()
+        assert box is not None, (width, height)
+        assert box["y"] >= 0 and box["y"] + box["height"] <= height + 2, (
+            "Workflow caption clipped in static desktop hero", width, height, box
+        )
+        assert static_page.evaluate("document.documentElement.scrollWidth <= innerWidth")
+        static_page.close()
     browser.close()
 print("Passed responsive portfolio checks, studio interaction, 16 case routes, reduced-motion and mobile keyboard navigation.")
