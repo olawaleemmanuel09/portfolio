@@ -156,5 +156,15 @@ with sync_playwright() as playwright:
         )
         assert static_page.evaluate("document.documentElement.scrollWidth <= innerWidth")
         static_page.close()
+    # On a cold case-study visit, recordings must remain click-to-play.
+    page = browser.new_page(viewport={"width": 390, "height": 844}, reduced_motion="reduce")
+    video_requests = []
+    page.on("request", lambda request: video_requests.append(request.url) if request.url.split("?")[0].endswith(".mp4") else None)
+    page.goto(origin + "/work/ai-job-scraper", wait_until="load", timeout=45000)
+    page.locator("video").scroll_into_view_if_needed()
+    page.wait_for_timeout(500)
+    assert page.locator("video").get_attribute("preload") == "none"
+    assert not video_requests, "Unexpected video transfer before playback"
+    page.close()
     browser.close()
 print("Passed responsive portfolio checks, studio interaction, 17 case routes, reduced-motion and mobile keyboard navigation.")

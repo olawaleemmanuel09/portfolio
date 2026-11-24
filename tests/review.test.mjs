@@ -107,7 +107,14 @@ test("search metadata is unique, canonical and source-consistent across all 22 p
     assert.ok(!descriptions.has(description), url.pathname);
     titles.add(title);
     descriptions.add(description);
-    assert.ok(html.includes('property="og:url" content="' + url.href + '"'), url.pathname);
+    // Next normalizes URL serialization (notably a bare origin versus "/").
+    // Compare resolved URLs, not raw attribute order or serialization.
+    const ogTag = [...html.matchAll(/<meta\b[^>]*>/g)]
+      .map(match => match[0])
+      .find(tag => /\bproperty="og:url"/.test(tag));
+    const ogUrl = ogTag?.match(/\bcontent="([^"]+)"/)?.[1];
+    assert.ok(ogUrl, "Missing Open Graph URL: " + url.pathname);
+    assert.equal(new URL(ogUrl).href, url.href, url.pathname);
     assert.ok(html.includes('name="twitter:card"'), url.pathname);
     if (url.pathname.startsWith("/work/")) {
       const graph = jsonLd(html).flatMap(item => item["@graph"] ?? []);
@@ -133,4 +140,28 @@ test("professional identity and crawler policy are explicit without invented rev
   assert.match(robots, /User-Agent: OAI-SearchBot/i);
   assert.match(robots, /Disallow: \/api\//i);
   assert.match(robots, /Sitemap: https:\/\//i);
+});
+
+test("contact rejects oversized bodies, non-JSON and cross-origin requests without sending mail", async () => {
+  const headers = { origin, "content-type": "application/json" };
+  const response = await fetch(origin + "/api/contact", {
+    method: "POST", headers, body: JSON.stringify({ message: "x".repeat(40000) }),
+  });
+  assert.equal(response.status, 413);
+  const unsupported = await fetch(origin + "/api/contact", {
+    method: "POST", headers: { origin, "content-type": "text/plain; application/json" }, body: "{}",
+  });
+  assert.equal(unsupported.status, 415);
+  assert.equal(response.headers.get("x-content-type-options"), "nosniff");
+});
+
+test("all canonical HTML and representative public resources have security headers", async () => {
+  for (const path of ["/", "/about", "/work/cefa", "/contact", "/robots.txt", "/sitemap.xml", "/work/headshot.jpg"]) {
+    const response = await fetch(origin + path);
+    assert.equal(response.status, 200, path);
+    assert.equal(response.headers.get("x-content-type-options"), "nosniff", path);
+    assert.equal(response.headers.get("x-frame-options"), "DENY", path);
+    assert.match(response.headers.get("content-security-policy") ?? "", /frame-ancestors 'none'/, path);
+    assert.match(response.headers.get("permissions-policy") ?? "", /camera=\(\)/, path);
+  }
 });
