@@ -81,11 +81,11 @@ with sync_playwright() as playwright:
     page = browser.new_page(viewport={"width": 1440, "height": 900}, reduced_motion="no-preference")
     page.add_init_script("Object.defineProperty(navigator, 'connection', { configurable: true, value: { saveData: true } })")
     page.goto(origin, wait_until="domcontentloaded", timeout=45000)
-    page.wait_for_function("document.querySelector('.cinematic-hero')?.dataset.motion === 'static'")
+    page.wait_for_function("() => document.querySelector('.cinematic-hero')?.dataset.motion === 'static'")
     assert page.locator("html.lenis").count() == 0
     assert page.get_by_role("heading", level=1).is_visible()
     page.goto(origin + "/work/ai-job-scraper", wait_until="domcontentloaded", timeout=45000)
-    page.wait_for_function("document.querySelector('[data-case-study]')?.dataset.caseMotion === 'static'")
+    page.wait_for_function("() => document.querySelector('[data-case-study]')?.dataset.caseMotion === 'static'")
     assert page.locator("html.lenis").count() == 0
     page.close()
     browser.close()
