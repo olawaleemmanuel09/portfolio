@@ -42,7 +42,7 @@ with sync_playwright() as playwright:
                     assert page.locator(".studio-problem-option").nth(2).get_attribute("href") == "/work/security-workforce-operations"
                     assert "cefa" in page.locator(".studio-stage-link").get_attribute("href")
             if path == "/work":
-                assert page.locator(".work-index-card").count() == 16
+                assert page.locator(".work-index-card").count() == 17
                 assert page.locator(".work-index-card img").count() == 13
             if path in ("/work/cefa", "/work/ai-job-scraper"):
                 assert page.locator("[data-case-hero] img").count() == 1
@@ -62,7 +62,7 @@ with sync_playwright() as playwright:
                 for number in ("127", "10", "113"):
                     assert page.locator('[aria-label="Verified project metrics"]').get_by_text(number, exact=True).count() == 1
             if path == "/work/ai-job-scraper":
-                assert page.locator(".evidence-panel").count() == 3
+                assert page.locator(".evidence-panel").count() == 4
                 assert page.get_by_role("link", name="Open original").count() == 3
                 assert page.locator('img[src*="job-intelligence-workflow"]').count() >= 1
             assert page.evaluate("matchMedia('(prefers-reduced-motion: reduce)').matches")

@@ -19,7 +19,7 @@ export default function SelectedWork() {
           ))}
         </ol>
         <div className="studio-selected-tail">
-          <p>Six featured systems / sixteen projects in the archive.</p>
+          <p>Six featured systems / seventeen projects in the archive.</p>
           <Link href="/work" className="studio-text-link">See the complete project archive <span aria-hidden="true">↗</span></Link>
         </div>
       </div>

@@ -49,14 +49,38 @@ export const projects: Project[] = [
       { value: "10", label: "Learning groups" },
       { value: "113", label: "Group-chat messages" }
     ],
-    media: [{
-      src: "/architecture/cefa-learning-operations.svg",
-      alt: "Architecture system map derived from documented implementation boundaries.",
-      caption: "Architecture summary; not a live dashboard screenshot.",
-      type: "image",
-      aspect: "wide"
-    }],
-    preview: "/architecture/cefa-learning-operations.svg"
+    media: [
+      {
+        "src": "/evidence/approved/learning-portal-sign-in.jpg",
+        "alt": "Mobile FOC/CEFA sign-in interface with browser address and toolbars removed.",
+        "caption": "Approved mobile sign-in capture, cropped to exclude the web address; no individual student's credentials or records are shown.",
+        "type": "image",
+        "aspect": "tall"
+      },
+      {
+        "src": "/evidence/approved/learning-push-notifications.jpg",
+        "alt": "Two CEFA push notifications visible on a phone lock screen.",
+        "caption": "Approved historical push notification capture. Delivery to this device is demonstrated; this is not a platform-wide delivery rate.",
+        "type": "image",
+        "aspect": "wide"
+      },
+      {
+        "src": "/evidence/approved/learning-portal-demo.mp4",
+        "poster": "/evidence/approved/learning-portal-demo-poster.jpg",
+        "alt": "CEFA student mobile screen recording navigating assignments, chats and updates.",
+        "caption": "Sanitized 44-second portal walkthrough. The browser domain and later personal phone-share screens were removed; this does not establish concurrent users.",
+        "type": "video",
+        "aspect": "tall"
+      },
+      {
+        "src": "/architecture/cefa-learning-operations.svg",
+        "alt": "Conceptual architecture of onboarding, group membership, group chat and staff review.",
+        "caption": "Conceptual architecture diagram. Not an application screenshot or deployment certification.",
+        "type": "image",
+        "aspect": "wide"
+      }
+    ],
+    preview: "/evidence/approved/learning-portal-sign-in.jpg"
   },
   {
     slug: "whatsapp-ordering-system",
@@ -148,14 +172,30 @@ export const projects: Project[] = [
       title: "An order is not finished until the business can fulfil and account for it",
       body: "The system must preserve the same record as it moves from customer to kitchen to financial reconciliation. Separate role permissions prevent branch staff from relying on a shared, uncontrolled spreadsheet."
     },
-    media: [{
-      src: "/architecture/restaurant-operations.svg",
-      alt: "Architecture system map derived from documented implementation boundaries.",
-      caption: "Architecture summary; not a live dashboard screenshot.",
-      type: "image",
-      aspect: "wide"
-    }],
-    preview: "/architecture/restaurant-operations.svg"
+    media: [
+      {
+        "src": "/evidence/approved/restaurant-branch-overview.jpg",
+        "alt": "Anonymized historical branch dashboard with sales, order, kitchen and menu areas.",
+        "caption": "Earlier staged branch dashboard with all sensitive branding removed; zero sales shown are test-period UI state, not an outcome metric.",
+        "type": "image",
+        "aspect": "wide"
+      },
+      {
+        "src": "/evidence/approved/restaurant-menu-admin.jpg",
+        "alt": "Anonymized menu administration table showing availability controls and food pricing.",
+        "caption": "Historical staff menu-control screen, with client branding and an administrator identifier removed. Pricing is a screenshot example, not current live inventory.",
+        "type": "image",
+        "aspect": "wide"
+      },
+      {
+        "src": "/architecture/restaurant-operations.svg",
+        "alt": "Conceptual division between branch operations, kitchen and accountant reconciliation.",
+        "caption": "Conceptual architecture diagram. Not an application screenshot or deployment certification.",
+        "type": "image",
+        "aspect": "wide"
+      }
+    ],
+    preview: "/evidence/approved/restaurant-branch-overview.jpg"
   },
   {
     slug: "elion-sales-command-centre",
@@ -199,14 +239,44 @@ export const projects: Project[] = [
       title: "The AI and the human must share one customer history",
       body: "A chatbot without a handoff is another silo. The design keeps the incoming message, automated response, lead record and human takeover tied to one authorized conversation. Staff—not the model—must control any sale, offer or sensitive customer decision."
     },
-    media: [{
-      src: "/architecture/crm-tenant-foundation.svg",
-      alt: "Architecture system map derived from documented implementation boundaries.",
-      caption: "Architecture summary; not a live dashboard screenshot.",
-      type: "image",
-      aspect: "wide"
-    }],
-    preview: "/architecture/crm-tenant-foundation.svg"
+    media: [
+      {
+        "src": "/evidence/approved/real-estate-conversations.jpg",
+        "alt": "Elion local-development conversation viewer showing test chat, AI response and takeover control.",
+        "caption": "Development test conversation, synthetic phone masked. The 'Take over conversation' button demonstrates a UI affordance, not authenticated live WhatsApp production handoff.",
+        "type": "image",
+        "aspect": "wide"
+      },
+      {
+        "src": "/evidence/approved/real-estate-sales-overview.jpg",
+        "alt": "Elion Sales Command local-development operations overview with test lead and inspection queue.",
+        "caption": "Staged overview showing synthetic test records. These do not represent real customer volumes or confirmed inspection bookings.",
+        "type": "image",
+        "aspect": "wide"
+      },
+      {
+        "src": "/evidence/approved/real-estate-leads.jpg",
+        "alt": "Elion local-development leads table with synthetic lead fields.",
+        "caption": "Sample lead record and ranking interface; test phone masked. A displayed lead score is not proven sales conversion.",
+        "type": "image",
+        "aspect": "wide"
+      },
+      {
+        "src": "/evidence/approved/real-estate-properties.jpg",
+        "alt": "Elion local-development inventory table of sample properties.",
+        "caption": "Sample real-estate inventory in local development, not verified public listings, prices or current availability.",
+        "type": "image",
+        "aspect": "wide"
+      },
+      {
+        "src": "/architecture/crm-tenant-foundation.svg",
+        "alt": "Conceptual scoped CRM data, conversation and human review architecture.",
+        "caption": "Conceptual architecture diagram. Not an application screenshot or deployment certification.",
+        "type": "image",
+        "aspect": "wide"
+      }
+    ],
+    preview: "/evidence/approved/real-estate-conversations.jpg"
   },
   {
     slug: "security-workforce-operations",
@@ -249,14 +319,30 @@ export const projects: Project[] = [
       title: "A WhatsApp message is not an attendance record",
       body: "Headquarters needs a durable, permission-controlled timeline—not screenshots of a chat. The system must link each clock-in, clock-out and exception to the correct guard, shift and site before management relies on it."
     },
-    media: [{
-      src: "/architecture/security-operations.svg",
-      alt: "Architecture system map derived from documented implementation boundaries.",
-      caption: "Architecture summary; not a live dashboard screenshot.",
-      type: "image",
-      aspect: "wide"
-    }],
-    preview: "/architecture/security-operations.svg"
+    media: [
+      {
+        "src": "/evidence/approved/security-hq-overview.jpg",
+        "alt": "Anonymized security headquarters operations overview with incident, attendance and staffing panels.",
+        "caption": "Staged operations dashboard with client branding obscured. Displayed sample guard and site totals are test records, not verified production adoption.",
+        "type": "image",
+        "aspect": "wide"
+      },
+      {
+        "src": "/evidence/approved/security-guard-shift.jpg",
+        "alt": "Anonymized guard field shift screen with scheduled clock-in button.",
+        "caption": "Staged guard check-in interface; site and staff identifiers removed. A visible button does not establish accepted real-world GPS attendance.",
+        "type": "image",
+        "aspect": "wide"
+      },
+      {
+        "src": "/architecture/security-operations.svg",
+        "alt": "Conceptual headquarters-to-guard event and attendance architecture.",
+        "caption": "Conceptual architecture diagram. Not an application screenshot or deployment certification.",
+        "type": "image",
+        "aspect": "wide"
+      }
+    ],
+    preview: "/evidence/approved/security-hq-overview.jpg"
   },
   {
     slug: "b2b-revenue-engine",
@@ -342,14 +428,24 @@ export const projects: Project[] = [
       title: "When campaign links lead nowhere, speed and clarity beat decoration",
       body: "A recovery website should load, explain the business and show customers how to contact the team before any animation runs. Security, verified domains and enquiry handling remain part of the launch decision."
     },
-    media: [{
-      src: "/architecture/property-website.svg",
-      alt: "Architecture system map derived from documented implementation boundaries.",
-      caption: "Architecture summary; not a live dashboard screenshot.",
-      type: "image",
-      aspect: "wide"
-    }],
-    preview: "/architecture/property-website.svg"
+    media: [
+      {
+        "src": "/evidence/approved/real-estate-website-mobile.mp4",
+        "poster": "/evidence/approved/real-estate-website-mobile-poster.jpg",
+        "alt": "Short mobile screen recording of the Elion Homes website hero and About section.",
+        "caption": "Sanitized historical mobile website demonstration. The video is click-to-play; it does not certify search rankings, uptime or recovered campaign traffic.",
+        "type": "video",
+        "aspect": "tall"
+      },
+      {
+        "src": "/architecture/property-website.svg",
+        "alt": "Conceptual website delivery and discovery architecture.",
+        "caption": "Conceptual architecture diagram. Not an application screenshot or deployment certification.",
+        "type": "image",
+        "aspect": "wide"
+      }
+    ],
+    preview: "/evidence/approved/real-estate-website-mobile-poster.jpg"
   },
   {
     slug: "leadreach",
@@ -485,6 +581,14 @@ export const projects: Project[] = [
         alt: "Archived Telegram bot alert examples with job source and match ratings.",
         caption: "Archived example of notifications. Listings and scores reflect the captured run, not current opportunities.",
         type: "image",
+        aspect: "tall"
+      },
+      {
+        src: "/evidence/approved/job-alert-notifications.mp4",
+        poster: "/evidence/approved/job-alert-notifications-poster.jpg",
+        alt: "Historical Telegram notifications from the job-intelligence automation.",
+        caption: "Sanitized earlier Telegram alert recording; source labels and scores are historical and do not establish current running integrations.",
+        type: "video",
         aspect: "tall"
       },
       {
@@ -769,7 +873,36 @@ export const projects: Project[] = [
       }
     ],
     preview: "/evidence/academy-student-view.png"
-  }
+  },
+  {
+    slug: "leadreach-prospect-intelligence",
+    title: "LeadReach — Prospect Discovery and Sales Readiness",
+    client: "Independent lead-intelligence product",
+    status: "prototype",
+    statusLabel: "Private research pipeline · evidence review",
+    period: "Owner progress report, November 2026",
+    summary: "LeadReach is an independent prospect-discovery effort. The owner reports 50,000 prospects discovered; the current live database and number qualified for calls are not yet independently verified.",
+    stack: ["n8n", "API integrations", "Data qualification"],
+    featured: false,
+    order: 17,
+    problem: [
+      "Teams can spend more time searching for potential customers than evaluating their fit or starting useful conversations.",
+      "A long list alone does not tell a marketer who is ready to call, what information is missing, or which lead was already contacted."
+    ],
+    approach: [
+      { title: "Separate discovery from qualification", body: "Research and intake assemble potential prospects. Qualification checks fit signals and marks leads needing additional review; a discovered record is not automatically call-ready." },
+      { title: "Make outreach follow-through measurable", body: "The intended workflow tracks the review state, call outcomes and follow-up ownership without confusing a discovered prospect with a paying customer." }
+    ],
+    outcome: [
+      "50,000 prospects discovered is the owner's reported progress figure as of November 2026, not an independently authenticated database count.",
+      "The qualification and sales-readiness workflows remain in progress. Current qualified-for-call totals, completed outreach and conversion counts are not supplied or asserted."
+    ],
+    decision: {
+      title: "Discovery is not the same as sales readiness",
+      body: "Keep unverified discoveries, qualified call candidates and recorded outreach outcomes separate so leadership sees useful pipeline stages rather than an inflated conversion claim."
+    },
+    media: []
+  },
 ];
 
 export const featured = projects.filter((project) => project.featured);
