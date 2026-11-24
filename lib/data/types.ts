@@ -31,6 +31,7 @@ export type Project = {
   preview?: string;
   metrics?: { value: string; label: string }[];
   metricsAsOf?: string;
+  ownerReportedProgress?: { value: string; label: string; asOf: string; note: string };
   repo?: string;
   live?: string;
 };

@@ -102,3 +102,29 @@ test("sanitized recordings are poster-first, click-to-play and source-labelled",
   assert.match(gallery, /poster=\{m.poster\}/);
   assert.ok(!gallery.includes("autoPlay"), "No autoplay on mobile data");
 });
+
+test("evidence viewer retains direct image destinations and labelled media context", () => {
+  const gallery = read("components/sections/EvidenceGallery.tsx");
+  assert.match(gallery, /<dialog/);
+  assert.match(gallery, /showModal\(\)/);
+  assert.match(gallery, /onClose=/);
+  assert.match(gallery, /event\.ctrlKey/);
+  assert.match(gallery, /event\.metaKey/);
+  assert.match(gallery, /case-evidence-figure-/);
+  assert.match(gallery, /aria-label="Browse visual evidence figures"/);
+  assert.match(gallery, /preload="none"/);
+  assert.match(gallery, /poster=\{m\.poster\}/);
+  assert.ok(!gallery.includes("autoPlay"));
+});
+
+test("owner-reported lead intelligence count is never mislabeled a verified metric", () => {
+  const section = catalog.slice(catalog.indexOf('slug: "leadreach-prospect-intelligence"'));
+  assert.match(section, /ownerReportedProgress:/);
+  assert.match(section, /value: "50,000"/);
+  assert.match(section, /qualified-for-call totals have not been independently verified/);
+  const type = read("lib/data/types.ts");
+  assert.match(type, /ownerReportedProgress\?:/);
+  const page = read("app/work/[slug]/page.tsx");
+  assert.match(page, /OWNER-REPORTED PROGRESS/);
+  assert.match(page, /project\.ownerReportedProgress/);
+});
