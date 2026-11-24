@@ -63,7 +63,7 @@ with sync_playwright() as playwright:
         assert page.locator(".case-title-word").count() >= 2
         assert page.locator("[data-case-hero] img").count() == 1
         assert page.get_by_role("navigation", name="Case-study chapters").count() == 1
-        assert page.locator(".evidence-panel").count() == 3
+        assert page.locator(".evidence-panel").count() == 4
         assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
         assert not errors, (width, errors)
         if screens:
