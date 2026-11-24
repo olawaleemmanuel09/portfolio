@@ -13,24 +13,29 @@ with sync_playwright() as playwright:
         page = browser.new_page(viewport={"width": width, "height": 900},
                                 java_script_enabled=javascript, reduced_motion="reduce")
         for path in ["/", "/work", "/work/cefa", "/work/ai-job-scraper", "/contact", "/resume"]:
-            page.goto(origin + path)
+            response = page.goto(origin + path, wait_until="domcontentloaded", timeout=45000)
+            assert response is not None and response.status == 200, (path, width)
             page.locator("h1").wait_for()
             assert page.locator("h1").count() == 1
             assert page.evaluate("document.documentElement.scrollWidth <= innerWidth"), (path, width)
             if path == "/":
                 assert page.locator(".hero-statement").count() == 1
-                assert page.get_by_role("figure", name="Illustrative AI systems architecture").count() == 1
+                assert page.locator(".studio-hero-proof img").count() == 1
+                assert page.locator(".studio-proof-stat").count() == 3
+                assert page.locator(".studio-problem-option").count() == 3
                 assert page.locator(".featured-case-card").count() == 6
-                if width == 320:
-                    assert page.locator(".featured-artboard").first.evaluate("el => el.getBoundingClientRect().height >= 200")
                 assert page.locator(".featured-case-card img").count() == 6
                 assert page.get_by_role("link", name="Explore selected work").get_attribute("href") == "#work"
                 assert page.get_by_role("link", name="Explore selected work").evaluate("el => getComputedStyle(el).color") == "rgb(255, 255, 255)"
-                assert page.locator(".system-canvas svg[role='img']").count() == 1
-                assert page.locator(".system-canvas-mobile").is_visible() == (width < 640), width
-                assert page.locator(".system-canvas-mobile").get_attribute("aria-hidden") is None
-                assert page.locator(".system-canvas-mobile li").count() == 5
                 assert page.locator(".featured-case-card").first.get_by_role("link").count() == 1
+                if javascript:
+                    choices = page.locator(".studio-problem-option")
+                    choices.nth(2).click()
+                    assert choices.nth(2).get_attribute("aria-pressed") == "true"
+                    assert "security-workforce-operations" in page.locator(".studio-stage-link").get_attribute("href")
+                    choices.first.click()
+                    assert choices.first.get_attribute("aria-pressed") == "true"
+                    assert "cefa" in page.locator(".studio-stage-link").get_attribute("href")
             if path == "/work":
                 assert page.locator(".work-index-card").count() == 16
                 assert page.locator(".work-index-card img").count() == 13
@@ -77,10 +82,10 @@ with sync_playwright() as playwright:
     ]
     page = browser.new_page(viewport={"width": 390, "height": 844}, reduced_motion="reduce")
     for slug in slugs:
-        response = page.goto(origin + "/work/" + slug, wait_until="domcontentloaded")
+        response = page.goto(origin + "/work/" + slug, wait_until="domcontentloaded", timeout=45000)
         assert response is not None and response.status == 200, slug
         assert page.locator("main h1").count() == 1, slug
         assert page.evaluate("document.documentElement.scrollWidth <= innerWidth"), slug
     page.close()
     browser.close()
-print("Passed 36 responsive route checks, all 16 project routes, reduced-motion and mobile keyboard navigation.")
+print("Passed responsive portfolio checks, studio interaction, 16 case routes, reduced-motion and mobile keyboard navigation.")

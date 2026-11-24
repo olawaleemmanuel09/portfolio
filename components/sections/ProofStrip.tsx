@@ -19,8 +19,8 @@ export default function ProofStrip() {
         <dl className="studio-proof-numbers">
           {results.map((item) => (
             <div key={item.name} className="studio-proof-stat">
-              <dd>{item.value}</dd>
               <dt>{item.name}</dt>
+              <dd>{item.value}</dd>
             </div>
           ))}
         </dl>
