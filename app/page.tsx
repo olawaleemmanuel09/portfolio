@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Hero from "@/components/sections/Hero";
-import AboutPreview from "@/components/sections/AboutPreview";
+import ProofStrip from "@/components/sections/ProofStrip";
+import ProblemExplorer from "@/components/sections/ProblemExplorer";
 import SelectedWork from "@/components/sections/SelectedWork";
 import MoreWork from "@/components/sections/MoreWork";
+import AboutPreview from "@/components/sections/AboutPreview";
 import ContactBand from "@/components/sections/ContactBand";
 
 export const metadata: Metadata = {
@@ -10,8 +12,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     title: "Olawale Emmanuel Olaonipekun — AI Engineer — Growth & Automation Systems",
-    description:
-      "Applied AI engineering, secure business platforms, CRM infrastructure, systems architecture and reliable operational workflows.",
+    description: "Business problems, working systems. Case studies in intelligent ordering, secure operations, CRM and learning infrastructure.",
     images: ["/work/headshot.jpg"],
     siteName: "Olawale Emmanuel Olaonipekun",
   },
@@ -21,9 +22,11 @@ export default function Home() {
   return (
     <>
       <Hero />
+      <ProofStrip />
+      <ProblemExplorer />
       <SelectedWork />
-      <AboutPreview />
       <MoreWork />
+      <AboutPreview />
       <ContactBand />
     </>
   );

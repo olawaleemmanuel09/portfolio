@@ -1,43 +1,67 @@
+import Image from "next/image";
 import Link from "next/link";
-import SystemCanvas from "@/components/sections/SystemCanvas";
 
 export default function Hero() {
   return (
-    <section className="hero-shell relative overflow-hidden border-b border-rule">
-      <div className="hero-shell-halo pointer-events-none absolute -right-32 -top-40 h-[520px] w-[520px] rounded-full" aria-hidden="true" />
-      <div className="relative mx-auto grid max-w-[1280px] items-center gap-12 px-6 pb-20 pt-32 md:px-8 md:pb-24 md:pt-40 lg:grid-cols-[minmax(0,1.06fr)_minmax(0,0.94fr)] lg:gap-16 lg:py-32">
-        <div className="max-w-[700px]">
-          <p className="hero-eyebrow text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-[var(--color-accent-deep)]">
-            AI Engineer — Growth &amp; Automation Systems
-          </p>
-          <h1 className="hero-statement mt-7 max-w-[14ch]">
-            I solve business problems <span className="hero-statement-accent">with dependable AI systems.</span>
-          </h1>
-          <p className="mt-7 max-w-[52ch] text-[1.05rem] leading-[1.72] text-muted md:text-[1.13rem]">
-            I start with what is slowing a business down: unanswered customer messages,
-            lost enquiries, scattered team updates or systems people cannot trust.
-            Then I build the AI, software and automation that address the problem—clearly and reliably.
-          </p>
-          <div className="mt-9 flex flex-wrap items-center gap-4">
-            <Link href="#work" className="hero-primary-cta inline-flex min-h-12 items-center gap-5 rounded-md bg-[var(--color-ink)] px-5 py-3 text-sm font-semibold text-white" style={{ color: "#ffffff" }}>
-              Explore selected work
-              <svg viewBox="0 0 24 24" width="19" height="19" fill="none" aria-hidden="true">
-                <path d="M5 12H19M13 6L19 12L13 18" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </Link>
-            <Link href="/contact" className="link-underline inline-flex min-h-12 items-center text-sm font-semibold">Discuss a project</Link>
-          </div>
-          <div className="hero-disciplines mt-11 flex flex-wrap gap-x-4 gap-y-2 border-t border-rule pt-5 text-[0.69rem] font-semibold uppercase tracking-[0.1em] text-muted" aria-label="Technical focus">
-            <span>AI solutions</span><span className="text-[var(--color-accent)]" aria-hidden="true">/</span>
-            <span>CRM &amp; data</span><span className="text-[var(--color-accent)]" aria-hidden="true">/</span>
-            <span>Production systems</span>
-          </div>
+    <section className="studio-hero" aria-labelledby="studio-hero-title">
+      <div className="studio-container">
+        <div className="studio-topline">
+          <span>OO / SELECTED WORK, 2026</span>
+          <span className="studio-topline-side">ENGINEERING &amp; OPERATIONS — NIGERIA / REMOTE</span>
         </div>
-        <div className="relative min-w-0">
-          <SystemCanvas />
-          <p className="mt-3 text-right text-[0.72rem] tracking-[0.02em] text-muted">
-            An illustration of my engineering approach, not client production data.
-          </p>
+        <div className="studio-hero-layout">
+          <div className="studio-hero-copy">
+            <p className="studio-overline">AI Engineer — Growth &amp; Automation Systems</p>
+            <h1 id="studio-hero-title" className="hero-statement studio-headline">
+              Business problems.
+              <em>Working systems.</em>
+            </h1>
+            <p className="studio-hero-intro">
+              I build what businesses need when enquiries are being lost,
+              orders are hard to manage, or teams can&apos;t see what&apos;s happening.
+              The work spans AI, applications, data and the less glamorous parts of keeping things running.
+            </p>
+            <div className="studio-hero-actions">
+              <Link href="#work" className="hero-primary-cta studio-button-primary">
+                Explore selected work
+                <span aria-hidden="true">↗</span>
+              </Link>
+              <Link href="/contact" className="studio-text-link">
+                Talk about a problem <span aria-hidden="true">↗</span>
+              </Link>
+            </div>
+            <div className="studio-hero-footnote">
+              <span className="studio-footnote-index">01 / THE APPROACH</span>
+              <span>Understand the constraint. Build the useful part. Prove what works.</span>
+            </div>
+          </div>
+          <figure className="studio-hero-proof">
+            <div className="studio-proof-top">
+              <span>FROM THE WORK ARCHIVE</span>
+              <span>FIG. 01</span>
+            </div>
+            <div className="studio-proof-media">
+              <div className="studio-proof-image">
+                <Image
+                  src="/evidence/job-intelligence-workflow.png"
+                  alt="Archived n8n workflow with multiple job-listing branches, scoring and Telegram alert nodes"
+                  width={1366}
+                  height={720}
+                  sizes="(max-width: 1023px) 100vw, 47vw"
+                  priority
+                  className="studio-proof-img"
+                />
+              </div>
+              <span className="studio-proof-margin" aria-hidden="true">ARCHIVE / 001</span>
+            </div>
+            <figcaption className="studio-proof-caption">
+              <span>
+                <strong>Job intelligence, not a mockup.</strong>
+                <small>Historical n8n editor capture. Current live runs require separate verification.</small>
+              </span>
+              <Link href="/work/ai-job-scraper" aria-label="Read the job intelligence case study">View case ↗</Link>
+            </figcaption>
+          </figure>
         </div>
       </div>
     </section>
