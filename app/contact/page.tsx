@@ -1,13 +1,9 @@
 import type { Metadata } from "next";
+import { pageMetadata, shortName } from "@/lib/seo";
 import ContactForm from "@/components/sections/ContactForm";
 import MaskLines from "@/components/motion/MaskLines";
 
-export const metadata: Metadata = {
-  alternates: { canonical: "/contact" },
-  title: "Contact",
-  description:
-    "Get in touch about automation engineering roles or contract work. Based in Lagos, working remotely.",
-};
+export const metadata: Metadata = pageMetadata("/contact", "Contact | " + shortName, "Contact Olawale Olaonipekun about AI automation engineering, CRM integrations, remote roles and custom business systems.", "/work/headshot.jpg");
 
 const channels = [
   { label: "Email", value: "olawaleemmanuel100@gmail.com", href: "mailto:olawaleemmanuel100@gmail.com" },

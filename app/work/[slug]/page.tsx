@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { absoluteUrl, caseMetadata, person, personName, personId, websiteId } from "@/lib/seo";
+import JsonLd from "@/components/seo/JsonLd";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { projects, getProject } from "@/lib/data/projects";
@@ -20,17 +22,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const project = getProject(slug);
   if (!project) return {};
-  return {
-    alternates: { canonical: `/work/${project.slug}` },
-    title: `${project.title} — Case study`,
-    description: project.summary,
-    openGraph: {
-      type: "article",
-      title: project.title,
-      description: project.summary,
-      images: project.preview ? [project.preview] : [],
-    },
-  };
+  return caseMetadata(project);
 }
 
 export default async function CaseStudy({
@@ -57,6 +49,16 @@ export default async function CaseStudy({
 
   return (
     <article data-case-study className="case-cinema-page">
+      <JsonLd data={{ "@context": "https://schema.org", "@graph": [person, {
+        "@type": "Article",
+        "@id": absoluteUrl("/work/" + project.slug + "#article"),
+        mainEntityOfPage: absoluteUrl("/work/" + project.slug),
+        headline: project.title,
+        description: project.summary,
+        author: { "@id": personId },
+        isPartOf: { "@id": websiteId },
+        inLanguage: "en",
+      }] }} />
       <CaseStudyMotion slug={project.slug} />
       <div className="case-cinema-cover">
         <div className="case-cinema-container">
@@ -78,6 +80,7 @@ export default async function CaseStudy({
                   </span>
                 </h1>
                 <p className="case-cinema-synopsis">{project.summary}</p>
+                <p className="mt-4 text-sm text-muted">Case study by <Link className="link-underline" href="/about">{personName}</Link></p>
                 <p className="case-cinema-context">
                   THE CASE / A BUSINESS PROBLEM, THE RESPONSE AND WHAT THE RECORD ACTUALLY SHOWS.
                 </p>
@@ -246,7 +249,7 @@ export default async function CaseStudy({
           </div>
           <nav aria-label="Case study contact options" className="case-conversion-links">
             <Link href="/contact"><span>Discuss a project</span><span aria-hidden="true">↗</span></Link>
-            <Link href="/resume"><span>View my engineering résumé</span><span aria-hidden="true">↗</span></Link>
+            <Link href="/resume"><span>Request my engineering CV</span><span aria-hidden="true">↗</span></Link>
             <Link href="/work"><span>Explore more case studies</span><span aria-hidden="true">↗</span></Link>
           </nav>
         </div>

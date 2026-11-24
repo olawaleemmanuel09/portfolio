@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
+import { pageMetadata, shortName } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Request a CV",
-  alternates: { canonical: "/resume" },
-};
+export const metadata: Metadata = pageMetadata("/resume", "Request a CV | " + shortName, "Request the current CV of Olawale Olaonipekun for AI engineering, automation, growth systems and CRM integration roles.", "/work/headshot.jpg");
 
 export default function Resume() {
   return (

@@ -9,7 +9,7 @@ export default function Hero() {
         <div className="cinematic-rule-grid" aria-hidden="true" />
         <div className="cinematic-stage studio-container">
           <div className="cinematic-meta-row">
-            <span>OO / FIELD NOTES — 2026</span>
+            <span>OLAWALE EMMANUEL OLAONIPEKUN / 2026</span>
             <span>AI ENGINEERING · GROWTH SYSTEMS</span>
             <span className="cinematic-meta-right">INDEPENDENT PRACTICE / NIGERIA + REMOTE</span>
           </div>
