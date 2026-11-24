@@ -28,6 +28,8 @@ export type Project = {
   demonstrates?: string;
   media: Media[];
   preview?: string;
+  metrics?: { value: string; label: string }[];
+  metricsAsOf?: string;
   repo?: string;
   live?: string;
 };

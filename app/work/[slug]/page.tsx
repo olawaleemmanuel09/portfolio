@@ -88,6 +88,23 @@ export default async function CaseStudy({
           </div>
         </dl>
 
+        {project.metrics && project.metrics.length > 0 && (
+          <section aria-label="Verified project metrics" className="mt-10 rounded-[1rem] border border-[#ded8e9] bg-[#faf9fd] p-5 sm:p-7">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <p className="text-[0.66rem] font-semibold uppercase tracking-[0.15em] text-[var(--color-accent-deep)]">Verified operating snapshot</p>
+              <p className="text-xs text-muted">Database count · {project.metricsAsOf}</p>
+            </div>
+            <dl className="mt-6 grid gap-5 sm:grid-cols-3">
+              {project.metrics.map((metric) => (
+                <div key={metric.label} className="border-l-2 border-[#a68edc] pl-4">
+                  <dt className="text-sm leading-snug text-muted">{metric.label}</dt>
+                  <dd className="mt-1.5 text-[clamp(1.9rem,3vw,2.75rem)] font-semibold tabular-nums leading-none tracking-[-0.035em] text-ink">{metric.value}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        )}
+
         {(project.live || project.repo) && (
           <div className="mt-10 flex gap-8">
             {project.live && (
@@ -108,7 +125,7 @@ export default async function CaseStudy({
 
       <div className="grid gap-14 py-14 md:py-20 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:gap-20">
         <div className="lg:sticky lg:top-32 lg:self-start">
-          <h2 className="t-h2">The problem</h2>
+          <h2 className="t-h2">The business problem</h2>
           {project.problem.map((p, i) => (
             <p key={i} className="t-body prose-justify mt-5 text-muted">
               {p}
@@ -117,7 +134,7 @@ export default async function CaseStudy({
         </div>
 
         <div>
-          <h2 className="t-h2">What I built</h2>
+          <h2 className="t-h2">The solution I designed</h2>
           <div className="mt-8">
             {project.approach.map((a, i) => (
               <Reveal key={a.title} delay={i * 60} variant="soft">
@@ -161,7 +178,7 @@ export default async function CaseStudy({
       )}
 
       <section className="grid gap-12 border-t border-rule py-14 md:py-20 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:gap-20">
-        <h2 className="t-h2">Delivery and evidence</h2>
+        <h2 className="t-h2">What changed and what remains</h2>
         <div>
           {project.outcome.map((o, i) => (
             <p key={i} className="t-body prose-justify mt-5 text-muted first:mt-0">

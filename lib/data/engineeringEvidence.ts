@@ -6,7 +6,7 @@ export type EngineeringEvidence = {
 };
 export const engineeringEvidence: Record<string, EngineeringEvidence> = {
   "cefa": {
-    "boundaries": "An operational learning programme connects student identities, authorized group membership, coursework, updates and staff review. A temporary backend outage cannot be equated with loss of identity.",
+    "boundaries": "A programme with 127 onboarded students and active group conversations needs a clear student experience, reliable access and private group boundaries. An interruption is not proof that a learner has lost their identity.",
     "implementation": [
       {
         "title": "Identity and groups",
@@ -55,7 +55,7 @@ export const engineeringEvidence: Record<string, EngineeringEvidence> = {
       {
         "area": "Historical operational channel",
         "state": "documented",
-        "detail": "Earlier handover describes real customer ordering and manual payment confirmation."
+        "detail": "An earlier handover documents order-taking and manual payment confirmation. Faster response and lead conversion improvements are business goals, not independently measured outcomes."
       },
       {
         "area": "Current node revisions",
@@ -114,7 +114,7 @@ export const engineeringEvidence: Record<string, EngineeringEvidence> = {
     "publicationNote": "Dashboard responsibilities are approved product scope, not independently verified screenshots or proof of release certification."
   },
   "elion-sales-command-centre": {
-    "boundaries": "Organization data should remain isolated across browser, server API and database access. The implemented foundation is not the same as a deployed AI sales assistant.",
+    "boundaries": "The business goal is to prevent lost property enquiries: quick initial replies, captured lead context, shared AI/customer conversation history and human takeover from the same WhatsApp number. The checked-in property/campaign foundation does not establish that those messaging features are live.",
     "implementation": [
       {
         "title": "Trust boundaries",
@@ -122,7 +122,7 @@ export const engineeringEvidence: Record<string, EngineeringEvidence> = {
       },
       {
         "title": "Auditable edits",
-        "detail": "Membership checks, idempotency and concurrency-aware property/campaign updates protect tenant data."
+        "detail": "Membership checks, idempotency and concurrency-aware property/campaign updates protect tenant data, supporting a future CRM conversation and handoff workflow."
       }
     ],
     "verification": [
@@ -139,12 +139,12 @@ export const engineeringEvidence: Record<string, EngineeringEvidence> = {
       {
         "area": "AI messaging",
         "state": "planned",
-        "detail": "Do not describe lead capture, conversation intelligence or WhatsApp as operational in this baseline."
+        "detail": "The requested conversation viewer, AI reply flow, lead intake and same-number human handoff still require live-provider integration and acceptance; do not describe them as certified production features."
       }
     ]
   },
   "security-workforce-operations": {
-    "boundaries": "The staged security-operations system separates guard field inputs, supervisor and headquarters access, and server-side spatial decision logic. Raw GPS coordinates are uncertain evidence.",
+    "boundaries": "The client described more than 1,000 guards and fragmented WhatsApp attendance reporting. The staged platform aims to give headquarters a consistent clock-in, clock-out, shift and incident picture without treating raw GPS as reliable proof.",
     "implementation": [
       {
         "title": "Geospatial attendance",
@@ -174,7 +174,7 @@ export const engineeringEvidence: Record<string, EngineeringEvidence> = {
     "publicationNote": "No client identifier, guard identity, site coordinate or deployment hostname is shared."
   },
   "christ-heart-foundation": {
-    "boundaries": "Public NGO information must remain separate from sensitive assistance submissions and privileged gallery management. Trust is enforced server-side and in the database.",
+    "boundaries": "A nonprofit must help visitors find programmes and submit appropriate enquiries while keeping assistance requests private. Trust is enforced server-side and in the database.",
     "implementation": [
       {
         "title": "Private submissions",
@@ -203,7 +203,7 @@ export const engineeringEvidence: Record<string, EngineeringEvidence> = {
     ]
   },
   "elion-homes": {
-    "boundaries": "A property website should communicate content and contact routes independently of video playback. The source is a design/release candidate with several external launch gates.",
+    "boundaries": "After a client-reported malware outage disabled an earlier campaign-linked site, the immediate need was a usable replacement destination. The source is a responsive design/release candidate, not proof that the campaign domain was restored.",
     "implementation": [
       {
         "title": "Adaptive media",

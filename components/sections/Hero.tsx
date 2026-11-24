@@ -11,12 +11,12 @@ export default function Hero() {
             AI Engineer — Growth &amp; Automation Systems
           </p>
           <h1 className="hero-statement mt-7 max-w-[14ch]">
-            I build AI systems <span className="hero-statement-accent">businesses rely on.</span>
+            I solve business problems <span className="hero-statement-accent">with dependable AI systems.</span>
           </h1>
           <p className="mt-7 max-w-[52ch] text-[1.05rem] leading-[1.72] text-muted md:text-[1.13rem]">
-            I engineer the infrastructure behind intelligent operations: AI integration,
-            business applications, secure data, CRM workflows and production automation.
-            My focus is what keeps working after launch.
+            I start with what is slowing a business down: unanswered customer messages,
+            lost enquiries, scattered team updates or systems people cannot trust.
+            Then I build the AI, software and automation that address the problem—clearly and reliably.
           </p>
           <div className="mt-9 flex flex-wrap items-center gap-4">
             <Link href="#work" className="hero-primary-cta inline-flex min-h-12 items-center gap-5 rounded-md bg-[var(--color-ink)] px-5 py-3 text-sm font-semibold text-white" style={{ color: "#ffffff" }}>

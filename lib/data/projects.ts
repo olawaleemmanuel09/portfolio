@@ -8,7 +8,7 @@ export const projects: Project[] = [
     status: "production",
     statusLabel: "Production programme",
     period: "Reviewed November 2026",
-    summary: "A learning operations platform connecting student access, group-scoped conversations, assignment submission, staff review and announcements. The central challenge is protecting group boundaries while maintaining reliable sessions during backend interruptions.",
+    summary: "A learning programme that replaces scattered spreadsheets and group updates with one reliable student experience. On November 24, 2026, the live database recorded 127 onboarded students, 10 learning groups and 113 non-deleted group-chat messages.",
     stack: [
       "Supabase Auth",
       "PostgreSQL",
@@ -18,25 +18,37 @@ export const projects: Project[] = [
     featured: true,
     order: 1,
     problem: [
-      "A single programme needs shared announcements and private group conversations. A student joining one group must only see the discussions and assignments intended for that group."
+      "Running a training programme is more than sending course links. Staff need to enrol students, place them into the correct groups, collect assignments and answer questions without losing track of who is participating.",
+      "When each class uses separate chats, spreadsheets and files, participants get confused and instructors spend time tracing messages instead of teaching. The platform needed to give every student one clear place to learn, talk to their group and submit work."
     ],
     approach: [
       {
-        title: "From enrolment to review",
-        body: "An enrolment links a student identity to a group. Database access policies use that membership when the student reads messages or submits an assignment. Staff review submissions with separate permissions."
+        title: "Give every student one starting point",
+        body: "After account activation, students can access the programme, their assigned group, learning resources and work submission. Staff manage assignments and review submitted work from their own permitted views."
       },
       {
-        title: "Recovering from interrupted sessions",
-        body: "A temporary role lookup failure could send a signed-in user back to login. The reliability changes distinguish an unavailable database from an invalid session, coalesce overlapping requests and pause unnecessary background refreshes."
+        title: "Keep conversations organized and private",
+        body: "Group membership is checked by the database, not only by a hidden menu. Students see the conversations intended for their group while programme-wide updates remain separate."
+      },
+      {
+        title: "Keep learning usable when services are busy",
+        body: "After an availability incident, recovery work focused on avoiding repeated requests and distinguishing a temporarily unavailable service from a truly invalid account session. Deployment under sustained load still requires separate acceptance."
       }
     ],
     outcome: [
-      "The November onboarding record documents student activation. Nine transactional chat checks covered group access and rolled back their writes. Those tests measure permissions. Peak concurrent capacity and deployment of each recovery change need separate verification."
+      "Verified database snapshot, November 24, 2026: 127 active students with linked accounts and claimed invitations; 10 groups; 113 non-deleted group-chat messages. These are participation records, not performance or revenue estimates.",
+      "Programme workflows cover enrolment, group communication and staff review. Permission tests exist; peak concurrent capacity and end-to-end recovery performance remain separate verification gates."
     ],
     decision: {
-      title: "A failed lookup is not a revoked session",
-      body: "After a November availability incident, source-level fixes distinguished temporary infrastructure failure from loss of authorization and reduced overlapping refreshes. Their successful deployment and live-load behavior require separate verification."
+      title: "Reliable access matters more than extra features",
+      body: "Students should not be locked out simply because the database is temporarily busy. Identity, group access and assignment records stay separate from notification delivery; the team can recover the experience without exposing another group's records."
     },
+    metricsAsOf: "2026-11-24",
+    metrics: [
+      { value: "127", label: "Students onboarded" },
+      { value: "10", label: "Learning groups" },
+      { value: "113", label: "Group-chat messages" }
+    ],
     media: [{
       src: "/architecture/cefa-learning-operations.svg",
       alt: "Architecture system map derived from documented implementation boundaries.",
@@ -53,7 +65,7 @@ export const projects: Project[] = [
     status: "production",
     statusLabel: "Production ordering",
     period: "Reviewed November 2026",
-    summary: "A historical operating channel translating customer messages into branch-specific orders, checking authoritative menu prices and passing staff-verified transfers to the kitchen.",
+    summary: "A three-branch restaurant was receiving more customer messages than staff could answer promptly. I built an AI-assisted WhatsApp order-taking flow to respond quickly, capture customer requests and connect each order to the correct branch and menu.",
     stack: [
       "n8n",
       "Twilio",
@@ -63,24 +75,29 @@ export const projects: Project[] = [
     featured: false,
     order: 2,
     problem: [
-      "Staff need an order total they can verify against the branch menu, even when a customer types a request informally."
+      "The restaurant was already selling through WhatsApp. Customers wanted fast answers about meals, prices, availability and delivery, but staff were busy handling multiple conversations and preparing orders.",
+      "A slow or missed response meant someone could abandon an enquiry before placing an order. Management wanted technology to handle the repetitive first conversation without forcing customers to install another app."
     ],
     approach: [
       {
-        title: "Interpret the request",
-        body: "A model extracts items from the message. The ordering workflow tracks the conversation and checks prices against the branch menu."
+        title: "Respond where customers already are",
+        body: "The ordering assistant receives incoming WhatsApp enquiries and guides customers through branch, meal choice, quantities and relevant order details, even when they type informally."
       },
       {
-        title: "Confirm the payment",
-        body: "A staff member confirms receipt of the transfer. The order record carries the reference across the payment and kitchen handoff."
+        title: "Turn messages into usable order records",
+        body: "AI helps interpret what a customer wrote; a rules-based workflow checks the actual branch menu and price. It captures the customer context and passes structured order details for human review and fulfilment."
+      },
+      {
+        title: "Hand over decisions that require people",
+        body: "Staff remain responsible for transfer confirmation and resolving exceptions. Keeping the customer order, payment reference and kitchen handoff linked avoids treating the chatbot's wording as a source of financial truth."
       }
     ],
     outcome: [
-      "The operating handover documents manual transfer confirmation. Order volumes and payment totals are private."
+      "The earlier operating handover documents a working order channel with staff-confirmed bank transfers. Current order volume, response-time improvement and sales impact have not been independently measured for publication."
     ],
     decision: {
-      title: "The model never sets the final bill",
-      body: "AI interprets a message, while branch menus, order totals and staff payment confirmation remain authoritative. Idempotency and branch checks matter more than conversational fluency."
+      title: "Fast replies are useful only when the order is correct",
+      body: "The AI handles conversation, but it does not invent prices, approve a payment or choose the branch on its own. The menu and recorded transaction state remain authoritative."
     },
     media: [{
       src: "/architecture/restaurant-conversation.svg",
@@ -98,7 +115,7 @@ export const projects: Project[] = [
     status: "staging",
     statusLabel: "Dashboard and payment release candidate",
     period: "Reviewed November 2026",
-    summary: "Web ordering with a management oversight layer, branch-manager operations, kitchen preparation and an accountant-led reconciliation scope. New payment and dashboard certification are not established by the historically live ordering workflow.",
+    summary: "As a three-branch restaurant expanded ordering beyond WhatsApp, management needed a clearer view of what each branch was receiving, preparing and reconciling. The rebuild connects a simple customer form to dedicated management, branch, kitchen and accountant responsibilities.",
     stack: [
       "n8n",
       "Supabase",
@@ -107,24 +124,29 @@ export const projects: Project[] = [
     featured: true,
     order: 3,
     problem: [
-      "A web customer may never have opened a WhatsApp conversation. The order must carry enough information for payment on its own."
+      "Taking a customer order is only the beginning. With three branches, an order can be missed between the customer, manager, kitchen and whoever checks the transfer. Management cannot solve those mistakes if everything lives in separate messages.",
+      "The team also wanted customers to place orders without waiting for a WhatsApp conversation, while keeping delivery coordination manual during the first release."
     ],
     approach: [
       {
-        title: "Keep the instructions with the order",
-        body: "The original web flow displays branch details, amount and reference on the payment page. Staff confirm transfers in Telegram."
+        title: "Make customer ordering straightforward",
+        body: "A lightweight order form collects the branch, items and order details without repeating the website's food gallery. The customer receives clear next steps rather than a complicated checkout."
       },
       {
-        title: "Scope the rebuild",
-        body: "The Ride candidate separates menu, order and reconciliation records. Management kept dispatch manual for the launch scope."
+        title: "Give each team the right view",
+        body: "Management needs cross-branch oversight. Branch managers need a branch-specific order queue. Kitchen staff need authorized preparation tickets. Accountants need references, transfer checks and an exception trail for reconciliation."
+      },
+      {
+        title: "Keep the first release focused",
+        body: "The agreed launch model leaves rider assignment and delivery charges to staff instead of building unnecessary dispatcher dashboards. Gateway and dashboard behavior require acceptance against the current release candidate."
       }
     ],
     outcome: [
-      "The earlier system took real orders. Live-money gateway activation and owner acceptance for Ride remain outstanding."
+      "The predecessor handled real customer ordering. The four-workspace dashboard model and manual delivery boundary are approved scope, but independent certification of the newer dashboard screens and live-money payment flow is still outstanding."
     ],
     decision: {
-      title: "Keep financial decisions and delivery responsibilities explicit",
-      body: "Management oversees branches, managers operate within a branch, kitchen acts on authorized orders, and accountants reconcile payment exceptions. Manual dispatch remains approved; no rider or dispatcher dashboard or automatic delivery fee belongs to this release."
+      title: "An order is not finished until the business can fulfil and account for it",
+      body: "The system must preserve the same record as it moves from customer to kitchen to financial reconciliation. Separate role permissions prevent branch staff from relying on a shared, uncontrolled spreadsheet."
     },
     media: [{
       src: "/architecture/restaurant-operations.svg",
@@ -142,7 +164,7 @@ export const projects: Project[] = [
     status: "staging",
     statusLabel: "Hosted acceptance pending",
     period: "Reviewed November 2026",
-    summary: "A tenant-isolated sales operations foundation using API boundaries, restricted data access, auditability and transaction-aware property and campaign updates; hosted release and AI messaging integrations remain unverified.",
+    summary: "A real-estate team needed to stop losing enquiries through slow WhatsApp replies and inconsistent follow-up. The Sales Command Centre is designed to capture leads, preserve customer/AI conversation history and let staff take over the same conversation using the business's existing number.",
     stack: [
       "TypeScript",
       "Next.js",
@@ -152,24 +174,30 @@ export const projects: Project[] = [
     featured: true,
     order: 4,
     problem: [
-      "Sales staff need to update shared records without crossing organisation boundaries or overwriting another person’s changes."
+      "Someone who asks about a property is often comparing several options. If the real-estate team replies hours later, forgets to follow up or loses the message in an agent's personal chat, a valuable enquiry can disappear.",
+      "The CEO wanted the business to see customer conversations in one place, respond consistently even when agents are busy, and let a person step in when a buyer needs a human conversation—without asking the buyer to switch numbers."
     ],
     approach: [
       {
-        title: "Protect the organisation boundary",
-        body: "The application checks organisation membership, uses restricted database roles and applies row-level access policies."
+        title: "Give enquiries a reliable first response",
+        body: "The planned AI WhatsApp assistant should answer approved property questions, capture the prospect's details and buying interests, and make the next follow-up visible to staff. It must not invent property facts or promise availability."
       },
       {
-        title: "Make edits traceable",
-        body: "Property and campaign endpoints use audit events, concurrency checks and idempotency to keep updates traceable."
+        title: "Put the whole conversation in the sales workspace",
+        body: "The intended dashboard shows an authorized team the customer's messages, AI replies, interest and handoff status. Staff should be able to take ownership of the same WhatsApp thread and reply using the same business sender, preserving the complete history."
+      },
+      {
+        title: "Build the dependable sales foundation first",
+        body: "The checked-in product already has organization-scoped property/campaign data, controlled writes and audit boundaries. A live connected WhatsApp channel, complete AI-to-human takeover and hosted end-to-end acceptance remain product launch gates—not features I can certify from the repository alone."
       }
     ],
     outcome: [
-      "The local contracts are documented. Hosted runtime login and user acceptance remain open. WhatsApp integration and AI qualification are future work."
+      "The sales challenge and target workflow are clear: faster acknowledgement, recorded lead context and easier human follow-up. The property/campaign foundation is implemented, but repository sign-off still withholds production approval for connected AI messaging.",
+      "Go-live prerequisites include business/provider documents, a compliant business WhatsApp sender, connection credentials, live conversation tests and final owner sign-off. I do not present staging records or planned takeover as proven production use."
     ],
     decision: {
-      title: "Permissions cannot live only in the interface",
-      body: "Membership checks, restricted database roles and auditable writes provide stronger organizational separation than a client-side list filter. Current hosted acceptance is distinct from local contract tests."
+      title: "The AI and the human must share one customer history",
+      body: "A chatbot without a handoff is another silo. The design keeps the incoming message, automated response, lead record and human takeover tied to one authorized conversation. Staff—not the model—must control any sale, offer or sensitive customer decision."
     },
     media: [{
       src: "/architecture/crm-tenant-foundation.svg",
@@ -187,7 +215,7 @@ export const projects: Project[] = [
     status: "staging",
     statusLabel: "Staged demo",
     period: "Reviewed November 2026",
-    summary: "A staged guard, supervisor, operations and HQ platform using geospatial attendance checks and permission-based records. Indoor GPS uncertainty and real-device field acceptance remain open.",
+    summary: "A security-company CEO overseeing more than 1,000 guards needed a dependable view of attendance and activity across locations. I designed a guard-to-headquarters command centre to replace scattered WhatsApp check-ins with structured records, role-based views and location-aware verification.",
     stack: [
       "TypeScript",
       "Supabase",
@@ -196,24 +224,30 @@ export const projects: Project[] = [
     featured: true,
     order: 5,
     problem: [
-      "Indoor GPS readings can be noisy. A phone reporting a coordinate is only one input to an attendance decision."
+      "The client described the difficulty of supervising more than 1,000 guards across different posts. Headquarters could not practically call everyone to ask who had arrived, who had left, which supervisor was on duty or whether an incident needed attention.",
+      "Attendance and operational updates sent through WhatsApp threads are difficult to reconcile. Messages get buried, a missed post can go unnoticed and management struggles to see one trustworthy picture across sites."
     ],
     approach: [
       {
-        title: "Evaluate the location on the server",
-        body: "The service checks the reported location against the configured site boundary. Role-specific views separate guard, supervisor and headquarters tasks."
+        title: "Make each shift traceable",
+        body: "A guard-facing interface is designed to record shift starts, clock-outs, site activity and incidents against the correct assignment, replacing informal WhatsApp attendance updates with structured operational events."
       },
       {
-        title: "Keep an audit trail",
-        body: "Durable event records let downstream automation follow the decision and preserve its context."
+        title: "Give headquarters one command view",
+        body: "Guards, supervisors, operations staff and headquarters have different responsibilities. Authorized dashboards are designed to show who is assigned where, which posts need attention and which events require escalation."
+      },
+      {
+        title: "Check the location without trusting it blindly",
+        body: "Server-side geofencing considers site boundaries, shift context and reported GPS accuracy. Indoor positioning and simulated coordinates can be unreliable, so real-device field testing remains necessary before attendance data is treated as fully certified."
       }
     ],
     outcome: [
-      "The delivery manifest marks deployment pending. Real-device GPS and connected hosted acceptance remain review gates."
+      "The source contains staged roles, geospatial attendance controls and recorded security tests. The 1,000-plus guard figure describes the client's management challenge, not the number of guards currently onboarded to this platform.",
+      "Connected headquarters demonstrations, mobile GPS acceptance and production operations certification remain launch gates."
     ],
     decision: {
-      title: "A coordinate is not proof of attendance",
-      body: "A phone's reported position has uncertainty; site boundaries, GPS accuracy, shift context and server-side authorization must be considered. Synthetic-location success does not certify real field conditions."
+      title: "A WhatsApp message is not an attendance record",
+      body: "Headquarters needs a durable, permission-controlled timeline—not screenshots of a chat. The system must link each clock-in, clock-out and exception to the correct guard, shift and site before management relies on it."
     },
     media: [{
       src: "/architecture/security-operations.svg",
@@ -231,7 +265,7 @@ export const projects: Project[] = [
     status: "prototype",
     statusLabel: "Certification pending",
     period: "Reviewed November 2026",
-    summary: "A sourced business-research and marketer follow-up design intended to prioritize candidates and record call outcomes. Hosted certification and attributable conversion remain unverified.",
+    summary: "A restaurant group needed more repeat business from nearby offices and organizations, but its sales team lacked a consistent list of businesses worth contacting. The prospect-intelligence workflow finds candidates, assesses their fit and prepares call-ready research for marketers.",
     stack: [
       "PostgreSQL",
       "n8n",
@@ -240,24 +274,30 @@ export const projects: Project[] = [
     featured: false,
     order: 6,
     problem: [
-      "A long list of candidate businesses leaves a marketer to repeat the same research before every call."
+      "Business customers such as offices and institutions can place repeat meal orders, but marketers cannot reach them efficiently if they first have to search online, guess which organizations are relevant and collect the same contact details again.",
+      "Management wanted a repeatable prospecting process that could move beyond random cold calls: identify suitable organizations near each branch, explain why a lead may fit, assign outreach and record what happened after a call."
     ],
     approach: [
       {
-        title: "Rank the research",
-        body: "The design records candidate sources, removes duplicates and separates qualification signals from the final ranking."
+        title: "Find and consolidate potential customers",
+        body: "Automated research collects candidate organizations across relevant territories, stores traceable sources and removes repeated listings so each business can be assessed once."
       },
       {
-        title: "Feed outcomes back",
-        body: "Call outcomes and follow-up tasks inform the next research brief."
+        title: "Separate a discovered lead from a call-ready one",
+        body: "The qualification flow checks the available business signals, scores the opportunity and prioritizes a marketer's list. A discovered business is not automatically a confirmed buyer or permission to contact someone."
+      },
+      {
+        title: "Close the loop with sales outcomes",
+        body: "Marketers record call dispositions, next steps and follow-ups. Management can distinguish raw prospects, qualified call candidates, outreach activity and actual opportunities without confusing the stages."
       }
     ],
     outcome: [
-      "The earlier portfolio documents the sales brief. Current hosted operation and revenue attributable to this work await verification."
+      "A historical report dated October 9, 2026 records 314 prospects discovered. That is a dated project result, not a verified current database total.",
+      "The current live total and the number qualified for calls could not be authenticated from the connected databases. Both figures are withheld from the public metrics until a single authoritative snapshot is available."
     ],
     decision: {
-      title: "Research is not a customer acquisition result",
-      body: "Candidate sources, prioritization signals and recorded conversations are distinct records. Do not conflate collected prospects with verified contact permission or won sales."
+      title: "A long lead list is not the same as a sales pipeline",
+      body: "Qualification and call outcomes make research actionable. Keep prospect discovery, call readiness and won business as different stages so management can decide where to invest sales effort."
     },
     media: []
   },
@@ -268,7 +308,7 @@ export const projects: Project[] = [
     status: "staging",
     statusLabel: "Release candidate",
     period: "Reviewed November 2026",
-    summary: "A mobile-first property website release candidate combining editorial content, responsive navigation, optimized video, static media fallbacks and direct contact paths. Public launch awaits the documented approvals.",
+    summary: "After the real-estate company's previous website was disabled following a reported malware attack, its marketing materials were still directing prospects to a site they could not use. I developed a fast, mobile-first replacement so campaigns could point people back to clear property information and contact options.",
     stack: [
       "HTML",
       "CSS",
@@ -277,24 +317,30 @@ export const projects: Project[] = [
     featured: true,
     order: 7,
     problem: [
-      "Prospective buyers may browse on a phone with a slow connection. Property information and contact details need to work before video finishes loading."
+      "The CEO faced an immediate business problem: the old company website had been taken offline after a malware incident, but existing campaign materials and customer links still directed people there.",
+      "Every failed visit risked losing a customer who had already shown interest. The replacement needed to feel credible, show the properties and company clearly, load well on mobile connections and give visitors an obvious way to make contact."
     ],
     approach: [
       {
-        title: "Start with the page",
-        body: "Semantic HTML carries the content and contact options. JavaScript progressively enhances navigation and motion."
+        title: "Restore a trustworthy digital destination",
+        body: "I prioritized the essential public pages, property presentation, navigation and contact links. This was a business-continuity response, not an open-ended visual redesign."
       },
       {
-        title: "Keep media optional",
-        body: "Responsive images and a video fallback accommodate reduced-motion and data-saving preferences."
+        title: "Make the website usable on real phones",
+        body: "Responsive layouts, optimized media, static image fallbacks and reduced-motion support keep the content readable even when a visitor's network cannot load a hero video."
+      },
+      {
+        title: "Separate development from the public go-live",
+        body: "The later release candidate includes additional enquiry-form and launch-security preparation. Domain connection, management-approved documents/privacy copy, backend intake and owner sign-off are still independent publication gates."
       }
     ],
     outcome: [
-      "The source records design approval and production SEO changes. The readiness documents retain hosting and domain gates. Public launch status needs confirmation."
+      "The replacement website and responsive QA have been developed as a release candidate. The source does not establish that every old campaign link was successfully restored or that the new website was publicly launched.",
+      "The incident-driven objective was to give management a credible site ready for approval, not to claim recovered sales without analytics."
     ],
     decision: {
-      title: "The page must work without video",
-      body: "Network, Save-Data, reduced-motion and low-memory fallbacks keep content and contact actions usable. Video polish does not substitute for verified domain, SEO and lead-intake readiness."
+      title: "When campaign links lead nowhere, speed and clarity beat decoration",
+      body: "A recovery website should load, explain the business and show customers how to contact the team before any animation runs. Security, verified domains and enquiry handling remain part of the launch decision."
     },
     media: [{
       src: "/architecture/property-website.svg",
@@ -349,7 +395,7 @@ export const projects: Project[] = [
     status: "production",
     statusLabel: "Operations platform",
     period: "Reviewed November 2026",
-    summary: "An event and team operations workspace connecting assignments, briefs, notifications and shared organizational work; it supplies context for the separate learning programme.",
+    summary: "An operations team needed one place to coordinate events, responsibilities and timely updates instead of relying on scattered chats and documents. The Command Centre connects staff work, shared briefs and notifications.",
     stack: [
       "PostgreSQL",
       "Supabase",
@@ -358,24 +404,24 @@ export const projects: Project[] = [
     featured: false,
     order: 9,
     problem: [
-      "An event brief in chat is hard to find when several projects share the same date."
+      "When several people own parts of an event, instructions spread across messages, files and verbal updates. Staff lose time searching for the latest brief and managers cannot easily see who is responsible for the next task."
     ],
     approach: [
       {
-        title: "Link the work",
-        body: "A shared event record ties project assignments to briefs and files."
+        title: "Give work a shared record",
+        body: "Event records, projects and assignments create a consistent reference for responsibilities, deadlines and associated documents."
       },
       {
-        title: "Queue reminders",
-        body: "The application records a notification for later delivery so a provider failure can be handled separately from the staff action."
+        title: "Keep reminders separate from business records",
+        body: "Notifications tell people that something needs attention, but the underlying event or task remains recorded even if an email or push notification is delayed."
       }
     ],
     outcome: [
-      "The command centre provides the operating context for CEFA. Outcomes are described at the workflow level."
+      "The platform provides an operating home for team coordination and programme administration. Time saved and operating-cost improvements require measured before-and-after evidence."
     ],
     decision: {
-      title: "Keep the operating record durable",
-      body: "An internal task or event cannot depend on whether an email or push message reaches the recipient; delivery failures should remain recoverable and observable."
+      title: "A missed notification should not erase the work",
+      body: "The record of an event, assigned task or submitted brief must exist independently of a message delivery service."
     },
     media: [{
       src: "/architecture/foc-operations.svg",
@@ -634,7 +680,7 @@ export const projects: Project[] = [
     status: "delivered",
     statusLabel: "Delivered website",
     period: "Reviewed November 2026",
-    summary: "A privacy-sensitive nonprofit application combining public programmes, an admin gallery, validated forms and restricted database access. Its public repository documents 61 tests focused on security and content correctness.",
+    summary: "A nonprofit needed a professional place to explain its programmes, receive the right kinds of enquiries and manage public updates without exposing sensitive requests for assistance.",
     stack: [
       "TypeScript",
       "Next.js"
@@ -642,20 +688,29 @@ export const projects: Project[] = [
     featured: true,
     order: 15,
     problem: [
-      "Visitors need to find the correct form for the programme they want."
+      "People approach a foundation for different reasons: they may want to understand its work, request help, volunteer or support a programme. A single informal inbox makes it harder for staff to route each enquiry appropriately.",
+      "Information about someone requesting assistance may be sensitive. The website needed to build trust without publishing private form responses or implying aid had been approved before a staff review."
     ],
     approach: [
       {
-        title: "Route the enquiry",
-        body: "Purpose-specific forms help visitors provide relevant information and staff identify the enquiry type."
+        title: "Make the mission and next steps easy to understand",
+        body: "Public pages explain programmes and provide purpose-specific calls to action so visitors know where to go and what information to share."
+      },
+      {
+        title: "Capture and protect each enquiry",
+        body: "Validated forms and protected storage keep request details away from public browsing, while acknowledgements confirm receipt without making unapproved promises."
+      },
+      {
+        title: "Give staff a controlled way to maintain the site",
+        body: "An administrator-managed gallery allows approved updates, with write permissions enforced by database policies and small images designed to load well on mobile."
       }
     ],
     outcome: [
-      "Public client assets and current deployment details are withheld pending clearance."
+      "The public repository documents a delivered nonprofit platform and 61 security/content tests. Those documented tests do not prove donation totals or beneficiary outcomes, and private request content is not shown in this portfolio."
     ],
     decision: {
-      title: "Never promise assistance that has not been approved",
-      body: "Assistance enquiries are sensitive. Backend validation, restricted submission access and truthful acknowledgement wording matter more than form completion visuals; gallery permissions are enforced at the database boundary."
+      title: "A responsible form should protect the person behind it",
+      body: "Treat assistance requests as confidential service enquiries, not promotional material. Staff approval, safe database access and honest acknowledgement copy matter as much as visual design."
     },
     media: [{
       src: "/architecture/foundation-platform.svg",
