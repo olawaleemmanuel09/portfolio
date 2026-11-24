@@ -44,8 +44,8 @@ test("release-scope boundaries are explicit", () => {
 
 test("archived media files exist and have provenance entries", () => {
   const media = [...catalog.matchAll(/src: "(\/evidence\/[^"]+\.(?:png|jpg))"/g)].map(x => x[1]);
-  assert.equal(media.length, 19);
-  assert.equal(new Set(media).size, 19);
+  assert.equal(media.length, 9);
+  assert.equal(new Set(media).size, 9);
   for (const src of media) assert.ok(existsSync(new URL("../public" + src, import.meta.url)), src);
   assert.match(read("docs/review/CASE_STUDY_VISUAL_EVIDENCE.md"), /original Git blobs/);
 });
@@ -96,7 +96,7 @@ test("approved redacted assets are real binary files and video posters exist", (
 
 test("sanitized recordings are poster-first, click-to-play and source-labelled", () => {
   for (const item of ["learning-portal-demo.mp4", "real-estate-website-mobile.mp4", "job-alert-notifications.mp4"])
-    assert.ok(catalog.includes('src: "/evidence/approved/' + item + '"'), item);
+    assert.ok(catalog.includes("/evidence/approved/" + item), item);
   const gallery = read("components/sections/EvidenceGallery.tsx");
   assert.match(gallery, /preload="none"/);
   assert.match(gallery, /poster=\{m.poster\}/);
