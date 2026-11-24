@@ -9,6 +9,14 @@ export const projects: Project[] = [
     statusLabel: "Production programme",
     period: "Reviewed November 2026",
     summary: "A learning programme that replaces scattered spreadsheets and group updates with one reliable student experience. On November 24, 2026, the live database recorded 127 onboarded students, 10 learning groups and 113 non-deleted group-chat messages.",
+    stack: [
+      "Supabase Auth",
+      "PostgreSQL",
+      "Realtime",
+      "JavaScript"
+    ],
+    featured: true,
+    order: 1,
     problem: [
       "Running a training programme is more than sending course links. Staff need to enrol students, place them into the correct groups, collect assignments and answer questions without losing track of who is participating.",
       "When each class uses separate chats, spreadsheets and files, participants get confused and instructors spend time tracing messages instead of teaching. The platform needed to give every student one clear place to learn, talk to their group and submit work."
@@ -58,6 +66,14 @@ export const projects: Project[] = [
     statusLabel: "Production ordering",
     period: "Reviewed November 2026",
     summary: "A three-branch restaurant was receiving more customer messages than staff could answer promptly. I built an AI-assisted WhatsApp order-taking flow to respond quickly, capture customer requests and connect each order to the correct branch and menu.",
+    stack: [
+      "n8n",
+      "Twilio",
+      "Google Sheets",
+      "Telegram"
+    ],
+    featured: false,
+    order: 2,
     problem: [
       "The restaurant was already selling through WhatsApp. Customers wanted fast answers about meals, prices, availability and delivery, but staff were busy handling multiple conversations and preparing orders.",
       "A slow or missed response meant someone could abandon an enquiry before placing an order. Management wanted technology to handle the repetitive first conversation without forcing customers to install another app."
@@ -100,6 +116,13 @@ export const projects: Project[] = [
     statusLabel: "Dashboard and payment release candidate",
     period: "Reviewed November 2026",
     summary: "As a three-branch restaurant expanded ordering beyond WhatsApp, management needed a clearer view of what each branch was receiving, preparing and reconciling. The rebuild connects a simple customer form to dedicated management, branch, kitchen and accountant responsibilities.",
+    stack: [
+      "n8n",
+      "Supabase",
+      "Monnify"
+    ],
+    featured: true,
+    order: 3,
     problem: [
       "Taking a customer order is only the beginning. With three branches, an order can be missed between the customer, manager, kitchen and whoever checks the transfer. Management cannot solve those mistakes if everything lives in separate messages.",
       "The team also wanted customers to place orders without waiting for a WhatsApp conversation, while keeping delivery coordination manual during the first release."
@@ -142,6 +165,14 @@ export const projects: Project[] = [
     statusLabel: "Hosted acceptance pending",
     period: "Reviewed November 2026",
     summary: "A real-estate team needed to stop losing enquiries through slow WhatsApp replies and inconsistent follow-up. The Sales Command Centre is designed to capture leads, preserve customer/AI conversation history and let staff take over the same conversation using the business's existing number.",
+    stack: [
+      "TypeScript",
+      "Next.js",
+      "NestJS",
+      "PostgreSQL"
+    ],
+    featured: true,
+    order: 4,
     problem: [
       "Someone who asks about a property is often comparing several options. If the real-estate team replies hours later, forgets to follow up or loses the message in an agent's personal chat, a valuable enquiry can disappear.",
       "The CEO wanted the business to see customer conversations in one place, respond consistently even when agents are busy, and let a person step in when a buyer needs a human conversation—without asking the buyer to switch numbers."
@@ -185,6 +216,13 @@ export const projects: Project[] = [
     statusLabel: "Staged demo",
     period: "Reviewed November 2026",
     summary: "A security-company CEO overseeing more than 1,000 guards needed a dependable view of attendance and activity across locations. I designed a guard-to-headquarters command centre to replace scattered WhatsApp check-ins with structured records, role-based views and location-aware verification.",
+    stack: [
+      "TypeScript",
+      "Supabase",
+      "PostGIS"
+    ],
+    featured: true,
+    order: 5,
     problem: [
       "The client described the difficulty of supervising more than 1,000 guards across different posts. Headquarters could not practically call everyone to ask who had arrived, who had left, which supervisor was on duty or whether an incident needed attention.",
       "Attendance and operational updates sent through WhatsApp threads are difficult to reconcile. Messages get buried, a missed post can go unnoticed and management struggles to see one trustworthy picture across sites."
@@ -228,6 +266,13 @@ export const projects: Project[] = [
     statusLabel: "Certification pending",
     period: "Reviewed November 2026",
     summary: "A restaurant group needed more repeat business from nearby offices and organizations, but its sales team lacked a consistent list of businesses worth contacting. The prospect-intelligence workflow finds candidates, assesses their fit and prepares call-ready research for marketers.",
+    stack: [
+      "PostgreSQL",
+      "n8n",
+      "Telegram"
+    ],
+    featured: false,
+    order: 6,
     problem: [
       "Business customers such as offices and institutions can place repeat meal orders, but marketers cannot reach them efficiently if they first have to search online, guess which organizations are relevant and collect the same contact details again.",
       "Management wanted a repeatable prospecting process that could move beyond random cold calls: identify suitable organizations near each branch, explain why a lead may fit, assign outreach and record what happened after a call."
@@ -264,6 +309,13 @@ export const projects: Project[] = [
     statusLabel: "Release candidate",
     period: "Reviewed November 2026",
     summary: "After the real-estate company's previous website was disabled following a reported malware attack, its marketing materials were still directing prospects to a site they could not use. I developed a fast, mobile-first replacement so campaigns could point people back to clear property information and contact options.",
+    stack: [
+      "HTML",
+      "CSS",
+      "JavaScript"
+    ],
+    featured: true,
+    order: 7,
     problem: [
       "The CEO faced an immediate business problem: the old company website had been taken offline after a malware incident, but existing campaign materials and customer links still directed people there.",
       "Every failed visit risked losing a customer who had already shown interest. The replacement needed to feel credible, show the properties and company clearly, load well on mobile connections and give visitors an obvious way to make contact."
@@ -344,6 +396,13 @@ export const projects: Project[] = [
     statusLabel: "Operations platform",
     period: "Reviewed November 2026",
     summary: "An operations team needed one place to coordinate events, responsibilities and timely updates instead of relying on scattered chats and documents. The Command Centre connects staff work, shared briefs and notifications.",
+    stack: [
+      "PostgreSQL",
+      "Supabase",
+      "n8n"
+    ],
+    featured: false,
+    order: 9,
     problem: [
       "When several people own parts of an event, instructions spread across messages, files and verbal updates. Staff lose time searching for the latest brief and managers cannot easily see who is responsible for the next task."
     ],
@@ -622,6 +681,12 @@ export const projects: Project[] = [
     statusLabel: "Delivered website",
     period: "Reviewed November 2026",
     summary: "A nonprofit needed a professional place to explain its programmes, receive the right kinds of enquiries and manage public updates without exposing sensitive requests for assistance.",
+    stack: [
+      "TypeScript",
+      "Next.js"
+    ],
+    featured: true,
+    order: 15,
     problem: [
       "People approach a foundation for different reasons: they may want to understand its work, request help, volunteer or support a programme. A single informal inbox makes it harder for staff to route each enquiry appropriately.",
       "Information about someone requesting assistance may be sensitive. The website needed to build trust without publishing private form responses or implying aid had been approved before a staff review."
