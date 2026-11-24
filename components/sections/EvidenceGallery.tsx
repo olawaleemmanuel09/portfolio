@@ -12,7 +12,7 @@ export default function EvidenceGallery({ project }: { project: Project }) {
 
   return (
     <section aria-labelledby="case-visual-evidence" className="border-b border-rule py-12 md:py-20">
-      <div className="mb-7 flex flex-wrap items-end justify-between gap-5 md:mb-10">
+      <div data-case-reveal className="mb-7 flex flex-wrap items-end justify-between gap-5 md:mb-10">
         <div>
           <p className="text-[0.68rem] font-semibold uppercase tracking-[0.17em] text-[var(--color-accent-deep)]">Visual record</p>
           <h2 id="case-visual-evidence" className="mt-3 text-[clamp(1.75rem,3.1vw,3.1rem)] font-semibold leading-[1.12] tracking-[-0.035em]">Inside the system.</h2>
@@ -30,7 +30,7 @@ export default function EvidenceGallery({ project }: { project: Project }) {
           const prominent = i === 0;
           const visualLabel = typeOfEvidence(m.src);
           return (
-            <figure key={m.src} className={`evidence-panel min-w-0 overflow-hidden rounded-[1rem] border border-[#e1dce9] bg-white ${prominent ? "md:col-span-2" : ""}`}>
+            <figure key={m.src} data-case-reveal className={`evidence-panel min-w-0 overflow-hidden rounded-[1rem] border border-[#e1dce9] bg-white ${prominent ? "md:col-span-2" : ""}`}>
               <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#eae7ee] bg-[#faf9fd] px-4 py-3 sm:px-6">
                 <span className="text-[0.64rem] font-bold uppercase tracking-[0.12em] text-[#574578]">{visualLabel}</span>
                 <span className="text-[0.64rem] font-medium tabular-nums text-[#70697d]">{String(i + 1).padStart(2, "0")} / {String(project.media.length).padStart(2, "0")}</span>
