@@ -55,7 +55,7 @@ export default async function CaseStudy({
 
   return (
     <article data-case-study className="case-cinema-page">
-      <CaseStudyMotion />
+      <CaseStudyMotion slug={project.slug} />
       <div className="case-cinema-cover">
         <div className="case-cinema-container">
           <header className="case-cinema-header">
@@ -103,7 +103,7 @@ export default async function CaseStudy({
             {project.metrics && project.metrics.length > 0 && (
               <section aria-label="Verified project metrics" className="case-cinema-metrics">
                 <div className="case-cinema-metrics-top">
-                  <p>VERIFIED OPERATING SNAPSHOT</p>
+                  <p>Verified operating snapshot</p>
                   <p>Database count · {project.metricsAsOf}</p>
                 </div>
                 <dl className="case-cinema-metrics-list">

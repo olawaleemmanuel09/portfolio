@@ -9,7 +9,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
  * source links and all status qualifiers are visible without hydration.
  * Every timeline belongs to this article and cleans up on navigation.
  */
-export default function CaseStudyMotion() {
+export default function CaseStudyMotion({ slug }: { slug: string }) {
   useEffect(() => {
     const root = document.querySelector<HTMLElement>("[data-case-study]");
     if (!root) return;
@@ -43,7 +43,7 @@ export default function CaseStudyMotion() {
       });
 
       media.add("(min-width: 1024px)", () => {
-        const frame = root.querySelector<HTMLElement>("[data-case-hero]");
+        const frame = root.querySelector<HTMLElement>("[data-case-hero] .case-hero-panel");
         if (!frame) return;
         gsap.fromTo(frame, { y: 0, rotate: 0 }, {
           y: -54, rotate: -1.15, ease: "none",
@@ -63,7 +63,7 @@ export default function CaseStudyMotion() {
       ctx.revert();
       delete root.dataset.caseMotion;
     };
-  }, []);
+  }, [slug]);
 
   return null;
 }

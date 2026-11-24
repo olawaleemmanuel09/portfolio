@@ -68,3 +68,21 @@ test("contact rejects invalid requests and falls back without sending mail", asy
   assert.match((await response.json()).error, /email me directly/);
   assert.equal((await post("{}", headers)).status, 429);
 });
+
+test("case studies preserve semantic chapter navigation and evidence boundaries", async () => {
+  for (const slug of ["cefa", "ai-job-scraper", "web-ordering-and-payments"]) {
+    const html = await (await fetch(origin + "/work/" + slug)).text();
+    assert.match(html, /aria-label="Case-study chapters"/);
+    assert.match(html, /href="#case-challenge"/);
+    assert.match(html, /href="#case-results"/);
+    assert.match(html, /id="case-system"/);
+    assert.match(html, /class="case-cinema-response/);
+    assert.match(html, /WHAT THE EVIDENCE ACTUALLY SUPPORTS/);
+    assert.equal((html.match(/<h1[\s>]/g) || []).length, 1);
+  }
+  const ce = await (await fetch(origin + "/work/cefa")).text();
+  for (const number of ["127", "10", "113"]) assert.match(ce, new RegExp(">"+number+"<"));
+  const job = await (await fetch(origin + "/work/ai-job-scraper")).text();
+  assert.match(job, /Archived project capture/);
+  assert.match(job, /one We Work Remotely RSS feed/);
+});

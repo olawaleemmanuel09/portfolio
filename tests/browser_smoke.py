@@ -46,6 +46,17 @@ with sync_playwright() as playwright:
                 assert page.locator(".work-index-card img").count() == 13
             if path in ("/work/cefa", "/work/ai-job-scraper"):
                 assert page.locator("[data-case-hero] img").count() == 1
+                assert page.get_by_role("navigation", name="Case-study chapters").count() == 1
+                assert page.locator(".case-title-word").count() >= 2
+                assert page.get_by_role("link", name="Challenge").get_attribute("href") == "#case-challenge"
+                assert page.get_by_role("link", name="Outcome").get_attribute("href") == "#case-results"
+                assert page.get_by_role("link", name="Visual record").get_attribute("href") == "#case-visual-evidence"
+                assert page.locator(".case-cinema-chapter").count() == 1
+                assert page.locator(".case-cinema-response li").count() >= 2
+                assert page.locator(".case-cinema-verification-row").count() >= 1
+                if javascript and width == 375:
+                    page.get_by_role("link", name="Engineering", exact=True).click()
+                    assert page.url.endswith("#case-system")
             if path == "/work/cefa":
                 assert page.get_by_text("Verified operating snapshot", exact=True).count() == 1
                 for number in ("127", "10", "113"):
