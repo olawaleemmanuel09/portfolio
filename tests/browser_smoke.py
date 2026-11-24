@@ -62,7 +62,7 @@ with sync_playwright() as playwright:
                 for number in ("127", "10", "113"):
                     assert page.locator('[aria-label="Verified project metrics"]').get_by_text(number, exact=True).count() == 1
             if path == "/work/ai-job-scraper":
-                assert page.locator(".evidence-panel").count() == 3
+                assert page.locator(".evidence-panel").count() == 4
                 assert page.get_by_role("link", name="Open original").count() == 3
                 assert page.locator('img[src*="job-intelligence-workflow"]').count() >= 1
             assert page.evaluate("matchMedia('(prefers-reduced-motion: reduce)').matches")

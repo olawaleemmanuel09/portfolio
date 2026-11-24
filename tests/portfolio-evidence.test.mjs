@@ -93,3 +93,12 @@ test("approved redacted assets are real binary files and video posters exist", (
   assert.match(catalog, /50,000 prospects discovered is the owner's reported progress/);
   assert.ok(!catalog.includes('metricsAsOf: "2026-11-24",\n    metrics: [\n      { value: "50,000"'));
 });
+
+test("sanitized recordings are poster-first, click-to-play and source-labelled", () => {
+  for (const item of ["learning-portal-demo.mp4", "real-estate-website-mobile.mp4", "job-alert-notifications.mp4"])
+    assert.ok(catalog.includes('src: "/evidence/approved/' + item + '"'), item);
+  const gallery = read("components/sections/EvidenceGallery.tsx");
+  assert.match(gallery, /preload="none"/);
+  assert.match(gallery, /poster=\{m.poster\}/);
+  assert.ok(!gallery.includes("autoPlay"), "No autoplay on mobile data");
+});
