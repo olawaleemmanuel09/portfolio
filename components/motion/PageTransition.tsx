@@ -22,7 +22,11 @@ export default function PageTransition() {
 
     const el = panel.current;
     if (!el) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true;
+    if (saveData || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      el.dataset.phase = "idle";
+      return;
+    }
 
     el.dataset.phase = "cover";
     const toClear = window.setTimeout(() => {
@@ -35,6 +39,7 @@ export default function PageTransition() {
     return () => {
       window.clearTimeout(toClear);
       window.clearTimeout(toIdle);
+      el.dataset.phase = "idle";
     };
   }, [pathname]);
 

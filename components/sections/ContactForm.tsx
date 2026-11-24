@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 type State = "idle" | "sending" | "sent" | "error";
 
@@ -14,9 +14,11 @@ const needs = [
 export default function ContactForm() {
   const [state, setState] = useState<State>("idle");
   const [message, setMessage] = useState("");
+  const sending = useRef(false);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (sending.current) return;
 
     // Read the form BEFORE touching state. React flushes updates from a submit
     // synchronously, which clears the event's currentTarget, and FormData built
@@ -33,6 +35,7 @@ export default function ContactForm() {
       return;
     }
 
+    sending.current = true;
     setState("sending");
 
     try {
@@ -40,6 +43,7 @@ export default function ContactForm() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
+        signal: AbortSignal.timeout(15000),
       });
 
       if (!res.ok) {
@@ -53,22 +57,24 @@ export default function ContactForm() {
     } catch {
       setMessage("That did not send. Try again, or email me directly.");
       setState("error");
+    } finally {
+      sending.current = false;
     }
   }
 
   if (state === "sent") {
     return (
-      <div className="border-t border-ink pt-8" data-hero="1">
+      <div className="border-t border-ink pt-8" data-hero="1" role="status">
         <p className="t-display-sm">Message received.</p>
         <p className="t-body mt-4 text-muted">
-          I will reply within a day. If it is urgent, email is faster.
+          Thank you for sharing the details.
         </p>
       </div>
     );
   }
 
   return (
-    <form onSubmit={onSubmit} className="grid gap-7" data-hero="1" noValidate>
+    <form method="post" action="/api/contact" onSubmit={onSubmit} className="grid gap-7" data-hero="1" noValidate>
       <Field name="name" label="Name" required />
       <Field name="email" label="Email" type="email" required />
       <Field name="company" label="Company" />
@@ -98,9 +104,14 @@ export default function ContactForm() {
           name="message"
           rows={5}
           required
+          maxLength={5000}
           className="t-body resize-none border-b border-rule bg-transparent py-2 outline-none transition-colors focus:border-[var(--color-accent)]"
         />
       </div>
+
+      <p className="t-small text-muted">Your contact details and message are emailed to Olawale so he can reply. Please leave out confidential client information.</p>
+
+      <noscript><p className="t-small text-muted">This form requires JavaScript. Please use <a className="underline" href="mailto:olawaleemmanuel100@gmail.com">direct email</a> instead.</p></noscript>
 
       {/* spam trap, never shown to a person */}
       <input
@@ -156,6 +167,8 @@ function Field({
         name={name}
         type={type}
         required={required}
+        maxLength={name === "email" ? 200 : name === "company" ? 160 : 120}
+        autoComplete={name === "company" ? "organization" : name}
         className="t-body border-b border-rule bg-transparent py-2 outline-none transition-colors focus:border-[var(--color-accent)]"
       />
     </div>

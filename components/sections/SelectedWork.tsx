@@ -1,29 +1,28 @@
+import Link from "next/link";
 import { featured } from "@/lib/data/projects";
-import Reveal from "@/components/motion/Reveal";
 import WorkRow from "@/components/sections/WorkRow";
 
 export default function SelectedWork() {
   return (
-    <section id="work" className="mx-auto max-w-[1180px] px-6 pb-8 pt-24 md:px-8 md:pt-32">
-      <Reveal>
-        <div className="mb-14 flex items-baseline justify-between gap-6">
-          <span className="mask block">
-            <span className="t-h2">Selected work</span>
-          </span>
-          <span className="t-small text-muted">Six systems in production</span>
+    <section id="work" aria-labelledby="featured-heading" className="studio-selected">
+      <div className="studio-container">
+        <div className="studio-section-heading">
+          <div>
+            <p className="studio-overline">03 / SELECTED WORK</p>
+            <h2 id="featured-heading">A different problem. <em>Every time.</em></h2>
+          </div>
+          <p>These are the systems behind actual operational constraints. Each story distinguishes the work delivered from the next release gate.</p>
         </div>
-        <span className="rule-draw mb-4 block h-px w-full bg-rule" />
-      </Reveal>
-
-      <Reveal as="ol" className="relative">
-        <span
-          aria-hidden
-          className="connector absolute left-[5px] top-4 hidden h-[calc(100%-4rem)] w-px bg-rule md:block"
-        />
-        {featured.map((p) => (
-          <WorkRow key={p.slug} project={p} />
-        ))}
-      </Reveal>
+        <ol className="studio-featured-grid">
+          {featured.map((project, index) => (
+            <WorkRow key={project.slug} project={project} index={index} total={featured.length} />
+          ))}
+        </ol>
+        <div className="studio-selected-tail">
+          <p>Six featured systems / seventeen projects in the archive.</p>
+          <Link href="/work" className="studio-text-link">See the complete project archive <span aria-hidden="true">↗</span></Link>
+        </div>
+      </div>
     </section>
   );
 }

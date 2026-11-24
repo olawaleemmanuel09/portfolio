@@ -1,39 +1,11 @@
 import { NextResponse } from "next/server";
+import { clientAddress, createContactThrottle } from "@/lib/contact-throttle";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const WINDOW_MS = 10 * 60 * 1000;
-const MAX_PER_WINDOW = 3;
-
-/**
- * Per-IP throttle. Serverless instances are not shared, so this is a speed
- * bump rather than a wall, but it stops a single client hammering the endpoint
- * and burning the daily sending quota in one go.
- */
-const hits = new Map<string, number[]>();
-
-function rateLimited(ip: string) {
-  const now = Date.now();
-  const recent = (hits.get(ip) ?? []).filter((t) => now - t < WINDOW_MS);
-
-  if (recent.length >= MAX_PER_WINDOW) {
-    hits.set(ip, recent);
-    return true;
-  }
-
-  recent.push(now);
-  hits.set(ip, recent);
-
-  // keep the map from growing without bound on a long-lived instance
-  if (hits.size > 500) {
-    for (const [key, times] of hits) {
-      if (times.every((t) => now - t >= WINDOW_MS)) hits.delete(key);
-    }
-  }
-
-  return false;
-}
+const MAX_BODY_BYTES = 32 * 1024;
+const rateLimited = createContactThrottle();
 
 /** Strips control characters and newlines, which have no business in a subject. */
 function clean(value: unknown, limit: number) {
@@ -58,40 +30,51 @@ export async function POST(request: Request) {
   // Only accept submissions from this site's own pages.
   const origin = request.headers.get("origin");
   const host = request.headers.get("host");
-  if (origin) {
-    try {
-      if (new URL(origin).host !== host) {
-        return NextResponse.json({ error: "Request rejected." }, { status: 403 });
-      }
-    } catch {
-      return NextResponse.json({ error: "Request rejected." }, { status: 403 });
-    }
+  if (!host || !origin || ![`https://${host}`, `http://${host}`].includes(origin)) {
+    return NextResponse.json({ error: "Request rejected." }, { status: 403 });
   }
 
-  if (!request.headers.get("content-type")?.includes("application/json")) {
+  if (request.headers.get("content-type")?.split(";")[0].trim().toLowerCase() !== "application/json") {
     return NextResponse.json({ error: "Unsupported content type." }, { status: 415 });
   }
 
-  const ip =
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-    request.headers.get("x-real-ip") ||
-    "unknown";
-
-  if (rateLimited(ip)) {
-    return NextResponse.json(
-      { error: "Too many messages just now. Try again shortly, or email me directly." },
-      { status: 429 }
-    );
+  // Check the declared size before reading, and enforce the same limit on
+  // the actual stream for requests without a trustworthy Content-Length.
+  if (Number(request.headers.get("content-length")) > MAX_BODY_BYTES) {
+    return NextResponse.json({ error: "Message is too large." }, { status: 413 });
   }
 
   let body: Record<string, unknown>;
+  const reader = request.body?.getReader();
+  if (!reader) return NextResponse.json({ error: "Malformed request." }, { status: 400 });
   try {
-    body = await request.json();
+    const decoder = new TextDecoder("utf-8", { fatal: true });
+    let bytes = 0;
+    let raw = "";
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      bytes += value.byteLength;
+      if (bytes > MAX_BODY_BYTES) {
+        void reader.cancel().catch(() => {});
+        return NextResponse.json({ error: "Message is too large." }, { status: 413 });
+      }
+      raw += decoder.decode(value, { stream: true });
+    }
+    raw += decoder.decode();
+    body = JSON.parse(raw);
   } catch {
+    void reader.cancel().catch(() => {});
     return NextResponse.json({ error: "Malformed request." }, { status: 400 });
+  } finally {
+    reader.releaseLock();
   }
 
   // Honeypot. Answer 200 so the bot believes it worked and does not retry.
+  if (!body || typeof body !== "object" || Array.isArray(body)) {
+    return NextResponse.json({ error: "Malformed request." }, { status: 400 });
+  }
+
   if (clean(body.website, 50)) {
     return NextResponse.json({ ok: true });
   }
@@ -123,6 +106,15 @@ export async function POST(request: Request) {
     );
   }
 
+  // Only validated mail attempts consume the bounded per-instance quota.
+  const ip = clientAddress(request.headers, process.env.VERCEL === "1");
+  if (rateLimited(ip)) {
+    return NextResponse.json(
+      { error: "Too many messages just now. Try again shortly, or email me directly." },
+      { status: 429, headers: { "Retry-After": "600" } }
+    );
+  }
+
   const key = process.env.RESEND_API_KEY;
   const to = process.env.CONTACT_TO;
   const from = process.env.CONTACT_FROM ?? "Portfolio <onboarding@resend.dev>";
@@ -144,8 +136,7 @@ export async function POST(request: Request) {
   ].join("\n");
 
   try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10_000);
+
 
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -160,14 +151,14 @@ export async function POST(request: Request) {
         subject: `Portfolio enquiry from ${name}`,
         text,
       }),
-      signal: controller.signal,
+      signal: AbortSignal.timeout(10_000),
     });
 
-    clearTimeout(timeout);
+
 
     if (!res.ok) {
       // Log the provider's reason, never return it: it can echo configuration.
-      console.error("[contact] Resend rejected the message", res.status, await res.text());
+      console.error("[contact] Resend rejected the message", res.status);
       return NextResponse.json(
         { error: "That did not send. Please email me directly." },
         { status: 502 }
@@ -175,8 +166,8 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json({ ok: true });
-  } catch (error) {
-    console.error("[contact] Request to Resend failed", error);
+  } catch {
+    console.error("[contact] Request to Resend failed");
     return NextResponse.json(
       { error: "That did not send. Please email me directly." },
       { status: 502 }

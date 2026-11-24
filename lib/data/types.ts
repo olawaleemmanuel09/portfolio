@@ -1,7 +1,8 @@
-export type ProjectStatus = "production" | "build" | "capstone";
+export type ProjectStatus = "production" | "staging" | "prototype" | "delivered" | "capstone" | "personal";
 
 export type Media = {
   src: string;
+  poster?: string;
   alt: string;
   caption?: string;
   type?: "image" | "video";
@@ -25,9 +26,12 @@ export type Project = {
   approach: Block[];
   decision?: Block;
   outcome: string[];
-  demonstrates: string;
+  demonstrates?: string;
   media: Media[];
   preview?: string;
+  metrics?: { value: string; label: string }[];
+  metricsAsOf?: string;
+  ownerReportedProgress?: { value: string; label: string; asOf: string; note: string };
   repo?: string;
   live?: string;
 };

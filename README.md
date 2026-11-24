@@ -14,11 +14,13 @@ npm run dev          # http://localhost:3000
 - `.env.local` holds the Resend key and is covered by `.gitignore` (`.env*`).
   It must never be committed.
 - The contact endpoint checks the request origin, requires a JSON content type,
-  throttles to three messages per IP per ten minutes, strips control characters
+  applies a best-effort per-instance limit of three messages per IP per ten minutes, strips control characters
   from every field, and never returns the provider's error text to the browser.
 - Security headers, including a content security policy, are set in
   `next.config.ts` and apply to every route.
 - `poweredByHeader` is off, so the stack is not advertised in responses.
+
+On serverless hosting the in-memory limit resets on cold starts and is independent per instance. Configure a shared platform rate limit before relying on a global quota.
 
 ## Make the contact form send
 
@@ -66,6 +68,10 @@ logs: every failure path logs a line beginning `[contact]`.
   Parallax, PageTransition
 - `lib/animations/` — `useReveal` (enter once) and `useActive` (active while in
   the middle band of the viewport, which is what drives the work list on mobile)
+
+## Search and sharing
+
+Set `SITE_URL` to the public production origin before building to generate canonical URLs, the sitemap and social image links for that domain. It defaults to https://olawaleolaonipekun.vercel.app.
 
 ## Deploying
 

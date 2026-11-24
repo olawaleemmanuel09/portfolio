@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { siteUrl } from "@/lib/site";
+import { homeTitle, homeDescription, shortName } from "@/lib/seo";
 import localFont from "next/font/local";
 import "./globals.css";
 import SmoothScroll from "@/components/motion/SmoothScroll";
@@ -14,22 +16,14 @@ const archivo = localFont({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://olawaleemmanuel09.github.io"),
+  metadataBase: siteUrl,
   title: {
-    default: "Olawale Emmanuel Olaonipekun — AI Automation Engineer",
-    template: "%s — Olawale Emmanuel Olaonipekun",
+    default: homeTitle,
+    template: "%s | " + shortName,
   },
-  description:
-    "I build automation systems that run in production: ordering pipelines, lead engines and operations platforms for businesses in Nigeria and beyond.",
-  openGraph: {
-    type: "website",
-    title: "Olawale Emmanuel Olaonipekun — AI Automation Engineer",
-    description:
-      "Automation systems that run in production. n8n, Supabase, Python and LLMs.",
-    siteName: "Olawale Emmanuel Olaonipekun",
-  },
+  description: homeDescription,
   twitter: { card: "summary_large_image", creator: "@LaoniAI" },
-  robots: { index: true, follow: true },
+  robots: process.env.VERCEL_ENV === "preview" ? { index: false, follow: false } : { index: true, follow: true },
 };
 
 export default function RootLayout({

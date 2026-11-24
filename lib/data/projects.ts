@@ -2,541 +2,918 @@ import type { Project } from "./types";
 
 export const projects: Project[] = [
   {
-    slug: "whatsapp-ordering-system",
-    preview: "/work/whatsapp-poster.jpg",
-    title: "WhatsApp Ordering System",
-    client: "Confidential restaurant brand, three branches",
+    slug: "cefa",
+    title: "CEFA cohort platform",
+    client: "FOC programme operations",
     status: "production",
-    statusLabel: "Live in production",
-    period: "April 2026 to present",
-    summary:
-      "Customers order by chat. A language model reads what they typed, a state machine runs the ordering flow, and the menu is read live from the sheet the business already edits. Thirteen workflows sit behind it.",
-    stack: ["n8n", "Twilio", "Google Sheets", "Telegram", "OpenAI", "Contabo VPS"],
+    statusLabel: "Production programme",
+    period: "Reviewed November 2026",
+    summary: "A learning programme that replaces scattered spreadsheets and group updates with one reliable student experience. On November 24, 2026, the live database recorded 127 onboarded students, 10 learning groups and 113 non-deleted group-chat messages.",
+    stack: [
+      "Supabase Auth",
+      "PostgreSQL",
+      "Realtime",
+      "JavaScript"
+    ],
     featured: true,
     order: 1,
     problem: [
-      "A restaurant running three branches across Lagos and Abuja took every order by phone call and WhatsApp message. Staff wrote orders into a notebook, quoted prices from memory, and lost track of which ones had been paid for.",
-      "The obvious fix is an app nobody downloads. The customers were already in WhatsApp, so the ordering system had to live there.",
+      "Running a training programme is more than sending course links. Staff need to enrol students, place them into the correct groups, collect assignments and answer questions without losing track of who is participating.",
+      "When each class uses separate chats, spreadsheets and files, participants get confused and instructors spend time tracing messages instead of teaching. The platform needed to give every student one clear place to learn, talk to their group and submit work."
     ],
     approach: [
       {
-        title: "Hybrid intent handling",
-        body: "A language model parses free text like ten jollof rice and goat meat into structured items. A deterministic state machine runs the ordering flow itself. The model interprets, it never decides. Ordering logic that changes its mind between runs is not an ordering system.",
+        title: "Give every student one starting point",
+        body: "After account activation, students can access the programme, their assigned group, learning resources and work submission. Staff manage assignments and review submitted work from their own permitted views."
       },
       {
-        title: "Stateful sessions",
-        body: "Session records are read, created and updated on every message, so a conversation survives across messages, across hours, and across a customer walking away mid-order. A restart command resets cleanly at any point.",
+        title: "Keep conversations organized and private",
+        body: "Group membership is checked by the database, not only by a hidden menu. Students see the conversations intended for their group while programme-wide updates remain separate."
       },
       {
-        title: "Live menu, no deploy",
-        body: "Menus are fetched per branch at request time behind a JWT-authenticated service account. A price edited in the sheet is live in the next customer reply. An item flagged unavailable shows as unavailable without anyone touching a workflow. The business controls the menu, not the engineer.",
-      },
-      {
-        title: "Two channels, one pipeline",
-        body: "The chat bot and the web ordering form write to the same order store and fire the same alerting and payment path. Two front doors, one system behind them.",
-      },
-      {
-        title: "Payment and confirmation",
-        body: "Per-branch bank accounts, a unique reference on every order, a forty-five minute expiry on anything unpaid, and staff confirming receipt in a per-branch Telegram group, which closes the order automatically and triggers the customer confirmation.",
-      },
+        title: "Keep learning usable when services are busy",
+        body: "After an availability incident, recovery work focused on avoiding repeated requests and distinguishing a temporarily unavailable service from a truly invalid account session. Deployment under sustained load still requires separate acceptance."
+      }
+    ],
+    outcome: [
+      "Verified database snapshot, November 24, 2026: 127 active students with linked accounts and claimed invitations; 10 groups; 113 non-deleted group-chat messages. These are participation records, not performance or revenue estimates.",
+      "Programme workflows cover enrolment, group communication and staff review. Permission tests exist; peak concurrent capacity and end-to-end recovery performance remain separate verification gates."
     ],
     decision: {
-      title: "The staff side",
-      body: "Staff needed a view of what was happening, on a phone, in a kitchen, with no install and no training. The answer is a single-page dashboard behind a login: live orders by branch with status and totals, a menu availability toggle that reflects on every ordering surface within seconds, and revenue split between Lagos and Abuja. It holds no business logic and no database of its own. It is a thin client over five API workflows on the same automation layer that runs the ordering pipeline. One source of truth, four surfaces reading from it.",
+      title: "Reliable access matters more than extra features",
+      body: "Students should not be locked out simply because the database is temporarily busy. Identity, group access and assignment records stay separate from notification delivery; the team can recover the experience without exposing another group's records."
     },
-    outcome: [
-      "Thirteen workflows in production. Deployed and operational across all three branches.",
-      "Order volume sits with the client and is not mine to publish, so this project is presented on what the system does rather than on numbers I cannot verify.",
+    metricsAsOf: "2026-11-24",
+    metrics: [
+      { value: "127", label: "Students onboarded" },
+      { value: "10", label: "Learning groups" },
+      { value: "113", label: "Group-chat messages" }
     ],
-    demonstrates:
-      "Conversational commerce design, LLM intent extraction bounded by deterministic control flow, multi-channel convergence on a single pipeline, live configuration from a business-owned source, and production operation of a thirteen-workflow system.",
     media: [
       {
-        src: "/work/whatsapp-bot-demo.mp4",
-        alt: "A customer places a full order through the WhatsApp bot",
-        caption:
-          "Recorded before handover to management. The system is now in daily use by customers.",
-        type: "video",
-        aspect: "tall",
+        "src": "/evidence/approved/learning-portal-sign-in.jpg",
+        "alt": "Mobile FOC/CEFA sign-in interface with browser address and toolbars removed.",
+        "caption": "Approved mobile sign-in capture, cropped to exclude the web address; no individual student's credentials or records are shown.",
+        "type": "image",
+        "aspect": "tall"
       },
+      {
+        "src": "/evidence/approved/learning-push-notifications.jpg",
+        "alt": "Two CEFA push notifications visible on a phone lock screen.",
+        "caption": "Approved historical push notification capture. Delivery to this device is demonstrated; this is not a platform-wide delivery rate.",
+        "type": "image",
+        "aspect": "wide"
+      },
+      {
+        "src": "/evidence/approved/learning-portal-demo.mp4",
+        "poster": "/evidence/approved/learning-portal-demo-poster.jpg",
+        "alt": "CEFA student mobile screen recording navigating assignments, chats and updates.",
+        "caption": "Sanitized 44-second portal walkthrough. The browser domain and later personal phone-share screens were removed; this does not establish concurrent users.",
+        "type": "video",
+        "aspect": "tall"
+      },
+      {
+        "src": "/architecture/cefa-learning-operations.svg",
+        "alt": "Conceptual architecture of onboarding, group membership, group chat and staff review.",
+        "caption": "Conceptual architecture diagram. Not an application screenshot or deployment certification.",
+        "type": "image",
+        "aspect": "wide"
+      }
     ],
+    preview: "/evidence/approved/learning-portal-sign-in.jpg"
   },
-
   {
-    slug: "web-ordering-and-payments",
-    preview: "/work/web-form-menu.jpg",
-    title: "Web Ordering and Payments",
-    client: "Confidential restaurant brand, three branches",
+    slug: "whatsapp-ordering-system",
+    title: "AI-Assisted Restaurant Ordering on WhatsApp",
+    client: "Three-branch restaurant (anonymized)",
     status: "production",
-    statusLabel: "Live in production",
-    period: "2026",
-    summary:
-      "A second ordering surface for people who would rather tap than type, feeding the same pipeline. Payment details and live order status render on the page itself, because WhatsApp could not be trusted to deliver them.",
-    stack: ["n8n", "Monnify", "Google Sheets", "Telegram", "nginx"],
-    featured: true,
+    statusLabel: "Production ordering",
+    period: "Reviewed November 2026",
+    summary: "A three-branch restaurant was receiving more customer messages than staff could answer promptly. I built an AI-assisted WhatsApp order-taking flow to respond quickly, capture customer requests and connect each order to the correct branch and menu.",
+    stack: [
+      "n8n",
+      "Twilio",
+      "Google Sheets",
+      "Telegram"
+    ],
+    featured: false,
     order: 2,
     problem: [
-      "Not every customer wants to talk to a bot. Ordering by chat means typing item names, waiting for replies and correcting misunderstandings. A restaurant with a broad menu needs a surface where you see everything, tap what you want, watch the total move, and pay.",
-      "It also had to work for customers who had never messaged the business number, which turned out to be the hardest constraint in the entire build.",
+      "The restaurant was already selling through WhatsApp. Customers wanted fast answers about meals, prices, availability and delivery, but staff were busy handling multiple conversations and preparing orders.",
+      "A slow or missed response meant someone could abandon an enquiry before placing an order. Management wanted technology to handle the repetitive first conversation without forcing customers to install another app."
     ],
     approach: [
       {
-        title: "The ordering surface",
-        body: "Category tabs across the top, a grouped scrolling menu underneath, quantity steppers on every item, and a running basket total pinned to the bottom of the screen. Delivery or pickup as a single toggle that changes what the form asks for, plus a free-text notes field for the requests no structured form anticipates.",
+        title: "Respond where customers already are",
+        body: "The ordering assistant receives incoming WhatsApp enquiries and guides customers through branch, meal choice, quantities and relevant order details, even when they type informally."
       },
       {
-        title: "Payment on the page",
-        body: "The payment screen carries the exact transfer amount, the bank details for the correct branch, a unique reference, copy buttons on the fields customers get wrong, a live status indicator and a countdown to expiry. Everything critical renders where the customer already is.",
+        title: "Turn messages into usable order records",
+        body: "AI helps interpret what a customer wrote; a rules-based workflow checks the actual branch menu and price. It captures the customer context and passes structured order details for human review and fulfilment."
       },
       {
-        title: "Parallel fan-out",
-        body: "The webhook receives the order, authenticates, processes it, then fans out at once: the order is written to the branch sheet, a confirmation goes to the customer, the branch Telegram group gets an alert with confirm buttons for staff, and management gets its own notification. The webhook responds immediately rather than waiting on any of it.",
-      },
+        title: "Hand over decisions that require people",
+        body: "Staff remain responsible for transfer confirmation and resolving exceptions. Keeping the customer order, payment reference and kitchen handoff linked avoids treating the chatbot's wording as a source of financial truth."
+      }
+    ],
+    outcome: [
+      "The earlier operating handover documents a working order channel with staff-confirmed bank transfers. Current order volume, response-time improvement and sales impact have not been independently measured for publication."
     ],
     decision: {
-      title: "The constraint that shaped everything",
-      body: "A cold-number test proved that freeform WhatsApp messages do not reach customers who have never messaged the business, because of the twenty-four hour session rule. A web customer could order and never receive payment details. The resolution was to stop treating WhatsApp as the delivery mechanism for anything critical. Payment instructions and live status render on the page, with WhatsApp offered as an opt-in extra. The exact transfer amount doubles as the order identifier, so a customer who ignores the reference field is still matched to their order. Unpaid orders expire on a timer, which stops the kitchen cooking against orders that will never be paid for.",
+      title: "Fast replies are useful only when the order is correct",
+      body: "The AI handles conversation, but it does not invent prices, approve a payment or choose the branch on its own. The menu and recorded transaction state remain authoritative."
     },
-    outcome: [
-      "The gateway integration is built and verified end to end in sandbox, with per-branch sub-account routing complete. Production activation is held up by corporate documentation and legal review, both outside my control.",
-      "Rather than leave the channel idle, I shipped a manual bank transfer path with staff confirming receipt in Telegram. The gateway code is disabled, not deleted, so activation is a switch rather than a rebuild.",
-      "Supporting legal documents, refund policy, privacy notice and terms of service, were drafted against the Nigeria Data Protection Act 2023.",
-    ],
-    demonstrates:
-      "Multi-channel order capture on one pipeline, designing around third-party platform constraints rather than through them, payment integration with a working fallback, and parallel fan-out with fast webhook response.",
-    media: [
-      { src: "/work/web-form-menu.jpg", alt: "Menu with category tabs and quantity steppers", aspect: "tall" },
-      { src: "/work/web-form-details.jpg", alt: "Delivery details form with address, contact and notes", aspect: "tall" },
-      { src: "/work/web-form-summary.jpg", alt: "Order summary with line items and total", aspect: "tall" },
-      { src: "/work/web-form-payment.jpg", alt: "Payment screen with exact amount, bank details and expiry countdown", aspect: "tall" },
-      { src: "/work/web-form-confirmed.jpg", alt: "Payment confirmed screen", aspect: "tall" },
-      { src: "/work/web-form-canvas.png", alt: "The web order handler workflow showing parallel fan-out after processing", caption: "WF-05, web order handler.", aspect: "wide" },
-    ],
+    media: [{
+      src: "/architecture/restaurant-conversation.svg",
+      alt: "Architecture system map derived from documented implementation boundaries.",
+      caption: "Architecture summary; not a live dashboard screenshot.",
+      type: "image",
+      aspect: "wide"
+    }],
+    preview: "/architecture/restaurant-conversation.svg"
   },
-
   {
-    slug: "b2b-revenue-engine",
-    preview: "/work/revenue-daily-brief-telegram.jpg",
-    title: "B2B Revenue Engine",
-    client: "Confidential restaurant brand, three branches",
-    status: "production",
-    statusLabel: "Live in production",
-    period: "August 2026 to present",
-    summary:
-      "Finds corporate accounts across a territory, scores them, and hands the sales marketer a ranked list every morning. Call outcomes feed back in and reorder tomorrow's list. Built under a hard zero-cost constraint.",
-    stack: ["n8n", "Supabase", "Gemini", "Apify", "Telegram"],
+    slug: "web-ordering-and-payments",
+    title: "Three-Branch Restaurant Operations Platform",
+    client: "Three-branch restaurant (anonymized)",
+    status: "staging",
+    statusLabel: "Dashboard and payment release candidate",
+    period: "Reviewed November 2026",
+    summary: "As a three-branch restaurant expanded ordering beyond WhatsApp, management needed a clearer view of what each branch was receiving, preparing and reconciling. The rebuild connects a simple customer form to dedicated management, branch, kitchen and accountant responsibilities.",
+    stack: [
+      "n8n",
+      "Supabase",
+      "Monnify"
+    ],
     featured: true,
     order: 3,
     problem: [
-      "Consumer orders arrived one plate at a time. Management wanted corporate bulk revenue, office lunch contracts rather than individual covers, and had nothing to pursue it with. No prospect list, no qualification process, no record of who had been called or what was said.",
-      "The instruction was to produce bulk sales, with no budget attached and no sales infrastructure to build on.",
+      "Taking a customer order is only the beginning. With three branches, an order can be missed between the customer, manager, kitchen and whoever checks the transfer. Management cannot solve those mistakes if everything lives in separate messages.",
+      "The team also wanted customers to place orders without waiting for a WhatsApp conversation, while keeping delivery coordination manual during the first release."
     ],
     approach: [
       {
-        title: "Territory harvest",
-        body: "Discovers corporate accounts inside a defined geographic territory, geocodes them, assigns them to a territory and writes them into the database, deduplicated against everything already there. Two hundred and sixty-five offices found in a single day's run.",
+        title: "Make customer ordering straightforward",
+        body: "A lightweight order form collects the branch, items and order details without repeating the website's food gallery. The customer receives clear next steps rather than a complicated checkout."
       },
       {
-        title: "Enrich and qualify",
-        body: "Each new account is enriched and scored for fit by a language model, so the marketer works a ranked list rather than an alphabetical one. Scoring criteria live as data, not embedded in the workflow, so recalibrating does not mean a code change.",
+        title: "Give each team the right view",
+        body: "Management needs cross-branch oversight. Branch managers need a branch-specific order queue. Kitchen staff need authorized preparation tickets. Accountants need references, transfer checks and an exception trail for reconciliation."
       },
       {
-        title: "Daily brief",
-        body: "Every morning the top accounts for a territory are pushed to the assigned marketer over Telegram with the context needed to make the call. Alerts are deliberately one-way. The marketer executes independently and does not reply to a bot, which removed an entire class of conversational state handling from the build.",
-      },
-      {
-        title: "Outcome capture",
-        body: "After each call the marketer submits the result through a form that writes straight back to the account record, creating contacts, tasks and deals as the outcome requires. That closes the loop: outcomes change scores, scores change tomorrow's brief.",
-      },
-      {
-        title: "Management reporting",
-        body: "A separate workflow compiles the pipeline into spreadsheets, prospects, activity log and pipeline, and pushes them to management over Telegram alongside a daily numbers digest. Management sees the funnel without asking anyone for it.",
-      },
+        title: "Keep the first release focused",
+        body: "The agreed launch model leaves rider assignment and delivery charges to staff instead of building unnecessary dispatcher dashboards. Gateway and dashboard behavior require acceptance against the current release candidate."
+      }
+    ],
+    outcome: [
+      "The predecessor handled real customer ordering. The four-workspace dashboard model and manual delivery boundary are approved scope, but independent certification of the newer dashboard screens and live-money payment flow is still outstanding."
     ],
     decision: {
-      title: "Multi-tenant before there was a second tenant",
-      body: "The schema was built to hold multiple brands from the first migration, when there was exactly one. Retrofitting tenancy into a live sales database is the most expensive migration you can take on, and adding a second brand is now a seed row rather than a fork. The same logic drove the rest of the stack: a free-tier model for enrichment, because qualification is bounded classification and does not need a frontier model, and Telegram instead of a custom app, because adoption is what kills field sales tooling and the marketer already lives there.",
+      title: "An order is not finished until the business can fulfil and account for it",
+      body: "The system must preserve the same record as it moves from customer to kitchen to financial reconciliation. Separate role permissions prevent branch staff from relying on a shared, uncontrolled spreadsheet."
     },
-    outcome: [
-      "Live across three branch territories. Accounts harvested, scored and briefed daily. Marketers onboarded and working the list.",
-      "The system is presented on what it does, not on revenue attributed to it. Deal figures sit with the client.",
-    ],
-    demonstrates:
-      "Lead generation pipeline design, LLM-assisted enrichment and scoring, multi-tenant relational schema, closed-loop field sales tooling, and delivering a working revenue system under a hard zero-cost constraint.",
     media: [
-      { src: "/work/revenue-wfa-territory-harvest.png", alt: "Territory harvest workflow", caption: "Discovery, geocoding, territory assignment and upsert.", aspect: "wide" },
-      { src: "/work/revenue-wfb-enrich-qualify.png", alt: "Enrichment and qualification workflow", caption: "Enrich, score, then queue for calling.", aspect: "wide" },
-      { src: "/work/revenue-wfc-daily-brief.png", alt: "Daily sales brief workflow", aspect: "wide" },
-      { src: "/work/revenue-wfd-call-outcome.png", alt: "Call outcome capture workflow", caption: "Outcomes create contacts, tasks and deals, then close the call task.", aspect: "wide" },
-      { src: "/work/revenue-wfe2-management-report.png", alt: "Management report workflow producing spreadsheet exports", aspect: "wide" },
-      { src: "/work/revenue-daily-brief-telegram.jpg", alt: "The daily numbers brief delivered over Telegram", caption: "Morning brief, before the calling day begins.", aspect: "tall" },
+      {
+        "src": "/evidence/approved/restaurant-branch-overview.jpg",
+        "alt": "Anonymized historical branch dashboard with sales, order, kitchen and menu areas.",
+        "caption": "Earlier staged branch dashboard with all sensitive branding removed; zero sales shown are test-period UI state, not an outcome metric.",
+        "type": "image",
+        "aspect": "wide"
+      },
+      {
+        "src": "/evidence/approved/restaurant-menu-admin.jpg",
+        "alt": "Anonymized menu administration table showing availability controls and food pricing.",
+        "caption": "Historical staff menu-control screen, with client branding and an administrator identifier removed. Pricing is a screenshot example, not current live inventory.",
+        "type": "image",
+        "aspect": "wide"
+      },
+      {
+        "src": "/architecture/restaurant-operations.svg",
+        "alt": "Conceptual division between branch operations, kitchen and accountant reconciliation.",
+        "caption": "Conceptual architecture diagram. Not an application screenshot or deployment certification.",
+        "type": "image",
+        "aspect": "wide"
+      }
     ],
+    preview: "/evidence/approved/restaurant-branch-overview.jpg"
   },
-
   {
-    slug: "foc-inc-operations",
-    preview: "/work/foc-command-centre-loading.jpg",
-    title: "FOC INC Operations Platform",
-    client: "Events and brand portfolio company, Lagos and Abuja",
-    status: "production",
-    statusLabel: "Live in production",
-    period: "2026",
-    summary:
-      "A year of events and seventeen brand projects lived in a static HTML file and a group chat. Now one database, one dashboard, and a set of scheduled workflows that tell people what is coming before they have to ask.",
-    stack: ["Supabase", "PostgreSQL", "n8n", "Vercel", "Web Push"],
+    slug: "elion-sales-command-centre",
+    title: "Elion Sales Command Centre",
+    client: "Real estate operations",
+    status: "staging",
+    statusLabel: "Hosted acceptance pending",
+    period: "Reviewed November 2026",
+    summary: "A real-estate team needed to stop losing enquiries through slow WhatsApp replies and inconsistent follow-up. The Sales Command Centre is designed to capture leads, preserve customer/AI conversation history and let staff take over the same conversation using the business's existing number.",
+    stack: [
+      "TypeScript",
+      "Next.js",
+      "NestJS",
+      "PostgreSQL"
+    ],
     featured: true,
     order: 4,
     problem: [
-      "More than eighty events across two cities, tied to seventeen active brand projects, held in a static HTML file. Management tracked dates separately in Google Calendar. Staff found out about events late or by word of mouth. Briefs and flyers sat in chat threads with no link to the event they belonged to.",
-      "There was no way to answer who is doing what next week without asking everyone.",
+      "Someone who asks about a property is often comparing several options. If the real-estate team replies hours later, forgets to follow up or loses the message in an agent's personal chat, a valuable enquiry can disappear.",
+      "The CEO wanted the business to see customer conversations in one place, respond consistently even when agents are busy, and let a person step in when a buyer needs a human conversation—without asking the buyer to switch numbers."
     ],
     approach: [
       {
-        title: "The database and the dashboard",
-        body: "A PostgreSQL schema covering events, projects, categories, locations, event to project activation links, outcomes, files, staff and admin users. Every event was extracted from the old calendar, cleaned and seeded, along with all seventeen projects and more than ninety-five activation links carrying the role each project plays for each event. On top of it, a command centre with KPIs, a filterable events view, a project explorer, a timeline, and an admin panel where staff add events and upload files without touching code.",
+        title: "Give enquiries a reliable first response",
+        body: "The planned AI WhatsApp assistant should answer approved property questions, capture the prospect's details and buying interests, and make the next follow-up visible to staff. It must not invent property facts or promise availability."
       },
       {
-        title: "Reminders that know who you are",
-        body: "Every morning at seven, the system queries for events landing in seven, three or one day, pulls the active staff list, joins staff to events and sends each person a reminder carrying the event details, the projects being activated and links to attached files. Deactivating someone removes them from every future reminder with no workflow edit.",
+        title: "Put the whole conversation in the sales workspace",
+        body: "The intended dashboard shows an authorized team the customer's messages, AI replies, interest and handoff status. Staff should be able to take ownership of the same WhatsApp thread and reply using the same business sender, preserving the complete history."
       },
       {
-        title: "Meeting management where they already are",
-        body: "Management were never going to abandon Google Calendar. Instead of forcing a second data entry process, a workflow reads the next ninety days from their calendar each morning, diffs it against the database and inserts what is missing. They add an event where they always have, and it appears on the dashboard and enters the reminder cycle on its own.",
-      },
-      {
-        title: "Task and brief automation",
-        body: "Due and overdue tasks are grouped per person and emailed to whoever owns them. New briefs are detected every ten minutes, fanned out one item per team member, emailed, then marked notified so nobody is told twice.",
-      },
-      {
-        title: "Access and collaboration",
-        body: "Per-staff logins enforced by row level security at the database, with the public URL withdrawn once real data was in it. Tenant separation so a sub-brand committee sees only its own workspace. Multi-assignee tasks with per-person completion, per-task comment threads with auto-logged status changes and mentions, and chat channels built on a single generic comments table with realtime updates and unread tracking.",
-      },
+        title: "Build the dependable sales foundation first",
+        body: "The checked-in product already has organization-scoped property/campaign data, controlled writes and audit boundaries. A live connected WhatsApp channel, complete AI-to-human takeover and hosted end-to-end acceptance remain product launch gates—not features I can certify from the repository alone."
+      }
+    ],
+    outcome: [
+      "The sales challenge and target workflow are clear: faster acknowledgement, recorded lead context and easier human follow-up. The property/campaign foundation is implemented, but repository sign-off still withholds production approval for connected AI messaging.",
+      "Go-live prerequisites include business/provider documents, a compliant business WhatsApp sender, connection credentials, live conversation tests and final owner sign-off. I do not present staging records or planned takeover as proven production use."
     ],
     decision: {
-      title: "Queue first, deliver second",
-      body: "Every notification is written to the database and dispatched by a separate polling workflow rather than fired inline when the event happens. That costs a small delay. In exchange, a failed send is retried rather than lost, a burst of activity cannot flood the mail or push provider, expired push subscriptions are pruned automatically instead of failing silently forever, and the application never needs to know how delivery works. For a team that acts on these alerts, delivery guarantees beat instant arrival.",
+      title: "The AI and the human must share one customer history",
+      body: "A chatbot without a handoff is another silo. The design keeps the incoming message, automated response, lead record and human takeover tied to one authorized conversation. Staff—not the model—must control any sale, offer or sensitive customer decision."
     },
-    outcome: [
-      "One system replaced a static file, a private calendar, scattered file sharing and the group chat that had been standing in for task management.",
-      "It runs on infrastructure that costs the company nothing per month, with all data held in their own account, covering what would otherwise be two separate SaaS subscriptions.",
-      "Four engineering problems were solved along the way. Free-tier database suspension after seven idle days, resolved with an external heartbeat. Aggressive caching serving stale builds, resolved with explicit no-cache headers. Row level security policies blocking legitimate writes, resolved by rebuilding the policies cleanly rather than layering exceptions. And sequence desync throwing duplicate key errors during bulk seeding, resolved by resetting sequences before every insert.",
-    ],
-    demonstrates:
-      "Relational schema design and data migration, row level security and multi-tenant access control, scheduled automation running directly against a production database, queue-based notification delivery with retry and subscription pruning, progressive web app installation and web push, and phased delivery to non-technical management.",
     media: [
-      { src: "/work/foc-command-centre-loading.jpg", alt: "The FOC INC command centre loading screen", aspect: "wide" },
-      { src: "/work/foc-wf-event-reminders.png", alt: "Event reminder workflow joining staff to upcoming events", caption: "Daily at seven. Events due in seven, three or one day.", aspect: "wide" },
-      { src: "/work/foc-wf-t2-daily-task-reminders.png", alt: "Daily task reminder workflow grouping tasks per staff member", aspect: "wide" },
-      { src: "/work/foc-wf-t3-brief-posted-alert.png", alt: "Brief posted alert workflow, one item per team member", aspect: "wide" },
-      { src: "/work/foc-wf-p1-task-push.png", alt: "Task push notification workflow with queue and pruning", caption: "Pending pushes are marked sent and dead subscriptions pruned.", aspect: "wide" },
-      { src: "/work/foc-wf-ch2-chat-mention-push.png", alt: "Chat mention push workflow", aspect: "wide" },
-      { src: "/work/foc-wf-t4-monday-lead-digest.png", alt: "Monday lead digest workflow", aspect: "wide" },
-      { src: "/work/foc-push-new-task.jpg", alt: "A task assignment push notification arriving on a phone", aspect: "tall" },
-      { src: "/work/foc-push-chat-mention.jpg", alt: "A chat mention push notification arriving on a phone", aspect: "tall" },
+      {
+        "src": "/evidence/approved/real-estate-conversations.jpg",
+        "alt": "Elion local-development conversation viewer showing test chat, AI response and takeover control.",
+        "caption": "Development test conversation, synthetic phone masked. The 'Take over conversation' button demonstrates a UI affordance, not authenticated live WhatsApp production handoff.",
+        "type": "image",
+        "aspect": "wide"
+      },
+      {
+        "src": "/evidence/approved/real-estate-sales-overview.jpg",
+        "alt": "Elion Sales Command local-development operations overview with test lead and inspection queue.",
+        "caption": "Staged overview showing synthetic test records. These do not represent real customer volumes or confirmed inspection bookings.",
+        "type": "image",
+        "aspect": "wide"
+      },
+      {
+        "src": "/evidence/approved/real-estate-leads.jpg",
+        "alt": "Elion local-development leads table with synthetic lead fields.",
+        "caption": "Sample lead record and ranking interface; test phone masked. A displayed lead score is not proven sales conversion.",
+        "type": "image",
+        "aspect": "wide"
+      },
+      {
+        "src": "/evidence/approved/real-estate-properties.jpg",
+        "alt": "Elion local-development inventory table of sample properties.",
+        "caption": "Sample real-estate inventory in local development, not verified public listings, prices or current availability.",
+        "type": "image",
+        "aspect": "wide"
+      },
+      {
+        "src": "/architecture/crm-tenant-foundation.svg",
+        "alt": "Conceptual scoped CRM data, conversation and human review architecture.",
+        "caption": "Conceptual architecture diagram. Not an application screenshot or deployment certification.",
+        "type": "image",
+        "aspect": "wide"
+      }
     ],
+    preview: "/evidence/approved/real-estate-conversations.jpg"
   },
-
   {
-    slug: "christ-heart-foundation",
-    preview: "/work/christheart-homepage.png",
-    title: "Christ Heart Foundation",
-    client: "Faith-based humanitarian organisation",
-    status: "production",
-    statusLabel: "Live",
-    period: "2026",
-    summary:
-      "A foundation serving communities since 1998, with no website. Four intake routes each with their own automatic reply, a gallery the staff run themselves, and privacy engineering that matches what the policy page promises.",
-    stack: ["Next.js", "TypeScript", "Tailwind", "Supabase", "Resend", "Vercel"],
+    slug: "security-workforce-operations",
+    title: "Security Workforce & Operations Management Platform",
+    client: "Security company (anonymized)",
+    status: "staging",
+    statusLabel: "Staged demo",
+    period: "Reviewed November 2026",
+    summary: "A security-company CEO overseeing more than 1,000 guards needed a dependable view of attendance and activity across locations. I designed a guard-to-headquarters command centre to replace scattered WhatsApp check-ins with structured records, role-based views and location-aware verification.",
+    stack: [
+      "TypeScript",
+      "Supabase",
+      "PostGIS"
+    ],
     featured: true,
     order: 5,
     problem: [
-      "An organisation that had been serving communities since 1998, reaching more than nine thousand people across twenty named communities, had no website. Volunteers, partners and people needing assistance had no route in except a phone number. Donors had no way to verify the work before giving.",
-      "The founder did not want a showcase. He wanted something a person could land on and immediately understand, use and act from.",
+      "The client described the difficulty of supervising more than 1,000 guards across different posts. Headquarters could not practically call everyone to ask who had arrived, who had left, which supervisor was on duty or whether an incident needed attention.",
+      "Attendance and operational updates sent through WhatsApp threads are difficult to reconcile. Messages get buried, a missed post can go unnoticed and management struggles to see one trustworthy picture across sites."
     ],
     approach: [
       {
-        title: "Restraint as the requirement",
-        body: "A story rail was built and deleted. A dark mode toggle was built and dropped. Decorative punctuation was stripped from the entire site. The palette went from navy and cream to white with the red and navy taken directly from the Foundation's own logo, so the site looks like the organisation rather than like a template.",
+        title: "Make each shift traceable",
+        body: "A guard-facing interface is designed to record shift starts, clock-outs, site activity and incidents against the correct assignment, replacing informal WhatsApp attendance updates with structured operational events."
       },
       {
-        title: "Four intake routes",
-        body: "Contact, volunteer, partnership and assistance each have their own hardened API route, their own validation and their own automatic reply written for that specific audience. A volunteer offering their time and a family requesting help should not receive the same email. Submissions land in the Foundation's own inbox, where their team already works.",
+        title: "Give headquarters one command view",
+        body: "Guards, supervisors, operations staff and headquarters have different responsibilities. Authorized dashboards are designed to show who is assigned where, which posts need attention and which events require escalation."
       },
       {
-        title: "A gallery the staff own",
-        body: "Foundation staff upload and manage outreach photographs themselves through a protected admin panel. No developer involvement to publish a photo from last weekend's outreach.",
-      },
-      {
-        title: "Donations by transfer",
-        body: "Bank transfer with copy-to-clipboard on the account details, no payment gateway. Deliberate. A gateway would take a cut and add compliance overhead the Foundation does not need, and Nigerian donors transfer by bank anyway.",
-      },
+        title: "Check the location without trusting it blindly",
+        body: "Server-side geofencing considers site boundaries, shift context and reported GPS accuracy. Indoor positioning and simulated coordinates can be unreliable, so real-device field testing remains necessary before attendance data is treated as fully certified."
+      }
+    ],
+    outcome: [
+      "The source contains staged roles, geospatial attendance controls and recorded security tests. The 1,000-plus guard figure describes the client's management challenge, not the number of guards currently onboarded to this platform.",
+      "Connected headquarters demonstrations, mobile GPS acceptance and production operations certification remain launch gates."
     ],
     decision: {
-      title: "Privacy that matches the policy page",
-      body: "Admin rights are enforced by a database table and a security definer function called by every write policy, not by a toggle in a dashboard. Uploads are constrained by type and size at the storage bucket itself, so the limit holds even if the client is bypassed. Every upload, edit, delete and reorder is written to an append-only audit table. Visitor IP addresses are stored as salted hashes and purged on a schedule, which means the published privacy policy describes what the system actually does rather than what the lawyer hoped. For an organisation handling assistance requests from vulnerable people, this mattered more than any feature on the page.",
+      title: "A WhatsApp message is not an attendance record",
+      body: "Headquarters needs a durable, permission-controlled timeline—not screenshots of a chat. The system must link each clock-in, clock-out and exception to the correct guard, shift and site before management relies on it."
     },
-    outcome: [
-      "Live and in use, with the Foundation running its own gallery and receiving intake through four routes with automatic replies.",
-      "Two bugs worth naming. The mobile menu was permanently open and blocking every tap, because a Tailwind display utility was overriding the HTML hidden attribute. And action bar labels went invisible on iOS Safari, a compositing failure that did not reproduce anywhere else, fixed by giving the bar a solid background rather than relying on the layer beneath it.",
-      "The engagement also covered the organisation's Google Business Profile. The address does not geocode reliably, so Google was routing visitors to the wrong location. Resolved by capturing coordinates and a Plus Code standing at the gate, correcting the pin, verifying the listing, fixing the primary category and rewriting the description to carry both names and the location ahead of Google's mobile truncation point. Getting directions to work was worth more to this organisation than any amount of copywriting.",
-    ],
-    demonstrates:
-      "Production Next.js and TypeScript delivery, database-enforced authorisation rather than client-side gating, privacy engineering, security hardening across headers, storage and audit, cross-browser debugging on real devices, and translating a non-technical brief into decisions including the decision to remove work already built.",
     media: [
-      { src: "/work/christheart-homepage.png", alt: "The Christ Heart Foundation homepage", caption: "christheartfoundation.org", aspect: "wide" },
+      {
+        "src": "/evidence/approved/security-hq-overview.jpg",
+        "alt": "Anonymized security headquarters operations overview with incident, attendance and staffing panels.",
+        "caption": "Staged operations dashboard with client branding obscured. Displayed sample guard and site totals are test records, not verified production adoption.",
+        "type": "image",
+        "aspect": "wide"
+      },
+      {
+        "src": "/evidence/approved/security-guard-shift.jpg",
+        "alt": "Anonymized guard field shift screen with scheduled clock-in button.",
+        "caption": "Staged guard check-in interface; site and staff identifiers removed. A visible button does not establish accepted real-world GPS attendance.",
+        "type": "image",
+        "aspect": "wide"
+      },
+      {
+        "src": "/architecture/security-operations.svg",
+        "alt": "Conceptual headquarters-to-guard event and attendance architecture.",
+        "caption": "Conceptual architecture diagram. Not an application screenshot or deployment certification.",
+        "type": "image",
+        "aspect": "wide"
+      }
     ],
-    live: "https://christheartfoundation.org",
+    preview: "/evidence/approved/security-hq-overview.jpg"
   },
-
   {
-    slug: "academy-platform",
-    title: "Academy Platform",
-    client: "My own training programme",
-    status: "production",
-    statusLabel: "In use",
-    period: "2026",
-    summary:
-      "Student portal, instructor panel, and an onboarding chain that creates an account and emails the student their credentials without me touching anything. Around twenty students through it so far.",
-    stack: ["Supabase", "n8n", "Vercel", "Google Sheets", "Google Forms"],
+    slug: "b2b-revenue-engine",
+    title: "Prospect Intelligence for a Restaurant Group",
+    client: "Three-branch restaurant (anonymized)",
+    status: "prototype",
+    statusLabel: "Certification pending",
+    period: "Reviewed November 2026",
+    summary: "A restaurant group needed more repeat business from nearby offices and organizations, but its sales team lacked a consistent list of businesses worth contacting. The prospect-intelligence workflow finds candidates, assesses their fit and prepares call-ready research for marketers.",
+    stack: [
+      "PostgreSQL",
+      "n8n",
+      "Telegram"
+    ],
     featured: false,
     order: 6,
     problem: [
-      "I run a cohort-based AI automation programme. Cohort one was twenty weeks, four nights a week. Cohort two is three months, three nights a week, rebuilt around business problems rather than a compressed technology syllabus, with every graduate leaving holding one capstone they can show a client.",
-      "That is the teaching. The problem was everything around it. Class links in a group chat. Slides in a group chat. A student joining in week three scrolling back through hundreds of messages for week one material, half of it expired. Scores in my head. Every new student meant creating an account and typing a welcome message by hand.",
+      "Business customers such as offices and institutions can place repeat meal orders, but marketers cannot reach them efficiently if they first have to search online, guess which organizations are relevant and collect the same contact details again.",
+      "Management wanted a repeatable prospecting process that could move beyond random cold calls: identify suitable organizations near each branch, explain why a lead may fit, assign outreach and record what happened after a call."
     ],
     approach: [
       {
-        title: "What students get",
-        body: "One dashboard. This week's sessions across the top, with a join control that appears only on the session that is live. Materials underneath, every deck and recording tagged with its week, so week four's files are one glance away in month three. Curriculum, schedule, scores, resources, certificate and group in the sidebar. A profile card showing cohort, current week, sessions attended and average. Nothing there is clever. A student should simply never have to ask where something is.",
+        title: "Find and consolidate potential customers",
+        body: "Automated research collects candidate organizations across relevant territories, stores traceable sources and removes repeated listings so each business can be assessed once."
       },
       {
-        title: "What I get",
-        body: "An instructor panel that records a score against a student, a week and a component, with written feedback attached. The same combination overwrites rather than duplicating, so correcting a mark is not a data problem. There is a student view toggle, because building an interface you never use yourself is how you ship something nobody can navigate.",
+        title: "Separate a discovered lead from a call-ready one",
+        body: "The qualification flow checks the available business signals, scores the opportunity and prioritizes a marketer's list. A discovered business is not automatically a confirmed buyer or permission to contact someone."
       },
       {
-        title: "Onboarding without me",
-        body: "A student fills in a form. A row lands in a sheet, n8n picks it up, cleans the fields, creates the account, saves their details and emails a welcome with the portal link and credentials. Around twenty students have come through it and I have not created an account by hand since.",
-      },
+        title: "Close the loop with sales outcomes",
+        body: "Marketers record call dispositions, next steps and follow-ups. Management can distinguish raw prospects, qualified call candidates, outreach activity and actual opportunities without confusing the stages."
+      }
+    ],
+    outcome: [
+      "A historical report dated October 9, 2026 records 314 prospects discovered. That is a dated project result, not a verified current database total.",
+      "The current live total and the number qualified for calls could not be authenticated from the connected databases. Both figures are withheld from the public metrics until a single authoritative snapshot is available."
     ],
     decision: {
-      title: "The version that failed first",
-      body: "The first onboarding build used a set-password link, so the student chooses their own password and nothing sensitive travels by email. It is the correct design and it failed repeatedly. Without a custom domain there was no custom SMTP, and the link flow depended on delivery I did not control. So I generated a temporary password instead, sent it in the welcome email and let the student sign in directly. It is the less elegant answer and it works every time. A student who cannot get into the portal on day one does not care which approach was more correct.",
+      title: "A long lead list is not the same as a sales pipeline",
+      body: "Qualification and call outcomes make research actionable. Keep prospect discovery, call readiness and won business as different stages so management can decide where to invest sales effort."
     },
-    outcome: [
-      "In use across the current cohort, with onboarding fully automated.",
-      "This is my own product rather than a client deployment. What it demonstrates is a full stack held together end to end by one person: schema, auth, two interfaces for two different user types, an automated onboarding pipeline, and the judgement to abandon my own first design when it kept failing.",
-    ],
-    demonstrates:
-      "End-to-end product ownership, authentication and row level security, form-to-database onboarding automation, and designing two distinct interfaces around two distinct users.",
-    media: [
-      { src: "/work/laoni-student-dashboard-week4.png", alt: "Student dashboard showing the week's sessions and materials", aspect: "wide" },
-      { src: "/work/laoni-admin-grading.png", alt: "Instructor panel recording a score and feedback", aspect: "wide" },
-      { src: "/work/laoni-wf-student-onboarding.png", alt: "Student onboarding workflow from form submission to welcome email", aspect: "wide" },
-    ],
+    media: []
   },
-
   {
-    slug: "smartbook-ai",
-    title: "SmartBook AI",
-    client: "Capstone project",
-    status: "capstone",
-    statusLabel: "Capstone, open source",
-    period: "February 2026",
-    summary:
-      "Appointment booking with a no-show risk model attached. High-risk bookings get chased differently from the rest. Five pipelines, and every scheduled one marks what it has already acted on.",
-    stack: ["n8n", "FastAPI", "XGBoost", "Supabase", "Claude", "Twilio"],
-    featured: false,
+    slug: "elion-homes",
+    title: "Elion Homes — Responsive Property Website",
+    client: "Property discovery",
+    status: "staging",
+    statusLabel: "Release candidate",
+    period: "Reviewed November 2026",
+    summary: "After the real-estate company's previous website was disabled following a reported malware attack, its marketing materials were still directing prospects to a site they could not use. I developed a fast, mobile-first replacement so campaigns could point people back to clear property information and contact options.",
+    stack: [
+      "HTML",
+      "CSS",
+      "JavaScript"
+    ],
+    featured: true,
     order: 7,
     problem: [
-      "Small service businesses run bookings through phone calls, chat and spreadsheets. The cost is double bookings, forgotten appointments and no-shows.",
-      "Reminders help, but they treat every booking identically. The interesting question is whether you can tell in advance which bookings are likely to be missed, and spend the extra effort only on those.",
+      "The CEO faced an immediate business problem: the old company website had been taken offline after a malware incident, but existing campaign materials and customer links still directed people there.",
+      "Every failed visit risked losing a customer who had already shown interest. The replacement needed to feel credible, show the properties and company clearly, load well on mobile connections and give visitors an obvious way to make contact."
     ],
     approach: [
       {
-        title: "Booking and risk",
-        body: "A webhook receives the booking. Validation runs first and returns an explicit error rather than writing junk to the database. Valid bookings are saved, then scored for no-show risk by the model service. A score at or above the threshold triggers an immediate re-confirmation message. Everything else gets a confirmation email.",
+        title: "Restore a trustworthy digital destination",
+        body: "I prioritized the essential public pages, property presentation, navigation and contact links. This was a business-continuity response, not an open-ended visual redesign."
       },
       {
-        title: "Reminder engine",
-        body: "An hourly scheduler pulls upcoming confirmed bookings and evaluates two windows independently: twenty-four hours out sends email and SMS, two hours out sends SMS only.",
+        title: "Make the website usable on real phones",
+        body: "Responsive layouts, optimized media, static image fallbacks and reduced-motion support keep the content readable even when a visitor's network cannot load a hero video."
       },
       {
-        title: "Feedback and cancellation",
-        body: "Completed appointments receive a one-click star-rating email on a daily schedule, then get marked so nobody is asked twice. A cancellation webhook updates status and notifies the customer.",
-      },
-      {
-        title: "Conversational booking",
-        body: "A message goes to a language model with a booking-focused prompt. If the reply contains booking intent, the workflow calls its own booking webhook to create the record. Natural language becomes a structured row without a form.",
-      },
+        title: "Separate development from the public go-live",
+        body: "The later release candidate includes additional enquiry-form and launch-security preparation. Domain connection, management-approved documents/privacy copy, backend intake and owner sign-off are still independent publication gates."
+      }
+    ],
+    outcome: [
+      "The replacement website and responsive QA have been developed as a release candidate. The source does not establish that every old campaign link was successfully restored or that the new website was publicly launched.",
+      "The incident-driven objective was to give management a credible site ready for approval, not to claim recovered sales without analytics."
     ],
     decision: {
-      title: "Idempotency wherever a schedule touches state",
-      body: "Every scheduled pipeline marks what it has already acted on. An hourly poller without that marking sends the same reminder every hour until the appointment arrives. This is the difference between a workflow that demos well and one that does not embarrass you overnight. The same reasoning kept inference behind its own service: the model can be retrained or swapped without touching booking logic, and the booking logic stays readable to someone who does not work in machine learning.",
+      title: "When campaign links lead nowhere, speed and clarity beat decoration",
+      body: "A recovery website should load, explain the business and show customers how to contact the team before any animation runs. Security, verified domains and enquiry handling remain part of the launch decision."
     },
-    outcome: [
-      "Built as a capstone, not deployed to a live business, so there are no production numbers behind it and none are claimed.",
-      "Published as a public repository under MIT, with the full workflow exported as importable JSON where every secret is a named placeholder, an environment example, a security policy and setup documentation. Anyone can run it without receiving a single one of my credentials, which is the standard any workflow published from a production instance should meet.",
-    ],
-    demonstrates:
-      "Webhook and scheduler orchestration with idempotent state handling, machine learning served as an independent inference API, conditional branching driven by a model score, LLM intent extraction writing structured records, and publishing an automation project safely as open source.",
     media: [
-      { src: "/work/smartbook-canvas-full.png", alt: "The full SmartBook workflow with five pipelines", aspect: "wide" },
-      { src: "/work/smartbook-flow-new-booking.png", alt: "New booking pipeline with validation and risk scoring", caption: "Validate first, then score, then branch on risk.", aspect: "wide" },
-      { src: "/work/smartbook-flow-reminders.png", alt: "Reminder engine evaluating two windows independently", aspect: "wide" },
+      {
+        "src": "/evidence/approved/real-estate-website-mobile.mp4",
+        "poster": "/evidence/approved/real-estate-website-mobile-poster.jpg",
+        "alt": "Short mobile screen recording of the Elion Homes website hero and About section.",
+        "caption": "Sanitized historical mobile website demonstration. The video is click-to-play; it does not certify search rankings, uptime or recovered campaign traffic.",
+        "type": "video",
+        "aspect": "tall"
+      },
+      {
+        "src": "/architecture/property-website.svg",
+        "alt": "Conceptual website delivery and discovery architecture.",
+        "caption": "Conceptual architecture diagram. Not an application screenshot or deployment certification.",
+        "type": "image",
+        "aspect": "wide"
+      }
     ],
-    repo: "https://github.com/olawaleemmanuel09/smartbook-ai-automation",
+    preview: "/evidence/approved/real-estate-website-mobile-poster.jpg"
   },
-
   {
-    slug: "lead-intelligence-pipeline",
-    title: "Lead Intelligence Pipeline",
-    client: "Personal build, open source",
-    status: "build",
-    statusLabel: "Open source",
-    period: "2026",
-    summary:
-      "Nineteen nodes that turn a scrape into a ranked list. The model classifies, the code scores. Ask a language model for a number and it drifts, and a ranking that reorders itself for no reason is worse than none.",
-    stack: ["n8n", "Apify", "Claude Haiku", "Google Sheets", "Telegram"],
+    slug: "leadreach",
+    title: "LeadReach",
+    client: "Independent product",
+    status: "prototype",
+    statusLabel: "Owner pilot",
+    period: "Reviewed November 2026",
+    summary: "A source-aware research and outreach workspace with human-reviewed message drafts and an owner-local pilot. The repository does not establish public SaaS adoption.",
+    stack: [
+      "Python",
+      "FastAPI",
+      "SQLite"
+    ],
     featured: false,
     order: 8,
     problem: [
-      "A scrape gives you rows. What a sales team needs is an order of operations: who to call first, and why.",
+      "A researcher needs to distinguish a sourced contact, a draft and an actual conversation."
     ],
     approach: [
       {
-        title: "Discover, qualify, score, alert",
-        body: "Apify pulls business records from Google Maps and Yelp. A language model qualifies each one and returns structured JSON. A deterministic weighted function in code turns that into a number. Google Sheets holds the record and enforces deduplication across runs. Leads clearing the threshold trigger a Telegram alert.",
+        title: "Capture provenance",
+        body: "Campaign records retain research sources and support suppression and opt-outs."
       },
+      {
+        title: "Keep the operator in control",
+        body: "Drafts are editable and the operator confirms activity before it counts as sent."
+      }
+    ],
+    outcome: [
+      "The first-user milestone describes a local package. The repository documents a pilot. Customer adoption has yet to be measured."
     ],
     decision: {
-      title: "The model classifies, the code scores",
-      body: "The language model describes what a business is and whether it fits the brief. It never produces the final number. Scoring is deterministic code, because a model asked to output a score drifts between runs and across versions, and a lead ranking whose order changes for no reason is worse than no ranking at all. Judgement to the model, arithmetic to the code. Haiku rather than a frontier model, because qualification is bounded classification and cost per lead matters when the pipeline runs daily at volume.",
+      title: "A draft is not a sent message",
+      body: "Provenance, editing, suppression and actual delivery need separate state; synthetic tests are not proof of customer outreach volume."
     },
-    outcome: ["Published as a sanitised public repository."],
-    demonstrates:
-      "Scraping orchestration, LLM classification with structured output, deterministic scoring, cross-run deduplication, and cost-aware model selection.",
-    media: [],
-    repo: "https://github.com/olawaleemmanuel09/lead-intelligence-pipeline",
+    media: []
   },
-
   {
-    slug: "voice-booking-agent",
-    title: "Voice Booking Agent",
-    client: "Personal build",
-    status: "build",
-    statusLabel: "Working end to end",
-    period: "2026",
-    summary:
-      "Takes a restaurant reservation over the phone, reads it back before committing, and knows whether the booking actually saved. Success and error paths wired separately, which is the part most voice demos skip.",
-    stack: ["ElevenLabs", "n8n", "Google Sheets", "Gmail"],
+    slug: "foc-inc-operations",
+    title: "FOC Command Centre",
+    client: "Event operations",
+    status: "production",
+    statusLabel: "Operations platform",
+    period: "Reviewed November 2026",
+    summary: "An operations team needed one place to coordinate events, responsibilities and timely updates instead of relying on scattered chats and documents. The Command Centre connects staff work, shared briefs and notifications.",
+    stack: [
+      "PostgreSQL",
+      "Supabase",
+      "n8n"
+    ],
     featured: false,
     order: 9,
     problem: [
-      "Voice agents demo beautifully and fail quietly. The failure mode is always the same: the agent thanks the caller for a reservation that never reached the database.",
+      "When several people own parts of an event, instructions spread across messages, files and verbal updates. Staff lose time searching for the latest brief and managers cannot easily see who is responsible for the next task."
     ],
     approach: [
       {
-        title: "Collect, confirm, commit",
-        body: "The agent collects name, contact, date, time, party size and any special request in natural conversation. Before writing anything it reads the full booking back and waits for confirmation. On confirmation it calls a webhook, which appends the reservation, generates a dated reference and emails a formatted confirmation to the guest.",
+        title: "Give work a shared record",
+        body: "Event records, projects and assignments create a consistent reference for responsibilities, deadlines and associated documents."
       },
+      {
+        title: "Keep reminders separate from business records",
+        body: "Notifications tell people that something needs attention, but the underlying event or task remains recorded even if an email or push notification is delayed."
+      }
+    ],
+    outcome: [
+      "The platform provides an operating home for team coordination and programme administration. Time saved and operating-cost improvements require measured before-and-after evidence."
     ],
     decision: {
-      title: "The agent finds out whether it worked",
-      body: "Both the sheet write and the email send have success and error outputs wired separately, feeding two different webhook responses. The agent therefore learns whether the booking persisted, rather than thanking the caller for something that failed. Read-back before commit exists for the same reason: speech recognition on names, numbers and times is where these systems break, so the agent confirms what it parsed out loud instead of trusting the transcription.",
+      title: "A missed notification should not erase the work",
+      body: "The record of an event, assigned task or submitted brief must exist independently of a message delivery service."
     },
-    outcome: ["Working end to end, from spoken request to confirmation email with a dated reference."],
-    demonstrates:
-      "Voice agent design, tool calling into an automation backend, explicit success and error path handling, and confirmation before state change.",
-    media: [
-      { src: "/work/voiceagent-transcript.png", alt: "The agent reading a booking back before creating it", caption: "Read-back and confirmation before anything is written.", aspect: "wide" },
-      { src: "/work/voiceagent-canvas.png", alt: "The booking workflow with separate success and error responses", aspect: "wide" },
-      { src: "/work/voiceagent-confirmation-email.png", alt: "The confirmation email with a dated booking reference", aspect: "wide" },
-    ],
+    media: [{
+      src: "/architecture/foc-operations.svg",
+      alt: "Architecture system map derived from documented implementation boundaries.",
+      caption: "Architecture summary; not a live dashboard screenshot.",
+      type: "image",
+      aspect: "wide"
+    }],
+    preview: "/architecture/foc-operations.svg"
   },
-
   {
     slug: "ai-job-scraper",
-    title: "AI Job Scraper",
-    client: "Personal build, open source",
-    status: "build",
-    statusLabel: "Running live",
-    period: "2026",
-    summary:
-      "Seven job boards polled every fifteen minutes, roughly two hundred listings a cycle, normalised and deduplicated in code before a single model call is spent. Only the shortlist reaches my phone.",
-    stack: ["n8n", "Gemini", "Adzuna", "Telegram"],
+    title: "AI Job Intelligence & Alerts",
+    client: "Personal operational system",
+    status: "personal",
+    statusLabel: "Private system · public teaching export",
+    period: "Reviewed November 2026",
+    summary: "An archived n8n screenshot shows seven job-source branches feeding deduplication, Gemini scoring and Telegram alerts. The public repository contains an older one-source teaching export; current private operations require separate verification.",
+    stack: [
+      "n8n",
+      "Adzuna",
+      "Gemini",
+      "Telegram"
+    ],
     featured: false,
     order: 10,
     problem: [
-      "Two hundred listings arriving every fifteen minutes is not a feed anyone reads. The value is entirely in the filter.",
+      "Reviewing several job boards by hand means reading duplicate listings and repeatedly deciding whether a role fits."
     ],
     approach: [
       {
-        title: "Seven sources, one stream",
-        body: "RemoteOK, Remotive, Jobicy, Arbeitnow, Himalayas, Adzuna and We Work Remotely over RSS, merged into a single stream, normalised into a common shape, deduplicated and scored. A language model then rates each survivor for fit against a profile covering CRM and marketing automation, AI automation and the major platforms. Only high scorers become a Telegram alert carrying role, company, location, score, source and apply link.",
+        title: "Inspect the public path",
+        body: "In the 10-node export, a scheduled request collects Adzuna results. Subsequent nodes filter roles, remove seen jobs, request a Gemini score and send strong matches to Telegram."
       },
+      {
+        title: "A second teaching example",
+        body: "A separate seven-node classroom exercise reads one We Work Remotely RSS feed. Its archived graph shows filtering, duplicate removal, Gemini and Telegram. The archive contains the structure only."
+      },
+      {
+        title: "Verify the editions separately",
+        body: "The public JSON is saved inactive. Independent verification of the private edition requires a redacted current graph and dated run record."
+      }
+    ],
+    outcome: [
+      "Archived screenshots document seven editor source branches and example Telegram alerts. They do not verify the current deployed graph, authenticated recent executions or scoring accuracy."
     ],
     decision: {
-      title: "Filter in code before you spend a model call",
-      body: "Normalisation and deduplication happen deterministically first, and model calls are spent only on what survives. Scoring every raw item would cost several times more and produce the same shortlist. Seven sources also return seven different shapes, with titles, locations, salary fields and dates all disagreeing, so the unglamorous normalisation step is what makes deduplication and scoring possible at all.",
+      title: "Filter before calling the model",
+      body: "The teaching workflow filters and deduplicates job listings before structured Gemini scoring, reducing unnecessary model calls. It does not independently establish seven live source integrations."
     },
-    outcome: ["Running live on a fifteen minute cycle, delivering a scored shortlist rather than a feed."],
-    demonstrates:
-      "Multi-source ingestion, schema normalisation, deterministic deduplication ahead of model spend, and scored filtering.",
     media: [
-      { src: "/work/jobscraper-canvas.png", alt: "Seven job sources merged, normalised, scored and filtered", aspect: "wide" },
-      { src: "/work/jobscraper-telegram-alerts.jpg", alt: "Scored job alerts delivered to Telegram", aspect: "tall" },
+      {
+        src: "/evidence/job-intelligence-workflow.png",
+        alt: "Archived screenshot of the multi-source n8n job alert workflow.",
+        caption: "Archived n8n editor capture showing seven named intake branches, including RSS, before normalization, Gemini scoring and Telegram. Not proof of current connectivity.",
+        type: "image",
+        aspect: "wide"
+      },
+      {
+        src: "/evidence/job-intelligence-telegram.jpg",
+        alt: "Archived Telegram bot alert examples with job source and match ratings.",
+        caption: "Archived example of notifications. Listings and scores reflect the captured run, not current opportunities.",
+        type: "image",
+        aspect: "tall"
+      },
+      {
+        src: "/evidence/approved/job-alert-notifications.mp4",
+        poster: "/evidence/approved/job-alert-notifications-poster.jpg",
+        alt: "Historical Telegram notifications from the job-intelligence automation.",
+        caption: "Sanitized earlier Telegram alert recording; source labels and scores are historical and do not establish current running integrations.",
+        type: "video",
+        aspect: "tall"
+      },
+      {
+        src: "/architecture/job-intelligence.svg",
+        alt: "Conceptual job discovery architecture diagram.",
+        caption: "Conceptual map, not live execution evidence.",
+        type: "image",
+        aspect: "wide"
+      }
     ],
+    preview: "/evidence/job-intelligence-workflow.png",
+    repo: "https://github.com/olawaleemmanuel09/ai-job-alert-system"
   },
-
   {
     slug: "lead-capture-crm-sync",
-    title: "Lead Capture and CRM Sync",
-    client: "Client deliverable",
-    status: "build",
-    statusLabel: "Delivered",
-    period: "2026",
-    summary:
-      "Form to CRM to inbox to Slack to sheet, with every failure branch ending somewhere a human will read it. A lead that vanishes between the form and the CRM is invisible by definition.",
-    stack: ["n8n", "HubSpot", "Slack", "Gmail", "Google Sheets"],
+    title: "Lead Capture & CRM Sync",
+    client: "Integration demo",
+    status: "delivered",
+    statusLabel: "Public workflow",
+    period: "Reviewed November 2026",
+    summary: "A Tally enquiry becomes a HubSpot contact with an acknowledgement, a team notification and a reporting row.",
+    stack: [
+      "n8n",
+      "HubSpot",
+      "Tally"
+    ],
     featured: false,
     order: 11,
     problem: [
-      "Most lead capture workflows fail silently. Nobody goes looking for a lead they never saw.",
+      "A sales handoff spans several destinations that can succeed or fail independently."
     ],
     approach: [
       {
-        title: "Capture and fan out",
-        body: "A submission arrives by webhook, is parsed and cleaned, and passes an email validity gate before anything downstream runs. Valid leads are upserted into the CRM, so a returning contact updates rather than duplicating. From there: a confirmation to the lead, a notification to the sales channel, and a formatted row appended to a sheet as an independent log.",
-      },
-      {
-        title: "Assignment pipeline",
-        body: "A second version extends it: create the contact, assign an owner, update the record, create a follow-up task against that owner, and post to the team channel.",
-      },
+        title: "Inspect the eight nodes",
+        body: "The graph parses form fields, validates email and upserts the contact. Gmail, Slack and Sheets handle the downstream handoff."
+      }
+    ],
+    outcome: [
+      "The export establishes the integration design. Delivery latency and conversion impact require monitored runs."
     ],
     decision: {
-      title: "Every failure ends somewhere a human reads",
-      body: "Error outputs from every CRM node feed a Slack alert, and a workflow-level error trigger feeds the same channel. Silent failure is the default state of an integration pipeline, and the only fix is making failure louder than success.",
+      title: "A CRM write and a notification are different outcomes",
+      body: "The form payload is normalized before the HubSpot upsert, but Gmail, Slack and Sheets can fail independently. A reliable production extension would track a persistent handoff, retries and reconciliation rather than promise zero missed leads from an export."
     },
-    outcome: [
-      "Delivered with a branded setup guide so the client could operate it without me, and published as a portfolio artifact.",
-    ],
-    demonstrates:
-      "Integration pipeline design, upsert semantics, parallel fan-out, and explicit error routing.",
     media: [
-      { src: "/work/leadcatcher-hubspot-sync.png", alt: "Lead catcher workflow with owner assignment and error alerting", aspect: "wide" },
-      { src: "/work/leadcapture-execution.png", alt: "A successful execution from form submission through to logging", caption: "Successful run, thirty-two seconds end to end.", aspect: "wide" },
+      {
+        src: "/evidence/crm-capture-execution.png",
+        alt: "Archived n8n successful execution showing Tally, HubSpot, Gmail, Slack and Google Sheets.",
+        caption: "Historical successful demonstration. Delivery-service guarantees and customer adoption are not established.",
+        type: "image",
+        aspect: "wide"
+      }
     ],
+    preview: "/evidence/crm-capture-execution.png",
+    repo: "https://github.com/olawaleemmanuel09/lead-capture-crm-sync"
+  },
+  {
+    slug: "smartbook-ai",
+    title: "SmartBook AI",
+    client: "Axia Africa capstone",
+    status: "capstone",
+    statusLabel: "Open-source capstone",
+    period: "Reviewed November 2026",
+    summary: "An appointment workflow coordinates booking intake, reminders, cancellation and feedback.",
+    stack: [
+      "n8n",
+      "Supabase",
+      "Twilio"
+    ],
+    featured: false,
+    order: 12,
+    problem: [
+      "A reminder must follow the current booking state even after the customer changes plans."
+    ],
+    approach: [
+      {
+        title: "Trace the lifecycle",
+        body: "The 24-node export validates bookings, persists records, checks reminder windows and records which reminders were sent."
+      }
+    ],
+    outcome: [
+      "The export contains a high-risk branch. Reproducing the proposed model inference requires a separate service."
+    ],
+    decision: {
+      title: "A reminder flag is not an exactly-once guarantee",
+      body: "The 24-node workflow represents booking, cancellation, reminder and feedback lifecycles. Concurrent executions and downstream provider failures still require idempotent claiming and delivery logs. A trained no-show predictor is not contained in the public export."
+    },
+    media: [
+      {
+        src: "/evidence/smartbook-overview.png",
+        alt: "Archived SmartBook n8n booking, cancellation and reminder workflow.",
+        caption: "Capstone export overview; no standalone machine-learning inference service is bundled.",
+        type: "image",
+        aspect: "wide"
+      },
+      {
+        src: "/evidence/smartbook-booking-path.png",
+        alt: "SmartBook booking validation and confirmation branch.",
+        caption: "Archived booking intake subflow; includes its error response path.",
+        type: "image",
+        aspect: "wide"
+      },
+      {
+        src: "/evidence/smartbook-reminder-path.png",
+        alt: "SmartBook scheduled email and SMS reminder flow.",
+        caption: "Archived 24-hour and 2-hour reminder branches. Not proof of exactly-once delivery.",
+        type: "image",
+        aspect: "wide"
+      }
+    ],
+    preview: "/evidence/smartbook-overview.png",
+    repo: "https://github.com/olawaleemmanuel09/smartbook-ai-automation"
+  },
+  {
+    slug: "lead-intelligence-pipeline",
+    title: "Lead Intelligence Pipeline",
+    client: "Research demo",
+    status: "delivered",
+    statusLabel: "Open-source workflow",
+    period: "Reviewed November 2026",
+    summary: "Claude identifies business signals and JavaScript computes a repeatable ranking from those signals.",
+    stack: [
+      "n8n",
+      "Claude",
+      "Apify"
+    ],
+    featured: false,
+    order: 13,
+    problem: [
+      "A researcher needs reasons to investigate a candidate before making contact."
+    ],
+    approach: [
+      {
+        title: "Separate assessment from ranking",
+        body: "The 19-node export collects Maps candidates, checks existing records and inspects website signals. A code step weights the model assessment before high-value alerts go to Telegram."
+      }
+    ],
+    outcome: [
+      "The output is a research shortlist. Contact and conversion require separate evidence."
+    ],
+    decision: {
+      title: "AI identifies signals; code computes the ranking",
+      body: "Keeping the weighted final score in deterministic JavaScript makes the model's extracted business signals inspectable and ranking criteria repeatable. Prospect research remains distinct from consent, outreach and conversion."
+    },
+    media: [],
+    repo: "https://github.com/olawaleemmanuel09/lead-intelligence-pipeline"
+  },
+  {
+    slug: "voice-booking-agent",
+    title: "Voice Booking Agent",
+    client: "Voice interaction lab",
+    status: "prototype",
+    statusLabel: "Prototype",
+    period: "Reviewed November 2026",
+    summary: "A voice booking exercise explores when an assistant can safely confirm a reservation.",
+    stack: [
+      "ElevenLabs",
+      "n8n"
+    ],
+    featured: false,
+    order: 14,
+    problem: [
+      "A caller can hear a successful reply even if persistence fails."
+    ],
+    approach: [
+      {
+        title: "Separate the response paths",
+        body: "The prototype design reads the booking back and branches on the result of the record write."
+      }
+    ],
+    outcome: [
+      "A sanitized export and repeatable call test are pending."
+    ],
+    decision: {
+      title: "A spoken confirmation must follow the committed record",
+      body: "An assistant can sound confident while a booking write has failed. The prototype should verify storage success before reading back a confirmed reservation. Reproducible public call/export evidence is still pending."
+    },
+    media: [
+      {
+        src: "/evidence/voice-booking-handoff.png",
+        alt: "Archived voice-booking webhook handoff to Google Sheets, Gmail and error paths.",
+        caption: "Prototype workflow screenshot; a verified live voice-call test remains outstanding.",
+        type: "image",
+        aspect: "wide"
+      }
+    ],
+    preview: "/evidence/voice-booking-handoff.png"
+  },
+  {
+    slug: "christ-heart-foundation",
+    title: "Christ Heart Empowerment Foundation — Digital Platform",
+    client: "Christ Heart Empowerment Foundation",
+    status: "delivered",
+    statusLabel: "Delivered website",
+    period: "Reviewed November 2026",
+    summary: "A nonprofit needed a professional place to explain its programmes, receive the right kinds of enquiries and manage public updates without exposing sensitive requests for assistance.",
+    stack: [
+      "TypeScript",
+      "Next.js"
+    ],
+    featured: true,
+    order: 15,
+    problem: [
+      "People approach a foundation for different reasons: they may want to understand its work, request help, volunteer or support a programme. A single informal inbox makes it harder for staff to route each enquiry appropriately.",
+      "Information about someone requesting assistance may be sensitive. The website needed to build trust without publishing private form responses or implying aid had been approved before a staff review."
+    ],
+    approach: [
+      {
+        title: "Make the mission and next steps easy to understand",
+        body: "Public pages explain programmes and provide purpose-specific calls to action so visitors know where to go and what information to share."
+      },
+      {
+        title: "Capture and protect each enquiry",
+        body: "Validated forms and protected storage keep request details away from public browsing, while acknowledgements confirm receipt without making unapproved promises."
+      },
+      {
+        title: "Give staff a controlled way to maintain the site",
+        body: "An administrator-managed gallery allows approved updates, with write permissions enforced by database policies and small images designed to load well on mobile."
+      }
+    ],
+    outcome: [
+      "The public repository documents a delivered nonprofit platform and 61 security/content tests. Those documented tests do not prove donation totals or beneficiary outcomes, and private request content is not shown in this portfolio."
+    ],
+    decision: {
+      title: "A responsible form should protect the person behind it",
+      body: "Treat assistance requests as confidential service enquiries, not promotional material. Staff approval, safe database access and honest acknowledgement copy matter as much as visual design."
+    },
+    media: [{
+      src: "/architecture/foundation-platform.svg",
+      alt: "Architecture system map derived from documented implementation boundaries.",
+      caption: "Architecture summary; not a live dashboard screenshot.",
+      type: "image",
+      aspect: "wide"
+    }],
+    preview: "/architecture/foundation-platform.svg",
+    repo: "https://github.com/olawaleemmanuel09/Christ-Heart-Empowerment-Foundation"
+  },
+  {
+    slug: "academy-platform",
+    title: "Academy platform",
+    client: "Teaching practice",
+    status: "delivered",
+    statusLabel: "Teaching platform",
+    period: "Reviewed November 2026",
+    summary: "A cohort workspace supports assignment submission and grading for practical automation courses.",
+    stack: [
+      "Supabase",
+      "n8n"
+    ],
+    featured: false,
+    order: 16,
+    problem: [
+      "Students and instructors need a common record of assignments and feedback."
+    ],
+    approach: [
+      {
+        title: "Connect the handoff",
+        body: "The platform links enrolment, weekly tasks, submissions and review."
+      }
+    ],
+    outcome: [
+      "Teaching work is presented separately from commercial case studies."
+    ],
+    decision: {
+      title: "Student submissions need a trustworthy review state",
+      body: "A cohort learning workflow must distinguish an uploaded or submitted assignment from a teacher's review and recorded feedback. Implementation details beyond the existing source and screenshots require further verification."
+    },
+    media: [
+      {
+        src: "/evidence/academy-student-view.png",
+        alt: "Archived student dashboard showing Academy sessions, materials and calendar.",
+        caption: "Earlier Academy interface with the owner's personal test profile; not a CEFA production student screenshot.",
+        type: "image",
+        aspect: "wide"
+      },
+      {
+        src: "/evidence/academy-onboarding-flow.png",
+        alt: "Archived Academy onboarding n8n pipeline for student records and welcome email.",
+        caption: "Archived student-onboarding automation, distinct from the separate CEFA programme.",
+        type: "image",
+        aspect: "wide"
+      }
+    ],
+    preview: "/evidence/academy-student-view.png"
+  },
+  {
+    slug: "leadreach-prospect-intelligence",
+    title: "LeadReach — Prospect Discovery and Sales Readiness",
+    client: "Independent lead-intelligence product",
+    status: "prototype",
+    statusLabel: "Private research pipeline · evidence review",
+    ownerReportedProgress: {
+      value: "50,000",
+      label: "Prospects discovered",
+      asOf: "November 2026",
+      note: "Owner-reported progress. Live database and qualified-for-call totals have not been independently verified."
+    },
+    period: "Owner progress report, November 2026",
+    summary: "LeadReach is an independent prospect-discovery effort. The owner reports 50,000 prospects discovered; the current live database and number qualified for calls are not yet independently verified.",
+    stack: ["n8n", "API integrations", "Data qualification"],
+    featured: false,
+    order: 17,
+    problem: [
+      "Teams can spend more time searching for potential customers than evaluating their fit or starting useful conversations.",
+      "A long list alone does not tell a marketer who is ready to call, what information is missing, or which lead was already contacted."
+    ],
+    approach: [
+      { title: "Separate discovery from qualification", body: "Research and intake assemble potential prospects. Qualification checks fit signals and marks leads needing additional review; a discovered record is not automatically call-ready." },
+      { title: "Make outreach follow-through measurable", body: "The intended workflow tracks the review state, call outcomes and follow-up ownership without confusing a discovered prospect with a paying customer." }
+    ],
+    outcome: [
+      "50,000 prospects discovered is the owner's reported progress figure as of November 2026, not an independently authenticated database count.",
+      "The qualification and sales-readiness workflows remain in progress. Current qualified-for-call totals, completed outreach and conversion counts are not supplied or asserted."
+    ],
+    decision: {
+      title: "Discovery is not the same as sales readiness",
+      body: "Keep unverified discoveries, qualified call candidates and recorded outreach outcomes separate so leadership sees useful pipeline stages rather than an inflated conversion claim."
+    },
+    media: []
   },
 ];
 
-export const featured = projects
-  .filter((p) => p.featured)
-  .sort((a, b) => a.order - b.order);
-
-export const others = projects
-  .filter((p) => !p.featured)
-  .sort((a, b) => a.order - b.order);
+export const featured = projects.filter((project) => project.featured);
+export const others = projects.filter((project) => !project.featured);
 
 export function getProject(slug: string) {
-  return projects.find((p) => p.slug === slug);
+  return projects.find((project) => project.slug === slug);
 }

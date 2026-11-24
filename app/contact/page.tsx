@@ -1,12 +1,9 @@
 import type { Metadata } from "next";
+import { pageMetadata, shortName } from "@/lib/seo";
 import ContactForm from "@/components/sections/ContactForm";
 import MaskLines from "@/components/motion/MaskLines";
 
-export const metadata: Metadata = {
-  title: "Contact",
-  description:
-    "Get in touch about automation engineering roles or contract work. Based in Lagos, working remotely.",
-};
+export const metadata: Metadata = pageMetadata("/contact", "Contact | " + shortName, "Contact Olawale Olaonipekun about AI automation engineering, CRM integrations, remote roles and custom business systems.", "/work/headshot.jpg");
 
 const channels = [
   { label: "Email", value: "olawaleemmanuel100@gmail.com", href: "mailto:olawaleemmanuel100@gmail.com" },
@@ -27,8 +24,8 @@ export default function Contact() {
 
         <aside data-hero="1">
           <p className="t-body prose-justify text-muted">
-            Open to automation engineer roles, remote or Lagos-based, and to
-            contract work. I reply to everything within a day.
+            Open to AI engineering roles, remote or Lagos-based, and to
+            contract work. Include the role or process you want to discuss.
           </p>
 
           <dl className="mt-10">
@@ -36,7 +33,7 @@ export default function Contact() {
               <div key={c.label} className="grid grid-cols-[6rem_minmax(0,1fr)] gap-4 border-b border-rule py-4">
                 <dt className="t-small text-muted">{c.label}</dt>
                 <dd className="t-small">
-                  <a href={c.href} className="group relative inline-block" target="_blank" rel="noreferrer">
+                  <a href={c.href} className="group relative inline-block max-w-full [overflow-wrap:anywhere]" target="_blank" rel="noreferrer">
                     {c.value}
                     <span className="absolute -bottom-0.5 left-0 h-px w-full origin-right scale-x-0 bg-ink transition-transform duration-[400ms] [transition-timing-function:var(--ease-out-expo)] group-hover:origin-left group-hover:scale-x-100" />
                   </a>
