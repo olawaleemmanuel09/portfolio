@@ -20,7 +20,9 @@ with sync_playwright() as playwright:
             assert page.evaluate("document.documentElement.scrollWidth <= innerWidth"), (path, width)
             if path == "/":
                 assert page.locator(".hero-statement").count() == 1
-                assert page.locator(".studio-hero-proof img").count() == 1
+                assert page.locator(".cinematic-image-frame img").count() == 1
+                assert page.locator(".cinematic-line-inner").count() == 3
+                assert page.locator(".cinematic-manifesto .cinematic-word").count() == 15
                 assert page.locator(".studio-proof-stat").count() == 3
                 assert page.locator(".studio-problem-option").count() == 3
                 assert page.locator(".featured-case-card").count() == 6
