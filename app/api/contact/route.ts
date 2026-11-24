@@ -1,42 +1,11 @@
 import { NextResponse } from "next/server";
+import { clientAddress, createContactThrottle } from "@/lib/contact-throttle";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const WINDOW_MS = 10 * 60 * 1000;
-const MAX_PER_WINDOW = 3;
-const MAX_TRACKED_IPS = 500;
 const MAX_BODY_BYTES = 32 * 1024;
-
-/**
- * Per-IP throttle. Serverless instances are not shared, so this is a speed
- * bump rather than a wall, but it stops a single client hammering the endpoint
- * and burning the daily sending quota in one go.
- */
-const hits = new Map<string, number[]>();
-
-function rateLimited(ip: string) {
-  const now = Date.now();
-  // Bound the map even under a burst of distinct addresses. Fail closed for
-  // new addresses at capacity; existing entries still follow their window.
-  if (hits.size >= MAX_TRACKED_IPS) {
-    for (const [key, times] of hits) {
-      if (times.every((t) => now - t >= WINDOW_MS)) hits.delete(key);
-    }
-    if (!hits.has(ip) && hits.size >= MAX_TRACKED_IPS) return true;
-  }
-  const recent = (hits.get(ip) ?? []).filter((t) => now - t < WINDOW_MS);
-
-  if (recent.length >= MAX_PER_WINDOW) {
-    hits.set(ip, recent);
-    return true;
-  }
-
-  recent.push(now);
-  hits.set(ip, recent);
-
-  return false;
-}
+const rateLimited = createContactThrottle();
 
 /** Strips control characters and newlines, which have no business in a subject. */
 function clean(value: unknown, limit: number) {
@@ -73,18 +42,6 @@ export async function POST(request: Request) {
   // the actual stream for requests without a trustworthy Content-Length.
   if (Number(request.headers.get("content-length")) > MAX_BODY_BYTES) {
     return NextResponse.json({ error: "Message is too large." }, { status: 413 });
-  }
-
-  const ip =
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-    request.headers.get("x-real-ip") ||
-    "unknown";
-
-  if (rateLimited(ip)) {
-    return NextResponse.json(
-      { error: "Too many messages just now. Try again shortly, or email me directly." },
-      { status: 429 }
-    );
   }
 
   let body: Record<string, unknown>;
@@ -146,6 +103,15 @@ export async function POST(request: Request) {
     return NextResponse.json(
       { error: "Add a little more detail so I can reply usefully." },
       { status: 400 }
+    );
+  }
+
+  // Only validated mail attempts consume the bounded per-instance quota.
+  const ip = clientAddress(request.headers, process.env.VERCEL === "1");
+  if (rateLimited(ip)) {
+    return NextResponse.json(
+      { error: "Too many messages just now. Try again shortly, or email me directly." },
+      { status: 429, headers: { "Retry-After": "600" } }
     );
   }
 

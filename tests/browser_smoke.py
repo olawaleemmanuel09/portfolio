@@ -95,8 +95,9 @@ with sync_playwright() as playwright:
                     assert opener.evaluate("el => el === document.activeElement")
             assert page.evaluate("matchMedia('(prefers-reduced-motion: reduce)').matches")
             assert not page.locator("html.lenis").count()
-            for img in page.locator("main img").all():
-                assert img.get_attribute("alt") is not None
+            # Evaluate one DOM snapshot; a closing evidence dialog can remove
+            # its image between locator enumeration and indexed lookup.
+            assert page.locator("main img:not([alt])").count() == 0, (path, width)
             if screens and width in (320, 768, 1440) and javascript and path in ["/", "/work", "/work/cefa", "/work/ai-job-scraper"]:
                 name = path.strip("/").replace("/", "-") or "home"
                 if path == "/":

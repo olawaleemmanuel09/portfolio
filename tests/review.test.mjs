@@ -7,7 +7,7 @@ const origin = "http://127.0.0.1:3197";
 let server;
 before(async () => {
   server = spawn(process.execPath, ["node_modules/next/dist/bin/next", "start", "-H", "127.0.0.1", "-p", "3197"], {
-    env: { ...process.env, RESEND_API_KEY: "", CONTACT_TO: "" },
+    env: { ...process.env, VERCEL: "", RESEND_API_KEY: "", CONTACT_TO: "" },
     stdio: "ignore",
   });
   for (let attempt = 0; attempt < 100; attempt++) {
@@ -66,7 +66,18 @@ test("contact rejects invalid requests and falls back without sending mail", asy
   const response = await post(JSON.stringify({name:"Review",email:"review@example.com",message:"Synthetic review message"}), headers);
   assert.equal(response.status, 503);
   assert.match((await response.json()).error, /email me directly/);
-  assert.equal((await post("{}", headers)).status, 429);
+  // Invalid requests cannot consume address quotas; untrusted forwarded
+  // addresses cannot create fresh quota buckets on a standalone Node server.
+  for (let i = 0; i < 8; i++) {
+    assert.equal((await post("{}", { ...headers, "x-forwarded-for": "198.51.100." + i })).status, 400);
+  }
+  const valid = JSON.stringify({name:"Review",email:"review@example.com",message:"Synthetic review message"});
+  for (let i = 0; i < 2; i++) {
+    assert.equal((await post(valid, { ...headers, "x-forwarded-for": "198.51.100." + i })).status, 503);
+  }
+  const limited = await post(valid, { ...headers, "x-forwarded-for": "198.51.100.99" });
+  assert.equal(limited.status, 429);
+  assert.equal(limited.headers.get("retry-after"), "600");
 });
 
 test("case studies preserve semantic chapter navigation and evidence boundaries", async () => {
@@ -164,4 +175,35 @@ test("all canonical HTML and representative public resources have security heade
     assert.match(response.headers.get("content-security-policy") ?? "", /frame-ancestors 'none'/, path);
     assert.match(response.headers.get("permissions-policy") ?? "", /camera=\(\)/, path);
   }
+});
+
+test("trusted-address and bounded throttle regression", async () => {
+  const { clientAddress, createContactThrottle } = await import("../lib/contact-throttle.ts");
+  const forged = new Headers({ "x-forwarded-for": "198.51.100.1", "x-real-ip": "198.51.100.2", "x-vercel-forwarded-for": "198.51.100.3" });
+  assert.equal(clientAddress(forged, false), "unknown");
+  assert.equal(clientAddress(forged, true), "198.51.100.3");
+  assert.equal(clientAddress(new Headers({ "x-vercel-forwarded-for": "invalid" }), true), "unknown");
+  let time = 0;
+  const limit = createContactThrottle(500, 3, 600000, () => time, 1000);
+  for (let i = 0; i < 500; i++) assert.equal(limit("synthetic-" + i), false);
+  assert.equal(limit("new-visitor"), false, "A full map must not deny new visitors");
+  assert.equal(limit("new-visitor"), false);
+  assert.equal(limit("new-visitor"), false);
+  assert.equal(limit("new-visitor"), true);
+  time = 600001;
+  assert.equal(limit("new-visitor"), false);
+});
+
+test("rotating addresses cannot reset the independent aggregate provider budget", async () => {
+  const { createContactThrottle } = await import("../lib/contact-throttle.ts");
+  let time = 0;
+  const limit = createContactThrottle(5, 3, 600000, () => time, 30);
+  let accepted = 0;
+  for (let i = 0; i < 1000; i++) {
+    if (!limit("synthetic-" + (i % 6))) accepted++;
+  }
+  assert.equal(accepted, 30);
+  assert.equal(limit("new-visitor"), true);
+  time = 600001;
+  assert.equal(limit("new-visitor"), false);
 });
