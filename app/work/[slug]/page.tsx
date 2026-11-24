@@ -46,11 +46,13 @@ export default async function CaseStudy({
   const index = projects.findIndex((p) => p.slug === slug);
   const next = projects[(index + 1) % projects.length];
   const chapters = [
+    { id: "case-brief", label: "Project brief" },
     ...(project.media.length ? [{ id: "case-visual-evidence", label: "Visual record" }] : []),
     { id: "case-challenge", label: "Challenge" },
     ...(evidence ? [{ id: "case-system", label: "Engineering" }] : []),
     ...(project.decision ? [{ id: "case-decision", label: "The decision" }] : []),
     { id: "case-results", label: "Outcome" },
+    { id: "case-contact", label: "Get in touch" },
   ];
 
   return (
@@ -141,6 +143,18 @@ export default async function CaseStudy({
       <CaseChapterNav chapters={chapters} />
 
       <div className="case-cinema-container">
+        <section id="case-brief" className="case-brief" aria-labelledby="case-brief-heading">
+          <div>
+            <p className="case-cinema-index">01 / PROJECT BRIEF</p>
+            <h2 id="case-brief-heading">The work at a glance.</h2>
+            <p className="case-brief-context">{project.problem[0]}</p>
+          </div>
+          <dl className="case-brief-ledger">
+            <div><dt>Engineering focus</dt><dd>{project.approach[0]?.title ?? project.title}</dd></div>
+            <div><dt>Delivery status</dt><dd>{project.statusLabel}</dd></div>
+            <div><dt>Evidence boundary</dt><dd>{evidence?.boundaries ?? project.outcome[0] ?? project.summary}</dd></div>
+          </dl>
+        </section>
         <EvidenceGallery project={project} />
 
         <section id="case-challenge" className="case-cinema-chapter" aria-labelledby="case-challenge-heading">
@@ -220,6 +234,21 @@ export default async function CaseStudy({
           <div className="case-cinema-results-copy">
             {project.outcome.map((paragraph, i) => <p key={i} data-case-reveal>{paragraph}</p>)}
           </div>
+        </div>
+      </section>
+
+      <section id="case-contact" className="case-conversion" aria-labelledby="case-contact-heading">
+        <div className="case-cinema-container case-conversion-inner">
+          <div>
+            <p className="case-cinema-index">06 / CONTINUE THE CONVERSATION</p>
+            <h2 id="case-contact-heading">Have a system <em>to build?</em></h2>
+            <p>Discuss the operational problem, the constraints and the outcome you need. Or explore my experience for an engineering role.</p>
+          </div>
+          <nav aria-label="Case study contact options" className="case-conversion-links">
+            <Link href="/contact"><span>Discuss a project</span><span aria-hidden="true">↗</span></Link>
+            <Link href="/resume"><span>View my engineering résumé</span><span aria-hidden="true">↗</span></Link>
+            <Link href="/work"><span>Explore more case studies</span><span aria-hidden="true">↗</span></Link>
+          </nav>
         </div>
       </section>
 

@@ -8,7 +8,10 @@ export default function ContactBand() {
         <h2 id="studio-contact-heading">What&apos;s slowing <em>your business down?</em></h2>
         <div className="studio-contact-bottom">
           <p>Open to AI engineering roles and projects with a real operational problem to solve.</p>
-          <Link href="/contact" className="studio-contact-link">Start a conversation <span aria-hidden="true">↗</span></Link>
+          <div className="studio-contact-paths">
+            <Link href="/contact" className="studio-contact-link">Discuss a project <span aria-hidden="true">↗</span></Link>
+            <Link href="/resume" className="studio-contact-resume">Explore my engineering résumé <span aria-hidden="true">↗</span></Link>
+          </div>
         </div>
       </div>
     </section>

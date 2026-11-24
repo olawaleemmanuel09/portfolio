@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState, type MouseEvent, type KeyboardEvent } from "react";
+import { useLayoutEffect, useRef, useState, type MouseEvent, type KeyboardEvent } from "react";
 import type { Project } from "@/lib/data/types";
 
 function typeOfEvidence(src: string) {
@@ -12,25 +12,35 @@ function typeOfEvidence(src: string) {
 }
 
 export default function EvidenceGallery({ project }: { project: Project }) {
-  const visualRecords = project.media.filter((m) => m.type !== "video");
+  const visualRecords = project.media.map((media, figureIndex) => ({ media, figureIndex })).filter(({ media }) => media.type !== "video");
   const count = project.media.length;
   const documentedCount = project.media.filter((m) => !m.src.startsWith("/architecture/")).length;
   const dialogRef = useRef<HTMLDialogElement>(null);
   const openerRef = useRef<HTMLAnchorElement | null>(null);
   const [activeImage, setActiveImage] = useState<number | null>(null);
-  if (!count) return null;
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const selectedRecord = activeImage === null ? null : visualRecords[activeImage];
+  const selected = selectedRecord?.media;
 
-  const selected = activeImage === null ? null : visualRecords[activeImage];
+  // Open only after React has committed the selected figure and accessible labels.
+  useLayoutEffect(() => {
+    const dialog = dialogRef.current;
+    if (activeImage !== null && dialog && !dialog.open) {
+      dialog.showModal();
+      closeRef.current?.focus();
+    }
+  }, [activeImage]);
+
+  if (!count) return null;
 
   function openImage(event: MouseEvent<HTMLAnchorElement>, src: string) {
     // A native destination remains usable without JavaScript or on modified clicks.
     if (event.button !== 0 || event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
-    const index = visualRecords.findIndex((record) => record.src === src);
-    if (index < 0 || !dialogRef.current) return;
+    const index = visualRecords.findIndex(({ media }) => media.src === src);
+    if (index < 0 || typeof dialogRef.current?.showModal !== "function") return;
     event.preventDefault();
     openerRef.current = event.currentTarget;
     setActiveImage(index);
-    dialogRef.current.showModal();
   }
 
   function closeImage() {
@@ -39,7 +49,7 @@ export default function EvidenceGallery({ project }: { project: Project }) {
 
   function moveImage(step: number) {
     if (activeImage === null || visualRecords.length < 2) return;
-    setActiveImage((activeImage + step + visualRecords.length) % visualRecords.length);
+    setActiveImage((current) => current === null ? null : (current + step + visualRecords.length) % visualRecords.length);
   }
 
   function handleDialogKey(event: KeyboardEvent<HTMLDialogElement>) {
@@ -141,19 +151,20 @@ export default function EvidenceGallery({ project }: { project: Project }) {
         onClose={() => {
           setActiveImage(null);
           openerRef.current?.focus();
+          openerRef.current = null;
         }}
         onKeyDown={handleDialogKey}
       >
-        {selected && (
+        {selected && selectedRecord && (
           <div className="evidence-theatre-dialog-inner">
             <div className="evidence-theatre-dialog-top">
               <div>
                 <p id="evidence-dialog-heading" className="evidence-theatre-dialog-kicker">{typeOfEvidence(selected.src)}</p>
                 <p className="evidence-theatre-dialog-count" aria-live="polite">
-                  FIG {String((activeImage ?? 0)+1).padStart(2,"0")} / {String(visualRecords.length).padStart(2,"0")}
+                  FIG {String(selectedRecord.figureIndex + 1).padStart(2,"0")} / {String(count).padStart(2,"0")}
                 </p>
               </div>
-              <button type="button" onClick={closeImage} className="evidence-theatre-dialog-close" aria-label="Close image viewer">Close <span aria-hidden="true">×</span></button>
+              <button ref={closeRef} type="button" onClick={closeImage} className="evidence-theatre-dialog-close" aria-label="Close image viewer">Close <span aria-hidden="true">×</span></button>
             </div>
             <div className="evidence-theatre-dialog-image">
               <Image src={selected.src} alt={selected.alt} width={selected.aspect==="tall"?850:1600} height={selected.aspect==="tall"?1750:980}

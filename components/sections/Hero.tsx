@@ -26,7 +26,7 @@ export default function Hero() {
               <p className="cinematic-intro">
                 When customer enquiries are missed, operations become difficult to oversee,
                 or teams lose track of work, I build the systems that address it.
-                AI is part of the toolkit—not the point of the story.
+                I connect AI, APIs and operational workflows with the records and controls a business needs.
               </p>
               <div className="cinematic-actions">
                 <Link href="#work" className="cinematic-action-main">

@@ -9,7 +9,7 @@ screens = os.environ.get("REVIEW_SCREENSHOTS")
 
 with sync_playwright() as playwright:
     browser = playwright.chromium.launch(executable_path=os.environ.get("CHROMIUM_PATH"))
-    for width, javascript in [(w, True) for w in (320, 375, 768, 1024, 1440)] + [(320, False)]:
+    for width, javascript in [(w, True) for w in (320, 375, 390, 768, 1024, 1366, 1440, 1920)] + [(320, False)]:
         page = browser.new_page(viewport={"width": width, "height": 900},
                                 java_script_enabled=javascript, reduced_motion="reduce")
         for path in ["/", "/work", "/work/cefa", "/work/ai-job-scraper", "/contact", "/resume"]:
@@ -66,6 +66,9 @@ with sync_playwright() as playwright:
                 opener.click()
                 viewer = page.locator(".evidence-theatre-dialog")
                 assert viewer.is_visible(), "Evidence theatre did not open"
+                assert viewer.get_by_role("button", name="Close image viewer").evaluate("el => el === document.activeElement"), "Close must receive initial focus"
+                assert viewer.get_attribute("aria-labelledby") == "evidence-dialog-heading"
+                assert viewer.locator("#evidence-dialog-description").inner_text().strip()
                 assert "01" in viewer.locator(".evidence-theatre-dialog-count").inner_text()
                 page.keyboard.press("ArrowRight")
                 assert "02" in viewer.locator(".evidence-theatre-dialog-count").inner_text()
@@ -79,6 +82,17 @@ with sync_playwright() as playwright:
                 assert page.locator(".evidence-panel").count() == 4
                 assert page.get_by_role("link", name="Open original").count() == 3
                 assert page.locator('img[src*="job-intelligence-workflow"]').count() >= 1
+                if javascript and width in (320, 1440):
+                    opener = page.locator("#case-evidence-figure-4 .evidence-image-link")
+                    opener.click()
+                    viewer = page.locator(".evidence-theatre-dialog")
+                    assert viewer.locator(".evidence-theatre-dialog-count").inner_text().strip() == "FIG 04 / 04"
+                    assert viewer.get_by_role("button", name="Close image viewer").evaluate("el => el === document.activeElement")
+                    page.keyboard.press("ArrowLeft")
+                    assert viewer.locator(".evidence-theatre-dialog-count").inner_text().strip() == "FIG 02 / 04"
+                    page.keyboard.press("Escape")
+                    assert not viewer.is_visible()
+                    assert opener.evaluate("el => el === document.activeElement")
             assert page.evaluate("matchMedia('(prefers-reduced-motion: reduce)').matches")
             assert not page.locator("html.lenis").count()
             for img in page.locator("main img").all():
@@ -103,7 +117,7 @@ with sync_playwright() as playwright:
             page.locator("#menu").get_by_role("link", name="Engineering lab").click()
             page.wait_for_url("**/work#lab")
         page.close()
-    # Full project-catalog route coverage supplements the 36 viewport checks.
+    # Full project-catalog route coverage supplements the viewport checks.
     # Keep slugs explicit so a rename requires an intentional test update.
     slugs = [
         "cefa", "whatsapp-ordering-system", "web-ordering-and-payments",
@@ -111,13 +125,15 @@ with sync_playwright() as playwright:
         "b2b-revenue-engine", "elion-homes", "leadreach",
         "foc-inc-operations", "ai-job-scraper", "lead-capture-crm-sync",
         "smartbook-ai", "lead-intelligence-pipeline", "voice-booking-agent",
-        "christ-heart-foundation", "academy-platform"
+        "christ-heart-foundation", "academy-platform", "leadreach-prospect-intelligence"
     ]
     page = browser.new_page(viewport={"width": 390, "height": 844}, reduced_motion="reduce")
     for slug in slugs:
         response = page.goto(origin + "/work/" + slug, wait_until="domcontentloaded", timeout=45000)
         assert response is not None and response.status == 200, slug
         assert page.locator("main h1").count() == 1, slug
+        assert page.get_by_role("heading", name="The work at a glance.").count() == 1, slug
+        assert page.get_by_role("navigation", name="Case study contact options").get_by_role("link", name="Discuss a project").get_attribute("href") == "/contact", slug
         assert page.evaluate("document.documentElement.scrollWidth <= innerWidth"), slug
     page.close()
     # Static motion is a first-class path, including the screenshot's 1366x635 viewport.
@@ -141,4 +157,4 @@ with sync_playwright() as playwright:
         assert static_page.evaluate("document.documentElement.scrollWidth <= innerWidth")
         static_page.close()
     browser.close()
-print("Passed responsive portfolio checks, studio interaction, 16 case routes, reduced-motion and mobile keyboard navigation.")
+print("Passed responsive portfolio checks, studio interaction, 17 case routes, reduced-motion and mobile keyboard navigation.")
