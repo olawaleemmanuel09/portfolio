@@ -36,6 +36,10 @@ with sync_playwright() as playwright:
                 assert page.locator(".work-index-card img").count() == 13
             if path in ("/work/cefa", "/work/ai-job-scraper"):
                 assert page.locator("[data-case-hero] img").count() == 1
+            if path == "/work/cefa":
+                assert page.get_by_text("Verified operating snapshot", exact=True).count() == 1
+                for number in ("127", "10", "113"):
+                    assert page.locator('[aria-label="Verified project metrics"]').get_by_text(number, exact=True).count() == 1
             if path == "/work/ai-job-scraper":
                 assert page.locator(".evidence-panel").count() == 3
                 assert page.get_by_role("link", name="Open original").count() == 3

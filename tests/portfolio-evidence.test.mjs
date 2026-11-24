@@ -49,3 +49,21 @@ test("archived media files exist and have provenance entries", () => {
   for (const src of media) assert.ok(existsSync(new URL("../public" + src, import.meta.url)), src);
   assert.match(read("docs/review/CASE_STUDY_VISUAL_EVIDENCE.md"), /original Git blobs/);
 });
+
+test("verified adoption numbers have a snapshot date and no unverified prospect qualification total", () => {
+  const ce = catalog.slice(catalog.indexOf('slug: "cefa"'), catalog.indexOf('slug: "whatsapp-ordering-system"'));
+  assert.match(ce, /metricsAsOf: "2026-11-24"/);
+  for (const [value, label] of [["127", "Students onboarded"], ["10", "Learning groups"], ["113", "Group-chat messages"]]) {
+    assert.ok(ce.includes('value: "' + value + '"'), label);
+    assert.ok(ce.includes('label: "' + label + '"'), label);
+  }
+  const prospect = catalog.slice(catalog.indexOf('slug: "b2b-revenue-engine"'), catalog.indexOf('slug: "elion-homes"'));
+  assert.ok(!prospect.includes("metrics:"), "Do not publish an unverified live prospect/qualified count");
+  assert.match(prospect, /October 9, 2026/);
+  assert.match(prospect, /withheld from the public metrics/);
+});
+test("client cases lead with business problems and retain release boundaries", () => {
+  for (const phrase of ["malware", "more than 1,000 guards", "same WhatsApp", "customer messages", "staff review"]) assert.ok(catalog.includes(phrase), phrase);
+  assert.match(catalog, /production approval/);
+  assert.match(evidence, /not describe them as certified production features/);
+});

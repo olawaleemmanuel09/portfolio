@@ -41,6 +41,12 @@ export default function WorkRow({ project: p, index, total }: { project: Project
           </div>
           <h3 className="featured-case-title mt-5 max-w-[24ch] text-[clamp(1.45rem,2.4vw,2.1rem)] font-semibold leading-[1.14] tracking-[-0.028em] text-ink">{p.title}</h3>
           <p className="mt-4 max-w-[58ch] text-[0.94rem] leading-[1.65] text-muted">{p.summary}</p>
+          {p.metrics && p.metrics.length > 0 && (
+            <div className="mt-5 flex flex-wrap items-baseline gap-x-3 gap-y-1" aria-label="Verified project snapshot">
+              <span className="text-[1.45rem] font-semibold tabular-nums tracking-[-0.04em] text-[var(--color-accent-deep)]">{p.metrics[0].value}</span>
+              <span className="text-[0.79rem] text-muted">{p.metrics[0].label.toLowerCase()} · {p.metricsAsOf}</span>
+            </div>
+          )}
           <div className="mt-auto flex flex-wrap items-end justify-between gap-4 border-t border-rule pt-5">
             <span className="text-[0.72rem] leading-[1.55] text-[#625c6b]">{p.stack.slice(0, 3).join(" · ")}</span>
             <span className="featured-case-action inline-flex items-center gap-2 text-[0.8rem] font-semibold text-[var(--color-accent-deep)]">
