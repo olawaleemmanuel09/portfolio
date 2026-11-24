@@ -45,5 +45,36 @@ with sync_playwright() as playwright:
             page.wait_for_timeout(600)
             assert page.locator(".cinematic-manifesto .cinematic-word").count() == 15
         page.close()
+
+    # Case studies must have motion *with* JavaScript and keep every evidence
+    # qualifier readable without any animation dependency.
+    for width in (390, 1440):
+        page = browser.new_page(viewport={"width": width, "height": 900},
+                                reduced_motion="no-preference")
+        errors = []
+        page.on("pageerror", lambda error: errors.append(str(error)))
+        resp = page.goto(origin + "/work/ai-job-scraper", wait_until="domcontentloaded", timeout=45000)
+        assert resp is not None and resp.status == 200
+        page.wait_for_function(
+            "() => document.querySelector('[data-case-study]')?.dataset.caseMotion === 'ready'",
+            timeout=20000
+        )
+        page.wait_for_timeout(1450)
+        assert page.locator(".case-title-word").count() >= 2
+        assert page.locator("[data-case-hero] img").count() == 1
+        assert page.get_by_role("navigation", name="Case-study chapters").count() == 1
+        assert page.locator(".evidence-panel").count() == 3
+        assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
+        assert not errors, (width, errors)
+        if screens:
+            page.screenshot(path=Path(screens) / f"motion-case-hero-{width}.png")
+        if width == 1440:
+            page.locator("#case-challenge").scroll_into_view_if_needed()
+            page.wait_for_timeout(700)
+            assert page.locator(".case-cinema-chapter-intro h2").is_visible()
+            if screens:
+                page.screenshot(path=Path(screens) / "motion-case-challenge-1440.png")
+        page.close()
+
     browser.close()
-print("Normal-motion desktop and phone checks passed; GSAP scroll-driven hero verified.")
+print("Normal-motion home and case-study browser checks passed.")

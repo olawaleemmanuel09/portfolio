@@ -3,12 +3,13 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { projects, getProject } from "@/lib/data/projects";
 import { engineeringEvidence } from "@/lib/data/engineeringEvidence";
-import Reveal from "@/components/motion/Reveal";
+import CaseChapterNav from "@/components/sections/CaseChapterNav";
+import CaseStudyMotion from "@/components/motion/CaseStudyMotion";
 import EvidenceGallery from "@/components/sections/EvidenceGallery";
 import CaseHeroVisual from "@/components/sections/CaseHeroVisual";
 
 export function generateStaticParams() {
-  return projects.map((p) => ({ slug: p.slug }));
+  return projects.map((project) => ({ slug: project.slug }));
 }
 
 export async function generateMetadata({
@@ -44,162 +45,182 @@ export default async function CaseStudy({
   const evidence = engineeringEvidence[project.slug];
   const index = projects.findIndex((p) => p.slug === slug);
   const next = projects[(index + 1) % projects.length];
+  const chapters = [
+    ...(project.media.length ? [{ id: "case-visual-evidence", label: "Visual record" }] : []),
+    { id: "case-challenge", label: "Challenge" },
+    ...(evidence ? [{ id: "case-system", label: "Engineering" }] : []),
+    ...(project.decision ? [{ id: "case-decision", label: "The decision" }] : []),
+    { id: "case-results", label: "Outcome" },
+  ];
 
   return (
-    <article className="mx-auto max-w-[1180px] px-6 pb-24 pt-32 md:px-8 md:pt-40">
-      <header className="border-b border-rule pb-12 md:pb-14">
-        <Link href="/work" className="link-underline t-small text-muted">
-          Back to work
-        </Link>
-
-        <div className={project.preview ? "mt-8 grid items-center gap-9 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-14" : "mt-8"}>
-          <div>
-            <h1 className="t-display max-w-[18ch]" data-hero="0">
-            <span className="mask block">
-              <span>{project.title}</span>
-            </span>
-          </h1>
-  
-            <p className="t-lead mt-6 max-w-[60ch] text-muted" data-hero="1">{project.summary}</p>
-  
-          </div>
-          {project.preview && <CaseHeroVisual project={project} />}
-        </div>
-
-        <dl className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-4" data-hero="2">
-          <div>
-            <dt className="t-small text-muted">Client</dt>
-            <dd className="t-small mt-1.5">{project.client}</dd>
-          </div>
-          <div>
-            <dt className="t-small text-muted">Status</dt>
-            <dd className="t-small mt-1.5 flex items-center gap-2">
-              {project.status === "production" && <span className="live-dot" aria-hidden />}
-              {project.statusLabel}
-            </dd>
-          </div>
-          <div>
-            <dt className="t-small text-muted">Period</dt>
-            <dd className="t-small mt-1.5">{project.period}</dd>
-          </div>
-          <div>
-            <dt className="t-small text-muted">Built with</dt>
-            <dd className="t-small mt-1.5">{project.stack.join(", ")}</dd>
-          </div>
-        </dl>
-
-        {project.metrics && project.metrics.length > 0 && (
-          <section aria-label="Verified project metrics" className="mt-10 rounded-[1rem] border border-[#ded8e9] bg-[#faf9fd] p-5 sm:p-7">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <p className="text-[0.66rem] font-semibold uppercase tracking-[0.15em] text-[var(--color-accent-deep)]">Verified operating snapshot</p>
-              <p className="text-xs text-muted">Database count · {project.metricsAsOf}</p>
+    <article data-case-study className="case-cinema-page">
+      <CaseStudyMotion slug={project.slug} />
+      <div className="case-cinema-cover">
+        <div className="case-cinema-container">
+          <header className="case-cinema-header">
+            <div className="case-cinema-topline">
+              <Link href="/work" className="case-cinema-return">← All projects</Link>
+              <span>CASE FILE / {String(index + 1).padStart(2, "0")} OF {String(projects.length).padStart(2, "0")}</span>
+              <span>{project.period}</span>
             </div>
-            <dl className="mt-6 grid gap-5 sm:grid-cols-3">
-              {project.metrics.map((metric) => (
-                <div key={metric.label} className="border-l-2 border-[#a68edc] pl-4">
-                  <dt className="text-sm leading-snug text-muted">{metric.label}</dt>
-                  <dd className="mt-1.5 text-[clamp(1.9rem,3vw,2.75rem)] font-semibold tabular-nums leading-none tracking-[-0.035em] text-ink">{metric.value}</dd>
-                </div>
-              ))}
+
+            <div className="case-cinema-hero-grid">
+              <div className="case-cinema-story">
+                <p className="case-cinema-eyebrow">ENGINEERING CASE STUDY <span aria-hidden="true">/</span> {project.statusLabel}</p>
+                <h1 className="case-cinema-title" aria-label={project.title}>
+                  <span aria-hidden="true">
+                    {project.title.split(/\s+/).map((word, i) => (
+                      <span className="case-title-word-wrap" key={i}><span className="case-title-word">{word}</span></span>
+                    ))}
+                  </span>
+                </h1>
+                <p className="case-cinema-synopsis">{project.summary}</p>
+                <p className="case-cinema-context">
+                  THE CASE / A BUSINESS PROBLEM, THE RESPONSE AND WHAT THE RECORD ACTUALLY SHOWS.
+                </p>
+              </div>
+              <div className="case-cinema-hero-media">
+                {project.preview ? (
+                  <CaseHeroVisual project={project} />
+                ) : (
+                  <div className="case-cinema-no-preview">
+                    <span>PROJECT RECORD</span>
+                    <strong>{project.title}</strong>
+                    <span>Documentation available below</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <dl className="case-cinema-facts">
+              <div><dt>ORGANISATION</dt><dd>{project.client}</dd></div>
+              <div><dt>DELIVERY</dt><dd>{project.status === "production" && <span className="live-dot" aria-hidden="true" />}{project.statusLabel}</dd></div>
+              <div><dt>PERIOD</dt><dd>{project.period}</dd></div>
+              <div><dt>ENGINEERING STACK</dt><dd>{project.stack.join(" / ")}</dd></div>
             </dl>
-          </section>
-        )}
 
-        {(project.live || project.repo) && (
-          <div className="mt-10 flex gap-8">
-            {project.live && (
-              <a href={project.live} className="link-underline t-small" target="_blank" rel="noreferrer">
-                Visit the site
-              </a>
-            )}
-            {project.repo && (
-              <a href={project.repo} className="link-underline t-small" target="_blank" rel="noreferrer">
-                View the repository
-              </a>
-            )}
-          </div>
-        )}
-      </header>
-
-      <EvidenceGallery project={project} />
-
-      <div className="grid gap-14 py-14 md:py-20 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:gap-20">
-        <div className="lg:sticky lg:top-32 lg:self-start">
-          <h2 className="t-h2">The business problem</h2>
-          {project.problem.map((p, i) => (
-            <p key={i} className="t-body prose-justify mt-5 text-muted">
-              {p}
-            </p>
-          ))}
-        </div>
-
-        <div>
-          <h2 className="t-h2">The solution I designed</h2>
-          <div className="mt-8">
-            {project.approach.map((a, i) => (
-              <Reveal key={a.title} delay={i * 60} variant="soft">
-                <div className="border-t border-rule py-7 first:border-t-0 first:pt-0">
-                  <h3 className="t-h2" style={{ fontVariationSettings: '"wdth" 100, "wght" 560' }}>
-                    {a.title}
-                  </h3>
-                  <p className="t-body prose-justify mt-3 text-muted">{a.body}</p>
+            {project.metrics && project.metrics.length > 0 && (
+              <section aria-label="Verified project metrics" className="case-cinema-metrics">
+                <div className="case-cinema-metrics-top">
+                  <p>Verified operating snapshot</p>
+                  <p>Database count · {project.metricsAsOf}</p>
                 </div>
-              </Reveal>
-            ))}
-          </div>
+                <dl className="case-cinema-metrics-list">
+                  {project.metrics.map((metric) => (
+                    <div key={metric.label}>
+                      <dt>{metric.label}</dt>
+                      <dd>{metric.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </section>
+            )}
+
+            {(project.live || project.repo) && (
+              <div className="case-cinema-external">
+                {project.live && <a href={project.live} target="_blank" rel="noopener noreferrer">Visit published site ↗</a>}
+                {project.repo && <a href={project.repo} target="_blank" rel="noopener noreferrer">Inspect public repository ↗</a>}
+              </div>
+            )}
+          </header>
         </div>
       </div>
 
-      {evidence && (
-        <section aria-labelledby="system-boundaries" className="border-t border-rule py-14 md:py-20">
-          <div className="grid gap-12 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:gap-20">
-            <div><p className="t-small text-muted">System evidence</p><h2 id="system-boundaries" className="t-h2 mt-3">Boundaries and responsibilities</h2><p className="t-body mt-5 text-muted">{evidence.boundaries}</p></div>
-            <div><h3 className="t-h2">Engineering implementation</h3><div className="mt-6 divide-y divide-rule border-t border-rule">
-              {evidence.implementation.map((item) => <div key={item.title} className="py-5"><h4 className="t-body font-semibold">{item.title}</h4><p className="t-body mt-2 text-muted">{item.detail}</p></div>)}
-            </div></div>
+      <CaseChapterNav chapters={chapters} />
+
+      <div className="case-cinema-container">
+        <EvidenceGallery project={project} />
+
+        <section id="case-challenge" className="case-cinema-chapter" aria-labelledby="case-challenge-heading">
+          <div className="case-cinema-chapter-intro" data-case-reveal>
+            <p className="case-cinema-index">02 / THE CHALLENGE</p>
+            <h2 id="case-challenge-heading">What was getting <em>in the way.</em></h2>
+            {project.problem.map((item, i) => <p key={i} className="case-cinema-problem">{item}</p>)}
           </div>
-          <div className="mt-12"><h3 className="t-h2">Delivery and verification boundaries</h3><div className="mt-6 grid gap-4 md:grid-cols-3">
-            {evidence.verification.map((item) => <div key={item.area} className="border border-rule p-5"><p className="t-small text-muted">{item.state === "documented" ? "Documented" : item.state === "planned" ? "Planned" : "Verification pending"}</p><h4 className="t-body mt-2 font-semibold">{item.area}</h4><p className="t-small mt-3 text-muted">{item.detail}</p></div>)}
-          </div>{evidence.publicationNote && <p className="t-small mt-5 text-muted">{evidence.publicationNote}</p>}</div>
+          <div className="case-cinema-response">
+            <div className="case-cinema-response-heading" data-case-reveal>
+              <p className="case-cinema-index">THE ENGINEERED RESPONSE</p>
+              <p>Specific decisions, not a catalogue of technologies.</p>
+            </div>
+            <ol>
+              {project.approach.map((step, i) => (
+                <li key={step.title} data-case-reveal>
+                  <span className="case-cinema-response-number">{String(i + 1).padStart(2, "0")}</span>
+                  <div><h3>{step.title}</h3><p>{step.body}</p></div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+      </div>
+
+      {evidence && (
+        <section id="case-system" aria-labelledby="case-system-heading" className="case-cinema-proof">
+          <div className="case-cinema-container">
+            <div className="case-cinema-proof-head" data-case-reveal>
+              <div><p className="case-cinema-index">03 / SYSTEM EVIDENCE</p><h2 id="case-system-heading">Show the <em>engineering.</em></h2></div>
+              <p>{evidence.boundaries}</p>
+            </div>
+            <div className="case-cinema-proof-grid">
+              <div className="case-cinema-implementation" data-case-reveal>
+                <p className="case-cinema-proof-label">IMPLEMENTED RESPONSIBILITIES</p>
+                {evidence.implementation.map((item, i) => (
+                  <div key={item.title} className="case-cinema-implementation-row">
+                    <span>{String(i + 1).padStart(2, "0")}</span>
+                    <div><h3>{item.title}</h3><p>{item.detail}</p></div>
+                  </div>
+                ))}
+              </div>
+              <div className="case-cinema-verification" data-case-reveal>
+                <p className="case-cinema-proof-label">WHAT THE EVIDENCE ACTUALLY SUPPORTS</p>
+                {evidence.verification.map((item, i) => (
+                  <div key={item.area} className="case-cinema-verification-row">
+                    <span className="case-cinema-verification-index">{String(i + 1).padStart(2, "0")}</span>
+                    <div>
+                      <span className="case-cinema-verification-state">{item.state === "documented" ? "DOCUMENTED" : item.state === "planned" ? "PLANNED" : "VERIFICATION PENDING"}</span>
+                      <h3>{item.area}</h3><p>{item.detail}</p>
+                    </div>
+                  </div>
+                ))}
+                {evidence.publicationNote && <p className="case-cinema-publication">{evidence.publicationNote}</p>}
+              </div>
+            </div>
+          </div>
         </section>
       )}
+
       {project.decision && (
-        <Reveal>
-          <section className="-mx-6 border-y border-ink px-6 py-14 md:-mx-8 md:px-10 md:py-20">
-            <p className="t-small text-[var(--color-accent)]">The call that mattered</p>
-            <h2 className="t-display-sm mt-4 max-w-[22ch]">
-              <span className="mask block">
-                <span>{project.decision.title}</span>
-              </span>
-            </h2>
-            <p className="t-body prose-justify measure-wide mt-6">{project.decision.body}</p>
-          </section>
-        </Reveal>
+        <section id="case-decision" className="case-cinema-decision" aria-labelledby="case-decision-heading">
+          <div className="case-cinema-container" data-case-reveal>
+            <p className="case-cinema-index">04 / THE DECISION THAT MATTERED</p>
+            <h2 id="case-decision-heading">{project.decision.title}</h2>
+            <p>{project.decision.body}</p>
+          </div>
+        </section>
       )}
 
-      <section className="grid gap-12 border-t border-rule py-14 md:py-20 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:gap-20">
-        <h2 className="t-h2">What changed and what remains</h2>
-        <div>
-          {project.outcome.map((o, i) => (
-            <p key={i} className="t-body prose-justify mt-5 text-muted first:mt-0">
-              {o}
-            </p>
-          ))}
-
+      <section id="case-results" className="case-cinema-results" aria-labelledby="case-results-heading">
+        <div className="case-cinema-container">
+          <div data-case-reveal>
+            <p className="case-cinema-index">05 / DELIVERY AND EVIDENCE</p>
+            <h2 id="case-results-heading">What changed. <em>What remains.</em></h2>
+          </div>
+          <div className="case-cinema-results-copy">
+            {project.outcome.map((paragraph, i) => <p key={i} data-case-reveal>{paragraph}</p>)}
+          </div>
         </div>
       </section>
 
-      <Link
-        href={`/work/${next.slug}`}
-        className="group flex items-baseline justify-between border-t border-rule pt-10 transition-colors hover:text-[var(--color-accent)]"
-      >
-        <span>
-          <span className="t-small block text-muted">Next project</span>
-          <span className="t-display-sm mt-2 block transition-transform duration-500 md:group-hover:translate-x-2">
-            {next.title}
-          </span>
-        </span>
-      </Link>
+      <footer className="case-cinema-next">
+        <div className="case-cinema-container">
+          <Link href={`/work/${next.slug}`} className="case-cinema-next-link">
+            <span>NEXT CASE / {String(((index + 1) % projects.length) + 1).padStart(2, "0")}</span>
+            <strong>{next.title}</strong>
+            <span aria-hidden="true">↗</span>
+          </Link>
+        </div>
+      </footer>
     </article>
   );
 }
