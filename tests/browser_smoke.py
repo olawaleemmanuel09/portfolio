@@ -55,7 +55,7 @@ with sync_playwright() as playwright:
                 assert page.locator(".case-cinema-response li").count() >= 2
                 assert page.locator(".case-cinema-verification-row").count() >= 1
                 if javascript and width == 375:
-                    page.get_by_role("link", name="Engineering", exact=True).click()
+                    page.locator('.case-chapter-nav-link[href="#case-system"]').click()
                     assert page.url.endswith("#case-system")
             if path == "/work/cefa":
                 assert page.get_by_text("Verified operating snapshot", exact=True).count() == 1
