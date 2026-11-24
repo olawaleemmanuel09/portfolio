@@ -2,6 +2,7 @@ export type ProjectStatus = "production" | "staging" | "prototype" | "delivered"
 
 export type Media = {
   src: string;
+  poster?: string;
   alt: string;
   caption?: string;
   type?: "image" | "video";
