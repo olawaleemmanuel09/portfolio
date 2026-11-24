@@ -128,3 +128,22 @@ test("owner-reported lead intelligence count is never mislabeled a verified metr
   assert.match(page, /OWNER-REPORTED PROGRESS/);
   assert.match(page, /project\.ownerReportedProgress/);
 });
+
+test("modal opens after committed figure and preserves original mixed-media numbering", () => {
+  const gallery = read("components/sections/EvidenceGallery.tsx");
+  assert.match(gallery, /useLayoutEffect\(\(\) =>/);
+  assert.match(gallery, /dialog\.showModal\(\);\s*closeRef\.current\?\.focus\(\)/);
+  assert.match(gallery, /selectedRecord\.figureIndex \+ 1/);
+  assert.match(gallery, /ref=\{closeRef\}/);
+  assert.match(gallery, /typeof dialogRef\.current\?\.showModal/);
+});
+
+test("case study contact and summary are server-rendered without new claims", () => {
+  const page = read("app/work/[slug]/page.tsx");
+  assert.match(page, /id="case-brief"/);
+  assert.match(page, /project\.problem\[0\]/);
+  assert.match(page, /evidence\?\.boundaries/);
+  assert.match(page, /aria-label="Case study contact options"/);
+  assert.match(page, /href="\/resume"/);
+  assert.match(page, /href="\/contact"/);
+});
