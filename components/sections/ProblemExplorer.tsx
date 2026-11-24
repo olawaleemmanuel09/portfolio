@@ -60,12 +60,18 @@ export default function ProblemExplorer() {
         <div className="studio-explorer-shell">
           <div className="studio-explorer-options" aria-label="Choose a business challenge">
             {cases.map((item, index) => (
-              <button
+              <a
                 key={item.slug}
-                type="button"
+                href={`/work/${item.slug}`}
                 className="studio-problem-option"
-                aria-pressed={index === active}
-                onClick={() => setActive(index)}
+                aria-current={index === active ? "true" : undefined}
+                onClick={(event) => {
+                  // An ordinary link without JavaScript. Once hydrated, a normal
+                  // primary click selects the preview; modified clicks still navigate.
+                  if (event.button !== 0 || event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) return;
+                  event.preventDefault();
+                  setActive(index);
+                }}
               >
                 <span className="studio-problem-number">{item.number}</span>
                 <span className="studio-problem-label">
@@ -73,7 +79,7 @@ export default function ProblemExplorer() {
                   <strong>{item.title}</strong>
                 </span>
                 <span className="studio-problem-arrow" aria-hidden="true">↗</span>
-              </button>
+              </a>
             ))}
             <p className="studio-explorer-aside">These are project narratives and conceptual diagrams, not simulated live dashboards.</p>
           </div>

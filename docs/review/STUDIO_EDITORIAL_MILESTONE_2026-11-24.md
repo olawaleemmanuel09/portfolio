@@ -36,3 +36,9 @@ Complete the real external restricted-identifiers scan and obtain client permiss
 ## Suggested Codex review
 
 Examine mobile heading overflow, serif fallbacks, source-image weight, contrast, selected-state affordance, semantic ARIA, copy accuracy, auto-scroll/motion, focus order, performance and regression relative to PR #4. Return severity-ranked findings with source-line references. Do not merge.
+
+## Codex review fixes after first visual QA
+
+- **P2 variable-font hierarchy:** legacy `body { font-variation-settings: ... wght 400 }` was overriding the intended studio `font-weight`. Studio sections and header controls now set `font-variation-settings: normal`, allowing Archivo's native weight axis to honor section-specific CSS weights while retaining the deliberate display-heading override.
+- **P2 no-JavaScript interactivity:** project choices are now real anchor links to their case studies. With JavaScript, an ordinary left click selects the in-page preview; without JavaScript (or when hydration fails), the same links navigate to fully rendered case studies. Modified clicks retain native open-in-new-tab behavior. The active choice uses `aria-current` and is tested at all widths.
+- **Screenshot reliability:** the browser returns to the top before full-page homepage screenshots so the fixed navigation appears at its normal initial position.

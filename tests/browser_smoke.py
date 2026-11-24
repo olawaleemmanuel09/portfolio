@@ -31,10 +31,13 @@ with sync_playwright() as playwright:
                 if javascript:
                     choices = page.locator(".studio-problem-option")
                     choices.nth(2).click()
-                    assert choices.nth(2).get_attribute("aria-pressed") == "true"
+                    assert choices.nth(2).get_attribute("aria-current") == "true"
                     assert "security-workforce-operations" in page.locator(".studio-stage-link").get_attribute("href")
                     choices.first.click()
-                    assert choices.first.get_attribute("aria-pressed") == "true"
+                    assert choices.first.get_attribute("aria-current") == "true"
+                else:
+                    assert page.locator(".studio-problem-option").nth(1).get_attribute("href") == "/work/web-ordering-and-payments"
+                    assert page.locator(".studio-problem-option").nth(2).get_attribute("href") == "/work/security-workforce-operations"
                     assert "cefa" in page.locator(".studio-stage-link").get_attribute("href")
             if path == "/work":
                 assert page.locator(".work-index-card").count() == 16
@@ -55,6 +58,9 @@ with sync_playwright() as playwright:
                 assert img.get_attribute("alt") is not None
             if screens and width in (320, 768, 1440) and javascript and path in ["/", "/work", "/work/cefa", "/work/ai-job-scraper"]:
                 name = path.strip("/").replace("/", "-") or "home"
+                if path == "/":
+                    page.evaluate("window.scrollTo(0, 0)")
+                    page.wait_for_timeout(120)
                 page.screenshot(path=Path(screens) / f"{name}-{width}.png", full_page=(path in ("/", "/work")))
         if width == 320 and javascript:
             toggle = page.get_by_role("button", name="Menu")

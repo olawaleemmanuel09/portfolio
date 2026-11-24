@@ -507,6 +507,15 @@ a { color: inherit; text-decoration: none; }
 .studio-header-monogram { font-family: var(--studio-serif); font-style: italic; font-size: 1.33rem; font-weight: 700; color: var(--studio-purple); line-height: .85; }
 .studio-nav-link { font-size: .82rem; font-weight: 530; }
 .studio-mobile-menu { min-height: 44px; min-width: 44px; font-weight: 680; }
+/* The older body rule pins Archivo's variable wght to 400. Scoped studio
+   sections must return to normal variation handling so CSS font-weight
+   actually controls the editorial hierarchy. The display headline retains
+   its intentional per-element width/weight axes. */
+.studio-hero, .studio-proof-strip, .studio-explorer,
+.studio-selected, .studio-lab, .studio-about, .studio-contact,
+.studio-header-brand, .studio-nav-link, .studio-mobile-menu {
+  font-variation-settings: normal;
+}
 .studio-hero { background: var(--studio-paper); color: var(--studio-ink); border-bottom: 1px solid var(--studio-line); }
 .studio-topline {
   display: flex; justify-content: space-between; gap: 1.2rem;
@@ -599,13 +608,13 @@ a { color: inherit; text-decoration: none; }
   border-bottom: 1px solid #d2ccd0; padding: clamp(1.25rem,2.6vw,2.4rem);
   cursor: pointer; transition: background-color 160ms ease, color 160ms ease;
 }
-.studio-problem-option[aria-pressed="true"] { background: var(--studio-ink); color: white; }
-.studio-problem-option:hover:not([aria-pressed="true"]) { background: #eae4dd; }
+.studio-problem-option[aria-current="true"] { background: var(--studio-ink); color: white; }
+.studio-problem-option:hover:not([aria-current="true"]) { background: #eae4dd; }
 .studio-problem-number { font-size: .71rem; letter-spacing: .14em; font-weight: 720; color: #746a80; padding-top: .22rem; }
-.studio-problem-option[aria-pressed="true"] .studio-problem-number { color: #cbb8fc; }
+.studio-problem-option[aria-current="true"] .studio-problem-number { color: #cbb8fc; }
 .studio-problem-label { flex: 1; min-width: 0; }
 .studio-problem-label small { display: block; font-size: .63rem; font-weight: 720; letter-spacing: .12em; color: #625d68; }
-.studio-problem-option[aria-pressed="true"] small { color: #baa9dd; }
+.studio-problem-option[aria-current="true"] small { color: #baa9dd; }
 .studio-problem-label strong { display: block; max-width: 25ch; margin-top: .65rem; font-size: clamp(1rem,1.5vw,1.55rem); line-height: 1.19; font-weight: 630; letter-spacing: -.02em; }
 .studio-problem-arrow { font-size: 1.1rem; font-weight: 720; }
 .studio-explorer-aside { margin-top: auto; padding: 1.7rem 2rem; font-size: .75rem; color: #746d76; line-height: 1.6; }
