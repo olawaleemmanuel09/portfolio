@@ -87,3 +87,50 @@ test("case studies preserve semantic chapter navigation and evidence boundaries"
   assert.match(job, /Archived project capture/);
   assert.match(job, /one We Work Remotely RSS feed/);
 });
+
+function jsonLd(html) {
+  return [...html.matchAll(/<script\b[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)]
+    .map(match => JSON.parse(match[1]));
+}
+
+test("search metadata is unique, canonical and source-consistent across all 22 pages", async () => {
+  const xml = await (await fetch(origin + "/sitemap.xml")).text();
+  const urls = [...xml.matchAll(/<loc>(.+?)<\/loc>/g)].map(match => new URL(match[1]));
+  assert.equal(urls.length, 22);
+  const titles = new Set(), descriptions = new Set();
+  for (const url of urls) {
+    const html = await (await fetch(origin + url.pathname)).text();
+    const title = html.match(/<title>([^<]+)<\/title>/)?.[1];
+    const description = html.match(/<meta name="description" content="([^"]+)"/)?.[1];
+    assert.ok(title && description, url.pathname);
+    assert.ok(!titles.has(title), title);
+    assert.ok(!descriptions.has(description), url.pathname);
+    titles.add(title);
+    descriptions.add(description);
+    assert.ok(html.includes('property="og:url" content="' + url.href + '"'), url.pathname);
+    assert.ok(html.includes('name="twitter:card"'), url.pathname);
+    if (url.pathname.startsWith("/work/")) {
+      const graph = jsonLd(html).flatMap(item => item["@graph"] ?? []);
+      const article = graph.find(item => item["@type"] === "Article");
+      const person = graph.find(item => item["@type"] === "Person");
+      assert.equal(article?.mainEntityOfPage, url.href);
+      assert.equal(article?.author["@id"], person?.["@id"]);
+      assert.ok(article?.headline && article?.description, url.pathname);
+    }
+  }
+});
+
+test("professional identity and crawler policy are explicit without invented reviews", async () => {
+  const home = await (await fetch(origin)).text();
+  const about = await (await fetch(origin + "/about")).text();
+  const homeGraph = jsonLd(home).flatMap(item => item["@graph"] ?? []);
+  const aboutGraph = jsonLd(about).flatMap(item => item["@graph"] ?? []);
+  const person = homeGraph.find(item => item["@type"] === "Person");
+  assert.equal(person?.name, "Olawale Emmanuel Olaonipekun");
+  assert.equal(aboutGraph.find(item => item["@type"] === "ProfilePage")?.mainEntity["@id"], person["@id"]);
+  assert.ok(homeGraph.some(item => item["@type"] === "WebSite"));
+  const robots = await (await fetch(origin + "/robots.txt")).text();
+  assert.match(robots, /User-Agent: OAI-SearchBot/i);
+  assert.match(robots, /Disallow: \/api\//i);
+  assert.match(robots, /Sitemap: https:\/\//i);
+});

@@ -1,15 +1,13 @@
 import type { Metadata } from "next";
+import { absoluteUrl, pageMetadata, person, personId, shortName, websiteId } from "@/lib/seo";
+import JsonLd from "@/components/seo/JsonLd";
+import Link from "next/link";
 import Image from "next/image";
 import Reveal from "@/components/motion/Reveal";
 import Parallax from "@/components/motion/Parallax";
 import MaskLines from "@/components/motion/MaskLines";
 
-export const metadata: Metadata = {
-  alternates: { canonical: "/about" },
-  title: "About",
-  description:
-    "AI Engineer — Growth & Automation Systems in Lagos. I build systems that run production operations for restaurants, event companies and foundations.",
-};
+export const metadata: Metadata = pageMetadata("/about", "About | " + shortName, "Meet Olawale Emmanuel Olaonipekun, an AI automation engineer working on CRM, business systems, API integrations and operational reliability.", "/work/headshot.jpg");
 
 const process = [
   { n: "01", t: "Discover", b: "Sit with the actual work. What gets typed twice, what gets forgotten, where money leaks out." },
@@ -23,6 +21,7 @@ const process = [
 export default function About() {
   return (
     <div className="mx-auto max-w-[1180px] px-6 pb-24 pt-40 md:px-8 md:pt-52">
+      <JsonLd data={{ "@context": "https://schema.org", "@graph": [person, { "@type": "ProfilePage", "@id": absoluteUrl("/about#profile"), url: absoluteUrl("/about"), mainEntity: { "@id": personId }, isPartOf: { "@id": websiteId } }] }} />
       <h1 className="t-display max-w-[18ch]" data-hero="0">
         <MaskLines lines={["Systems that keep", "running after I leave."]} />
       </h1>
@@ -30,7 +29,7 @@ export default function About() {
       <div className="mt-20 grid gap-14 lg:grid-cols-[minmax(0,5fr)_minmax(0,4fr)] lg:gap-20">
         <div data-hero="1">
           <p className="t-body prose-justify">
-            I am Olawale Emmanuel Olaonipekun. I build the systems behind
+            I am Olawale Emmanuel Olaonipekun, an AI Engineer focused on growth and automation systems. I build the systems behind
             everyday business operations: orders and payments, lead follow-up,
             sales pipelines, and internal workflows that keep teams moving.
           </p>
@@ -50,6 +49,7 @@ export default function About() {
             outcomes that only show up over time. I also teach it. I run a
             cohort-based automation programme and built the platform it runs on.
           </p>
+          <p className="t-body mt-5 text-muted">Explore my <Link href="/work" className="link-underline">engineering case studies</Link> or <Link href="/contact" className="link-underline">professional contact details</Link>.</p>
         </div>
 
         <Reveal>

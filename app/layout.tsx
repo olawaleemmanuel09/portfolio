@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { siteUrl } from "@/lib/site";
+import { homeTitle, homeDescription, shortName } from "@/lib/seo";
 import localFont from "next/font/local";
 import "./globals.css";
 import SmoothScroll from "@/components/motion/SmoothScroll";
@@ -17,13 +18,12 @@ const archivo = localFont({
 export const metadata: Metadata = {
   metadataBase: siteUrl,
   title: {
-    default: "Olawale Emmanuel Olaonipekun — AI Engineer — Growth & Automation Systems",
-    template: "%s — Olawale Emmanuel Olaonipekun",
+    default: homeTitle,
+    template: "%s | " + shortName,
   },
-  description:
-    "AI Engineer building production AI systems, CRM architecture, secure business platforms and growth automation. Explore engineering case studies and verified project evidence.",
+  description: homeDescription,
   twitter: { card: "summary_large_image", creator: "@LaoniAI" },
-  robots: { index: true, follow: true },
+  robots: process.env.VERCEL_ENV === "preview" ? { index: false, follow: false } : { index: true, follow: true },
 };
 
 export default function RootLayout({

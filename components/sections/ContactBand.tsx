@@ -10,7 +10,7 @@ export default function ContactBand() {
           <p>Open to AI engineering roles and projects with a real operational problem to solve.</p>
           <div className="studio-contact-paths">
             <Link href="/contact" className="studio-contact-link">Discuss a project <span aria-hidden="true">↗</span></Link>
-            <Link href="/resume" className="studio-contact-resume">Explore my engineering résumé <span aria-hidden="true">↗</span></Link>
+            <Link href="/resume" className="studio-contact-resume">Request my engineering CV <span aria-hidden="true">↗</span></Link>
           </div>
         </div>
       </div>

@@ -42,7 +42,14 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
   async headers() {
-    return [{ source: "/:path*", headers: securityHeaders }];
+    return [{
+      source: "/:path*",
+      headers: [
+        ...securityHeaders,
+        // Preview deployments are not canonical search destinations.
+        ...(process.env.VERCEL_ENV === "preview" ? [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] : []),
+      ],
+    }];
   },
 };
 

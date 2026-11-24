@@ -1,13 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
+import { pageMetadata, shortName } from "@/lib/seo";
 import { projects } from "@/lib/data/projects";
 
-export const metadata: Metadata = {
-  title: "Systems and engineering lab",
-  description: "Explore cohort operations, commerce, CRM foundations and public AI workflow exports with their delivery status.",
-  alternates: { canonical: "/work" },
-};
+export const metadata: Metadata = pageMetadata("/work", "Engineering Case Studies | " + shortName, "Explore AI automation, CRM integrations, commerce and operational systems. Case studies distinguish verified evidence, delivery status and pending work.", "/work/headshot.jpg");
 
 const labSlugs = new Set(["ai-job-scraper", "smartbook-ai", "lead-capture-crm-sync", "lead-intelligence-pipeline", "voice-booking-agent", "academy-platform"]);
 
