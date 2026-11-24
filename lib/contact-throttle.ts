@@ -14,17 +14,24 @@ export function clientAddress(headers: Headers, onVercel: boolean): string {
 
 /**
  * Bounded LRU throttle; admission never fails merely because the map is full.
- * This is per instance, not a distributed sending-quota guarantee.
+ * Admission is also subject to an independent aggregate budget of 30 attempts
+ * per ten minutes by default. This is not a distributed sending-quota guarantee.
  */
 export function createContactThrottle(
   capacity = 500,
   maxPerWindow = 3,
   windowMs = 10 * 60 * 1000,
   now = Date.now,
+  maxTotalPerWindow = 30,
 ) {
   const hits = new Map<string, number[]>();
+  // Independent aggregate budget survives address eviction. Bound both
+  // memory and provider attempts even when clients rotate genuine IPs.
+  let total: number[] = [];
   return function rateLimited(ip: string): boolean {
     const time = now();
+    total = total.filter(t => time - t < windowMs);
+    if (total.length >= maxTotalPerWindow) return true;
     const recent = (hits.get(ip) ?? []).filter(t => time - t < windowMs);
     if (recent.length >= maxPerWindow) return true;
     if (!hits.has(ip) && hits.size >= capacity) {
@@ -38,6 +45,7 @@ export function createContactThrottle(
     }
     hits.delete(ip);
     hits.set(ip, [...recent, time]);
+    total.push(time);
     return false;
   };
 }

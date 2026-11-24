@@ -20,3 +20,7 @@ Parent b23cb211f0c9c42057d4297ce2893d16e0201d3d (draft PR #12).
 - Once deployed, smoke-test home, work, contact and sitemap/robots/canonical URLs. Confirm absence of production noindex and correct preview noindex. Register/verify Search Console and Bing properties and submit sitemap only after public URL is verified. No rankings guaranteed.
 
 No production deployment, external webmaster registration, actual private-term certification, measured performance or owner visual sign-off performed in this milestone.
+
+## Release-gate follow-up
+Codex identified a P2 aggregate bypass in the previous LRU implementation. Add an independent per-instance rolling budget (30 valid submission attempts per 10 minutes) that survives eviction. Legitimate visitors may receive 429 when this budget is exhausted; direct email remains available. Global provider quota enforcement across serverless instances is not guaranteed. Verify edge or durable rate controls separately.
+M9 CI passed lint, build, npm test and synthetic privacy smoke but failed during browser image-alt iteration: a transient dialog image disappeared between indexed locator calls. Use a single DOM snapshot to detect any image missing alt without weakening the assertion. Exact-head rerun required.

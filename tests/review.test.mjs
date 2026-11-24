@@ -184,11 +184,25 @@ test("trusted-address and bounded throttle regression", async () => {
   assert.equal(clientAddress(forged, true), "198.51.100.3");
   assert.equal(clientAddress(new Headers({ "x-vercel-forwarded-for": "invalid" }), true), "unknown");
   let time = 0;
-  const limit = createContactThrottle(500, 3, 600000, () => time);
+  const limit = createContactThrottle(500, 3, 600000, () => time, 1000);
   for (let i = 0; i < 500; i++) assert.equal(limit("synthetic-" + i), false);
   assert.equal(limit("new-visitor"), false, "A full map must not deny new visitors");
   assert.equal(limit("new-visitor"), false);
   assert.equal(limit("new-visitor"), false);
+  assert.equal(limit("new-visitor"), true);
+  time = 600001;
+  assert.equal(limit("new-visitor"), false);
+});
+
+test("rotating addresses cannot reset the independent aggregate provider budget", async () => {
+  const { createContactThrottle } = await import("../lib/contact-throttle.ts");
+  let time = 0;
+  const limit = createContactThrottle(5, 3, 600000, () => time, 30);
+  let accepted = 0;
+  for (let i = 0; i < 1000; i++) {
+    if (!limit("synthetic-" + (i % 6))) accepted++;
+  }
+  assert.equal(accepted, 30);
   assert.equal(limit("new-visitor"), true);
   time = 600001;
   assert.equal(limit("new-visitor"), false);
