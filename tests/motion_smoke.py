@@ -89,24 +89,41 @@ with sync_playwright() as playwright:
     assert page.locator("html.lenis").count() == 0
     page.close()
 
-    # Isolated V2 direction study: real reversible monitor camera and static fallback.
+    # Photo-based camera: initial desk crop, monitor reveal, screen-filling
+    # zoom, white handoff and reverse scroll. Native scroll, not Lenis.
     page = browser.new_page(viewport={"width": 1440, "height": 900}, reduced_motion="no-preference")
+    errors = []
+    page.on("pageerror", lambda error: errors.append(str(error)))
     page.goto(origin + "/design-preview", wait_until="domcontentloaded", timeout=45000)
-    hero = page.locator(".v2-hero")
     page.wait_for_function("() => document.querySelector('.v2-hero')?.dataset.motion === 'ready'", timeout=20000)
-    assert page.locator(".v2-monitor-screen").count() == 1
-    world = page.locator(".v2-desk-world")
-    initial = world.evaluate("el => getComputedStyle(el).transform")
-    page.evaluate("window.scrollTo(0, document.querySelector('.v2-hero').offsetHeight - innerHeight - 5)")
-    page.wait_for_timeout(1500)
-    assert world.evaluate("el => getComputedStyle(el).transform") != initial
-    screen = page.locator(".v2-monitor-screen").bounding_box()
-    assert screen is not None and screen["width"] >= 1440 and screen["height"] >= 900, screen
+    page.locator(".v2-scene-photo").evaluate("el => el.decode()")
+    assert page.locator("html.lenis").count() == 0
+    plane = page.locator(".v2-camera-plane")
+    initial = plane.evaluate("el => getComputedStyle(el).transform")
+    assert page.locator(".v2-hero .v2-button").first.evaluate("el => getComputedStyle(el).backgroundColor") == "rgb(255, 255, 255)"
+    assert page.locator(".v2-monitor-screen").bounding_box()["y"] + page.locator(".v2-monitor-screen").bounding_box()["height"] <= 2
+    for progress, name in ((0, "desk"), (0.56, "monitor"), (0.89, "zoom"), (0.998, "handoff")):
+        page.evaluate("(p) => window.scrollTo(0, (document.querySelector('.v2-hero').offsetHeight - innerHeight) * p)", progress)
+        page.wait_for_timeout(1100)
+        if progress == 0.89:
+            assert plane.evaluate("el => getComputedStyle(el).transform") != initial
+            screen = page.locator(".v2-monitor-screen").bounding_box()
+            assert screen is not None and screen["width"] >= 1440 and screen["height"] >= 900, screen
+        if progress == 0.998:
+            assert page.locator(".v2-handoff").evaluate("el => Number(getComputedStyle(el).opacity)") > 0.9
+            assert page.locator("[data-v2-root]").get_attribute("data-light") == "true"
+        if screens:
+            page.screenshot(path=Path(screens) / f"v2-film-{name}-1440.png")
+    page.evaluate("window.scrollTo(0, document.querySelector('.v2-principle').offsetTop + 0.85 * (document.querySelector('.v2-principle').offsetHeight - innerHeight))")
+    page.wait_for_timeout(1100)
+    assert page.locator(".v2-story-resolution").evaluate("el => Number(getComputedStyle(el).opacity)") > 0.9
     if screens:
-        page.screenshot(path=Path(screens) / "v2-monitor-zoom-1440.png")
+        page.screenshot(path=Path(screens) / "v2-story-resolution-1440.png")
     page.evaluate("window.scrollTo(0, 0)")
-    page.wait_for_timeout(1500)
+    page.wait_for_timeout(1200)
     assert page.locator(".v2-hero-copy").evaluate("el => Number(getComputedStyle(el).opacity)") > 0.9
+    assert page.locator("[data-v2-root]").get_attribute("data-light") == "false"
+    assert not errors, errors
     page.close()
     for width, save in ((390, False), (1440, True)):
         page = browser.new_page(viewport={"width": width, "height": 900}, reduced_motion="no-preference")

@@ -10,7 +10,18 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-const statement = ["Useful", "AI", "doesn't", "stop", "at", "a", "conversation.", "It", "makes", "the", "business", "work", "better."];
+const tools = ["n8n", "OpenAI", "Claude", "Supabase", "Gemini", "Python"];
+const fragments = [
+  ["01", "Customer enquiry"], ["02", "Payment confirmation"],
+  ["03", "Spreadsheet update"], ["04", "Sales follow-up"],
+  ["05", "Team notification"], ["06", "Service request"],
+];
+
+function Words({ text, accent = false }: { text: string; accent?: boolean }) {
+  return <span className={accent ? "v2-accent-words" : undefined}>
+    {text.split(" ").map((word, index) => <span className="v2-word-mask" key={index}><span className="v2-word">{word}</span>{" "}</span>)}
+  </span>;
+}
 
 export default function DesignPreview() {
   const cases = featured.slice(0, 6);
@@ -19,114 +30,121 @@ export default function DesignPreview() {
       <PreviewMotion />
       <header className="v2-header">
         <div className="v2-container v2-header-inner">
-          <Link href="/design-preview" className="v2-brand">Olawale<span>.</span></Link>
+          <Link href="/design-preview" className="v2-brand">Olawale.</Link>
           <nav aria-label="Design preview navigation" className="v2-desktop-nav">
-            <a href="#v2-work">My work</a>
+            <a href="#v2-work">Projects</a>
             <a href="#v2-principle">Approach</a>
             <Link href="/about">About</Link>
-            <Link href="/resume">CV</Link>
           </nav>
-          <Link href="/contact" className="v2-button v2-header-cta">Let's talk</Link>
+          <div className="v2-header-actions">
+            <Link href="/resume" className="v2-button v2-secondary">View CV</Link>
+            <Link href="/contact" className="v2-button v2-header-cta">Get in touch</Link>
+          </div>
           <details className="v2-menu">
-            <summary>Menu</summary>
+            <summary>Menu <span aria-hidden="true">+</span></summary>
             <nav aria-label="Mobile design preview navigation">
-              <a href="#v2-work">My work</a>
+              <a href="#v2-work">Projects</a>
               <a href="#v2-principle">Approach</a>
               <Link href="/about">About</Link>
-              <Link href="/resume">CV</Link>
-              <Link href="/contact">Let's talk</Link>
+              <Link href="/resume">View CV</Link>
+              <Link href="/contact">Get in touch</Link>
             </nav>
           </details>
         </div>
       </header>
+
       <section className="v2-hero" aria-labelledby="v2-title" data-motion="static">
         <div className="v2-stage">
           <div className="v2-desk-world" aria-hidden="true">
-            <div className="v2-desk-surface" />
-            <div className="v2-paper"><i/><i/><i/><i/></div>
-            <div className="v2-keyboard" />
-            <div className="v2-monitor">
+            <div className="v2-camera-plane">
+              <Image className="v2-scene-photo" src="/design/workstation-preview.webp" alt="" width={512} height={768} priority unoptimized />
               <div className="v2-monitor-screen">
-                <div className="v2-screen-nav"><b>Olawale.</b><span>WORK / 2026</span></div>
-                <div className="v2-screen-body">
-                  <small>SELECTED SYSTEMS</small>
-                  <strong>My projects<span>.</span></strong>
-                  <div className="v2-screen-grid">
-                    {cases.slice(0, 3).map(project => (
-                      <div key={project.slug}>
-                        {project.preview && <Image src={project.preview} alt="" width={640} height={420} sizes="(min-width: 1024px) 15vw, 28vw" />}
-                        <b>{project.title}</b>
-                        <small>{project.statusLabel}</small>
-                      </div>
-                    ))}
+                <div className="v2-screen-nav"><b>Olawale.</b><span>Portfolio / 2026</span></div>
+                <div className="v2-screen-layout">
+                  <aside><b>Projects</b><span>Overview</span><span>Engineering</span><span>Case studies</span></aside>
+                  <div className="v2-screen-body">
+                    <strong>My projects</strong>
+                    <div className="v2-screen-table">
+                      <div className="v2-screen-row v2-screen-labels"><span>Project</span><span>Technology</span><span>Status</span></div>
+                      {cases.map(project => <div className="v2-screen-row" key={project.slug}>
+                        <b>{project.title}</b><span>{project.stack.slice(0, 2).join(" / ")}</span><span>{project.statusLabel}</span>
+                      </div>)}
+                    </div>
                   </div>
                 </div>
               </div>
-              <div className="v2-monitor-stand" />
             </div>
-            <div className="v2-notebook" />
           </div>
-          <div className="v2-hero-shade" aria-hidden="true"/>
+          <div className="v2-hero-shade" aria-hidden="true" />
           <div className="v2-container v2-hero-inner">
             <div className="v2-hero-copy">
-              <p className="v2-eyebrow">AI engineering / Automation systems</p>
-              <h1 id="v2-title">AI systems built for <span>real business.</span></h1>
-              <p>I connect AI, APIs and everyday operations to build systems that help teams sell, serve customers and get work done.</p>
+              <p className="v2-role">AI Automation Engineer</p>
+              <h1 id="v2-title">AI systems for<br className="v2-desktop-break" /> business operations.</h1>
+              <p>I build AI workflows, integrations and software that help teams get work done.</p>
               <div className="v2-actions">
-                <a className="v2-button" href="#v2-work">Explore my work <span aria-hidden="true">↗</span></a>
+                <a className="v2-button" href="#v2-work">Explore my work</a>
                 <Link href="/contact" className="v2-button v2-secondary">Discuss a project</Link>
               </div>
             </div>
+            <Link className="v2-proof-preview" href="/work/cefa">
+              <span>Inside a live system <span aria-hidden="true">↗</span></span>
+              <Image src="/evidence/approved/learning-portal-demo-poster.jpg" alt="CEFA student portal, from the approved mobile walkthrough" width={400} height={260} sizes="210px" />
+            </Link>
           </div>
-          <div className="v2-hero-foot v2-container" aria-hidden="true"><span>Independent practice · Nigeria / Remote</span><span>Scroll to explore ↓</span></div>
+          <div className="v2-hero-foot">
+            <div className="v2-container v2-tools">
+              <span className="v2-tools-label">Built with</span>
+              <ul>{tools.map(tool => <li key={tool}>{tool}</li>)}</ul>
+            </div>
+          </div>
+          <div className="v2-handoff" aria-hidden="true" />
         </div>
       </section>
-      <section id="v2-principle" className="v2-principle">
-        <div className="v2-container">
-          <p className="v2-eyebrow">The approach</p>
-          <h2>{statement.map((word, i) => <span className="v2-word-mask" key={i}><span className="v2-word">{word}</span>{" "}</span>)}</h2>
-          <p>From the first customer message to the records, decisions and people behind the workflow.</p>
+
+      <section id="v2-principle" className="v2-principle" data-motion="static" aria-label="My engineering approach">
+        <div className="v2-story-stage">
+          <div className="v2-story-fragments" aria-hidden="true">
+            {fragments.map(([n, label]) => <div className="v2-fragment" key={n}><span>{n}</span>{label}</div>)}
+          </div>
+          <div className="v2-story-first">
+            <h2><Words text="Customer enquiries, payments and team updates often live in separate tools." /></h2>
+            <p><Words text="The work falls between them." /></p>
+          </div>
+          <div className="v2-story-resolution">
+            <h2><Words text="I connect the systems behind the work." />{" "}<Words accent text="One connected workflow." /></h2>
+            <p><Words text="Clear records. People in control." /></p>
+          </div>
         </div>
       </section>
+
       <section id="v2-work" className="v2-work v2-container" aria-labelledby="v2-work-title">
         <div className="v2-section-intro">
           <p className="v2-eyebrow">Selected work</p>
-          <h2 id="v2-work-title">See the systems <span>in action.</span></h2>
-          <p>Real operational problems, documented implementations and clear release status.</p>
+          <h2 id="v2-work-title">Systems that solve<br className="v2-desktop-break" /> <span>real business problems.</span></h2>
+          <Link href="/work" className="v2-button v2-accent-button">View all projects</Link>
         </div>
         <div className="v2-showcase">
-          <nav aria-label="Selected project navigation" className="v2-project-index">
-            {cases.map((project, index) => <a key={project.slug} href={"#v2-" + project.slug}><span>{String(index + 1).padStart(2, "0")}</span>{project.title}</a>)}
-          </nav>
-          <div className="v2-project-panels">
-            {cases.map((project, index) => (
-              <article key={project.slug} id={"v2-" + project.slug} className="v2-project">
-                <div className="v2-project-copy">
-                  <p className="v2-eyebrow">{String(index + 1).padStart(2, "0")} / {project.statusLabel}</p>
-                  <h3>{project.title}</h3>
-                  <p>{project.summary}</p>
-                  <Link className="v2-project-link" href={"/work/" + project.slug}>Read case study <span aria-hidden="true">↗</span></Link>
-                </div>
-                {project.preview && (
-                  <figure className="v2-product-scene">
-                    <div className="v2-product-window">
-                      <div className="v2-window-bar" aria-hidden="true"><i/><i/><i/><span>Project evidence</span></div>
-                      <Image src={project.preview} width={1280} height={760} alt={project.media?.find(m => m.src === project.preview)?.alt ?? project.title + " project evidence"} sizes="(max-width: 800px) 90vw, 58vw" />
-                    </div>
-                    <figcaption>{project.media?.find(m => m.src === project.preview)?.caption ?? "Project evidence — see the case study for context."}</figcaption>
-                  </figure>
-                )}
-              </article>
-            ))}
-          </div>
+          {cases.map((project, index) => <details className="v2-project" name="portfolio-v2-projects" open={index === 0} key={project.slug} id={"v2-" + project.slug}>
+            <summary><span>{project.title}</span><span className="v2-project-toggle" aria-hidden="true" /></summary>
+            <div className="v2-project-copy">
+              <p className="v2-project-status">{project.statusLabel}</p>
+              <p>{project.summary}</p>
+              <Link className="v2-project-link" href={"/work/" + project.slug}>Explore case study <span aria-hidden="true">↗</span></Link>
+            </div>
+            {project.preview && <figure className="v2-product-scene">
+              <div className="v2-product-window">
+                <Image src={project.preview} width={1280} height={760} alt={project.media?.find(m => m.src === project.preview)?.alt ?? project.title + " project evidence"} sizes="(max-width: 900px) 90vw, 60vw" />
+              </div>
+              <figcaption>{project.media?.find(m => m.src === project.preview)?.caption ?? "Project evidence — see the case study for context."}</figcaption>
+            </figure>}
+          </details>)}
         </div>
-        <Link href="/work" className="v2-button v2-all-work">View all 17 projects ↗</Link>
       </section>
       <section className="v2-contact">
         <div className="v2-container">
-          <p className="v2-eyebrow">Let's build</p>
-          <h2>What's the process you want to improve?</h2>
-          <Link href="/contact" className="v2-button">Start a conversation ↗</Link>
+          <p className="v2-eyebrow">Work together</p>
+          <h2>What would you like to automate?</h2>
+          <Link href="/contact" className="v2-button v2-accent-button">Get in touch ↗</Link>
         </div>
       </section>
     </div>

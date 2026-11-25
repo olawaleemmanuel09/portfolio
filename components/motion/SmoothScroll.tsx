@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 import Lenis from "lenis";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -11,7 +12,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
  * Two loops fighting each other is where scroll-linked motion starts to stutter.
  */
 export default function SmoothScroll() {
+  const preview = usePathname() === "/design-preview";
   useEffect(() => {
+    if (preview) return;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true;
     // Native touch scrolling remains available; avoid a continuous animation loop on phones.
@@ -36,7 +39,7 @@ export default function SmoothScroll() {
       lenis.destroy();
       // Route-level motion owns and disposes its own triggers.
     };
-  }, []);
+  }, [preview]);
 
   return null;
 }

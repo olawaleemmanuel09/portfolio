@@ -23,7 +23,7 @@ export default function PageTransition() {
     const el = panel.current;
     if (!el) return;
     const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true;
-    if (saveData || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (pathname === "/design-preview" || saveData || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       el.dataset.phase = "idle";
       return;
     }

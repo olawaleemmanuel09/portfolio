@@ -1,0 +1,14 @@
+# Combined V2.1–V2.3: opening film and product showcase
+
+Owner rejected first dark CSS prototype. This revision replaces it at /design-preview only. Production main remains 8b1f1aa. No merge or production promotion authorized.
+
+## Recorded reference
+From the owner's 68.499-second 1280x720 recording, inspected sampled stills including 04s, 08s, 10s, 12s, 14s, 16s, 18s, 20s, 24s, 28s, 32s, 36s, 40s and contact sheet through 64s. Times describe the recording, not the website's exact animation duration. First screen has warm timber/blueprint, small white header, left-aligned medium-weight two-line headline, white primary CTA and translucent secondary CTA; no purple-led opening. Copy exits before camera travels over desk; frontal monitor enters, project table enlarges; light handoff precedes centered animated words and surrounding fragments; accent emerges on white; first feature section uses narrow left accordion, large right product stage. Use reference proportions and motion logic, not reference assets or source. Original photographic art generated for portfolio, with blank monitor replaced by actual portfolio project titles, stacks and status labels (decorative HTML, not a real management dashboard). No copied Billdr imagery.
+
+## Changes
+- Generated photographic workstation, 512x768 WebP preview, 9764 bytes, Git blob 6212e650cfd532630c6f1f64c88a55bc12ee8914 verified against local encoded file. Full original 1024x1536 exists in conversation; preview compression is a deliberate transfer limitation and image sharpness must be checked before approval.
+- Photo plane moves from foreground crop to centered real HTML project-list overlay, then zooms with computed screen geometry and fades into the matching off-white story stage. Header changes to dark text/purple CTA only at light handoff. No first-screen purple UI, no black hero background. This is a 2.5D photo pan/zoom, not a continuous 3D camera or actual reference video scrub.
+- Centered masked-word problem/solution story, decorative generic workflow fragments, no fabricated company data. Native exclusive project accordion, real project evidence and original captions.
+- Native scroll only on preview; skip global route sweep on preview arrival. Desktop enhanced motion is reversible and scoped by GSAP matchMedia; static for smaller or short viewports, coarse pointer, reduced motion and initial Save-Data/slow connection. JS-off content stays readable.
+- Browser assertions for initial crop, computed zoom geometry, white handoff, reverse, no Lenis, neutral primary button, accordion, noindex and existing responsive checks. Tests must run on CI, not claimed passed here.
+- Preview is unapproved: original image high-resolution upgrade, actual screenshot comparison, color/contrast on real devices, camera pacing, browser CI and independent Codex review remain acceptance requirements. No production route replacement.

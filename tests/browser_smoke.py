@@ -178,6 +178,14 @@ with sync_playwright() as playwright:
         assert preview.locator("meta[name=robots]").get_attribute("content") == "noindex, nofollow"
         assert preview.evaluate("document.documentElement.scrollWidth <= innerWidth"), width
         assert preview.locator(".v2-project img:not([alt])").count() == 0
+        assert preview.locator(".v2-scene-photo").count() == 1
+        assert preview.locator(".v2-project[open]").count() == 1
+        assert preview.locator(".v2-hero .v2-button").first.evaluate("el => getComputedStyle(el).backgroundColor") == "rgb(255, 255, 255)"
+        if js:
+            preview.locator(".v2-project summary").nth(1).click()
+            assert preview.locator(".v2-project").nth(1).get_attribute("open") is not None
+            assert preview.locator(".v2-project[open]").count() == 1
+            assert preview.locator(".v2-project").nth(1).locator(".v2-product-scene").is_visible()
         if js and width == 390:
             menu = preview.locator(".v2-menu summary")
             menu.click()
