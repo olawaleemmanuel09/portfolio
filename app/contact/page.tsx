@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { pageMetadata, shortName } from "@/lib/seo";
 import ContactForm from "@/components/sections/ContactForm";
-import MaskLines from "@/components/motion/MaskLines";
 
 export const metadata: Metadata = pageMetadata("/contact", "Contact | " + shortName, "Contact Olawale Olaonipekun about AI automation engineering, CRM integrations, remote roles and custom business systems.", "/work/headshot.jpg");
 
@@ -14,15 +13,15 @@ const channels = [
 
 export default function Contact() {
   return (
-    <div className="mx-auto max-w-[1180px] px-6 pb-24 pt-40 md:px-8 md:pt-52">
-      <h1 className="t-display max-w-[16ch]" data-hero="0">
-        <MaskLines lines={["Tell me what", "needs building."]} />
+    <div className="mx-auto max-w-[1180px] px-6 pb-24 pt-28 md:px-8 md:pt-36">
+      <h1 className="t-display max-w-[16ch]">
+        Tell me what needs building.
       </h1>
 
       <div className="mt-20 grid gap-16 lg:grid-cols-[minmax(0,4fr)_minmax(0,3fr)] lg:gap-24">
         <ContactForm />
 
-        <aside data-hero="1">
+        <aside>
           <p className="t-body prose-justify text-muted">
             Open to AI engineering roles, remote or Lagos-based, and to
             contract work. Include the role or process you want to discuss.

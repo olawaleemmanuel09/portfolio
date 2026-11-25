@@ -3,9 +3,7 @@ import { siteUrl } from "@/lib/site";
 import { homeTitle, homeDescription, shortName } from "@/lib/seo";
 import localFont from "next/font/local";
 import "./globals.css";
-import SmoothScroll from "@/components/motion/SmoothScroll";
 import Header from "@/components/layout/Header";
-import PageTransition from "@/components/motion/PageTransition";
 import Footer from "@/components/layout/Footer";
 
 const archivo = localFont({
@@ -32,8 +30,6 @@ export default function RootLayout({
   return (
     <html lang="en" className={archivo.variable}>
       <body>
-        <SmoothScroll />
-        <PageTransition />
         <Header />
         <main id="main">{children}</main>
         <Footer />

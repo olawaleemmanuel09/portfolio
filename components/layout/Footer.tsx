@@ -8,14 +8,14 @@ const channels = [
 
 export default function Footer() {
   return (
-    <footer className="border-t border-rule">
-      <div className="mx-auto flex max-w-[1180px] flex-col gap-6 px-6 py-10 md:flex-row md:items-center md:justify-between md:px-8">
+    <footer className="v2-site-footer border-t border-rule">
+      <div className="mx-auto flex max-w-[1200px] flex-col gap-6 px-6 py-10 md:flex-row md:items-center md:justify-between md:px-8">
         <p className="t-small text-muted">
           Olawale Emmanuel Olaonipekun. Lagos, Nigeria. Available for contract work.
         </p>
-        <nav className="flex gap-6">
+        <nav className="flex flex-wrap gap-6">
           {channels.map((c) => (
-            <Link key={c.label} href={c.href} className="t-small">
+            <Link prefetch={false} key={c.label} href={c.href} className="t-small">
               {c.label}
             </Link>
           ))}

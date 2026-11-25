@@ -3,9 +3,6 @@ import { absoluteUrl, pageMetadata, person, personId, shortName, websiteId } fro
 import JsonLd from "@/components/seo/JsonLd";
 import Link from "next/link";
 import Image from "next/image";
-import Reveal from "@/components/motion/Reveal";
-import Parallax from "@/components/motion/Parallax";
-import MaskLines from "@/components/motion/MaskLines";
 
 export const metadata: Metadata = pageMetadata("/about", "About | " + shortName, "Meet Olawale Emmanuel Olaonipekun, an AI automation engineer working on CRM, business systems, API integrations and operational reliability.", "/work/headshot.jpg");
 
@@ -20,14 +17,14 @@ const process = [
 
 export default function About() {
   return (
-    <div className="mx-auto max-w-[1180px] px-6 pb-24 pt-40 md:px-8 md:pt-52">
+    <div className="mx-auto max-w-[1180px] px-6 pb-24 pt-28 md:px-8 md:pt-36">
       <JsonLd data={{ "@context": "https://schema.org", "@graph": [person, { "@type": "ProfilePage", "@id": absoluteUrl("/about#profile"), url: absoluteUrl("/about"), mainEntity: { "@id": personId }, isPartOf: { "@id": websiteId } }] }} />
-      <h1 className="t-display max-w-[18ch]" data-hero="0">
-        <MaskLines lines={["Systems that keep", "running after I leave."]} />
+      <h1 className="t-display max-w-[18ch]">
+        Systems that keep running after I leave.
       </h1>
 
       <div className="mt-20 grid gap-14 lg:grid-cols-[minmax(0,5fr)_minmax(0,4fr)] lg:gap-20">
-        <div data-hero="1">
+        <div>
           <p className="t-body prose-justify">
             I am Olawale Emmanuel Olaonipekun, an AI Engineer focused on growth and automation systems. I build the systems behind
             everyday business operations: orders and payments, lead follow-up,
@@ -49,11 +46,11 @@ export default function About() {
             outcomes that only show up over time. I also teach it. I run a
             cohort-based automation programme and built the platform it runs on.
           </p>
-          <p className="t-body mt-5 text-muted">Explore my <Link href="/work" className="link-underline">engineering case studies</Link> or <Link href="/contact" className="link-underline">professional contact details</Link>.</p>
+          <p className="t-body mt-5 text-muted">Explore my <Link prefetch={false} href="/work" className="link-underline">engineering case studies</Link> or <Link prefetch={false} href="/contact" className="link-underline">professional contact details</Link>.</p>
         </div>
 
-        <Reveal>
-          <Parallax className="wipe border border-rule" amount={8}>
+        <div>
+          <div>
             <Image
               src="/work/headshot.jpg"
               alt="Olawale Emmanuel Olaonipekun"
@@ -62,23 +59,23 @@ export default function About() {
               className="w-full"
               priority
             />
-          </Parallax>
-        </Reveal>
+          </div>
+        </div>
       </div>
 
       <section className="-mx-6 mt-24 border-y border-rule px-6 py-20 md:-mx-8 md:mt-32 md:px-10 md:py-28">
-        <Reveal>
+        <div>
           <div className="mb-14">
             <span className="mask block">
               <span className="t-h2">How I work</span>
             </span>
             <span className="rule-draw mt-6 block h-px w-full bg-rule" />
           </div>
-        </Reveal>
+        </div>
 
         <ol className="grid gap-x-16 gap-y-0 md:grid-cols-2">
           {process.map((p, i) => (
-            <Reveal as="li" key={p.n} delay={i * 60} variant="soft">
+            <div>
               <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-6 border-b border-rule py-8">
                 <span className="t-index text-[var(--color-accent)]">{p.n}</span>
                 <span>
@@ -86,7 +83,7 @@ export default function About() {
                   <span className="t-body prose-justify mt-2 block text-muted">{p.b}</span>
                 </span>
               </div>
-            </Reveal>
+            </div>
           ))}
         </ol>
       </section>

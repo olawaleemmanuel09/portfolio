@@ -20,9 +20,9 @@ export default async function Work({ searchParams }: {
     { id: "lab", title: "Engineering lab", note: "Experiments, capstones and reproducible workflow ideas.", items: visible.filter((p) => labSlugs.has(p.slug)) },
   ].filter((group) => group.items.length > 0);
   return (
-    <div className="mx-auto max-w-[1280px] px-6 pb-24 pt-36 md:px-8 md:pt-44">
+    <div className="mx-auto max-w-[1280px] px-6 pb-24 pt-28 md:px-8 md:pt-36">
       <p className="text-[0.7rem] font-bold uppercase tracking-[0.17em] text-[var(--color-accent-deep)]">Project archive / Engineering evidence</p>
-      <h1 className="mt-5 max-w-[16ch] text-[clamp(2.75rem,5.3vw,5.3rem)] font-semibold leading-[1.04] tracking-[-0.04em]">Systems and the decisions behind them.</h1>
+      <h1 className="mt-5 max-w-[16ch] text-[clamp(2.1rem,4vw,3.5rem)] font-medium leading-[1.04] tracking-[-0.04em]">Systems and the decisions behind them.</h1>
       <p className="mt-6 max-w-[66ch] text-[1.05rem] leading-[1.7] text-muted">
         Business applications, AI integrations and smaller engineering studies. Each page distinguishes implemented behavior, verified evidence and outstanding release work.
       </p>
@@ -50,10 +50,10 @@ export default async function Work({ searchParams }: {
           <ul className="grid gap-6 md:grid-cols-2 lg:gap-8">
             {group.items.map((p) => (
               <li key={p.slug} className="min-w-0">
-                <Link className="work-index-card group flex h-full flex-col overflow-hidden rounded-[1.05rem] border border-rule bg-white" href={"/work/" + p.slug}>
+                <Link prefetch={false} className="work-index-card group flex h-full flex-col overflow-hidden rounded-none border border-rule bg-white" href={"/work/" + p.slug}>
                   <div className="work-index-preview flex aspect-[16/9] items-center justify-center overflow-hidden px-4 py-5 sm:px-7">
                     {p.preview ? (
-                      <div className="w-full max-w-[550px] overflow-hidden rounded-md border border-[#dedbe5] bg-white shadow-[0_18px_40px_-30px_rgba(35,25,65,.6)]">
+                      <div className="w-full max-w-[550px] overflow-hidden rounded-md border border-[#dedbe5] bg-white ">
                         <Image src={p.preview} alt="" width={1280} height={670} sizes="(max-width: 768px) 100vw, 45vw" className="h-auto w-full" />
                       </div>
                     ) : (

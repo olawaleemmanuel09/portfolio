@@ -19,28 +19,18 @@ with sync_playwright() as playwright:
             assert page.locator("h1").count() == 1
             assert page.evaluate("document.documentElement.scrollWidth <= innerWidth"), (path, width)
             if path == "/":
-                assert page.locator(".hero-statement").count() == 1
-                assert page.locator(".cinematic-image-frame img").count() == 1
-                assert page.locator(".cinematic-line-inner").count() == 3
-                assert page.locator(".cinematic-manifesto .cinematic-word").count() == 15
-                assert page.locator(".studio-proof-stat").count() == 3
-                assert page.locator(".studio-problem-option").count() == 3
-                assert page.locator(".featured-case-card").count() == 6
-                assert page.locator(".featured-case-card img").count() == 6
-                assert page.get_by_role("link", name="Explore selected work").get_attribute("href") == "#work"
-                assert page.get_by_role("link", name="Explore selected work").evaluate("el => getComputedStyle(el).color") == "rgb(255, 255, 255)"
-                assert page.locator(".featured-case-card").first.get_by_role("link").count() == 1
+                assert page.locator(".v2-hero").get_attribute("data-motion") == "static"
+                assert page.locator(".v2-scene-photo").count() == 1
+                assert page.locator(".v2-project").count() == 6
+                assert page.locator(".v2-project[open]").count() == 1
+                assert page.get_by_role("link", name="Explore my work").get_attribute("href") == "#v2-work"
+                assert page.locator(".v2-hero .v2-button").first.evaluate("el => getComputedStyle(el).backgroundColor") == "rgb(255, 255, 255)"
+                assert page.locator("header:visible").count() == 1
+                assert page.locator(".v2-adoption").count() == 1
                 if javascript:
-                    choices = page.locator(".studio-problem-option")
-                    choices.nth(2).click()
-                    assert choices.nth(2).get_attribute("aria-current") == "true"
-                    assert "security-workforce-operations" in page.locator(".studio-stage-link").get_attribute("href")
-                    choices.first.click()
-                    assert choices.first.get_attribute("aria-current") == "true"
-                else:
-                    assert page.locator(".studio-problem-option").nth(1).get_attribute("href") == "/work/web-ordering-and-payments"
-                    assert page.locator(".studio-problem-option").nth(2).get_attribute("href") == "/work/security-workforce-operations"
-                    assert "cefa" in page.locator(".studio-stage-link").get_attribute("href")
+                    page.locator(".v2-project summary").nth(1).click()
+                    assert page.locator(".v2-project").nth(1).get_attribute("open") is not None
+                    assert page.locator(".v2-project[open]").count() == 1
             if path == "/work":
                 assert page.locator(".work-index-card").count() == 17
                 assert page.locator(".work-index-card img").count() == 13
@@ -146,15 +136,10 @@ with sync_playwright() as playwright:
         )
         resp = static_page.goto(origin, wait_until="domcontentloaded", timeout=45000)
         assert resp is not None and resp.status == 200
-        caption = static_page.locator(".cinematic-image-caption")
-        assert caption.count() == 1
-        assert caption.is_visible()
-        assert static_page.locator(".cinematic-image-caption a").get_attribute("href") == "/work/ai-job-scraper"
-        box = caption.bounding_box()
-        assert box is not None, (width, height)
-        assert box["y"] >= 0 and box["y"] + box["height"] <= height + 2, (
-            "Workflow caption clipped in static desktop hero", width, height, box
-        )
+        assert static_page.locator(".v2-hero").get_attribute("data-motion") == "static"
+        assert static_page.get_by_role("link", name="Explore my work").is_visible()
+        assert static_page.get_by_role("heading", level=1).is_visible()
+        assert static_page.locator(".v2-project").count() == 6
         assert static_page.evaluate("document.documentElement.scrollWidth <= innerWidth")
         static_page.close()
     # On a cold case-study visit, recordings must remain click-to-play.

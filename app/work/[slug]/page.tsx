@@ -64,7 +64,7 @@ export default async function CaseStudy({
         <div className="case-cinema-container">
           <header className="case-cinema-header">
             <div className="case-cinema-topline">
-              <Link href="/work" className="case-cinema-return">← All projects</Link>
+              <Link prefetch={false} href="/work" className="case-cinema-return">← All projects</Link>
               <span>CASE FILE / {String(index + 1).padStart(2, "0")} OF {String(projects.length).padStart(2, "0")}</span>
               <span>{project.period}</span>
             </div>
@@ -80,7 +80,7 @@ export default async function CaseStudy({
                   </span>
                 </h1>
                 <p className="case-cinema-synopsis">{project.summary}</p>
-                <p className="mt-4 text-sm text-muted">Case study by <Link className="link-underline" href="/about">{personName}</Link></p>
+                <p className="mt-4 text-sm text-muted">Case study by <Link prefetch={false} className="link-underline" href="/about">{personName}</Link></p>
                 <p className="case-cinema-context">
                   THE CASE / A BUSINESS PROBLEM, THE RESPONSE AND WHAT THE RECORD ACTUALLY SHOWS.
                 </p>
@@ -248,16 +248,16 @@ export default async function CaseStudy({
             <p>Discuss the operational problem, the constraints and the outcome you need. Or explore my experience for an engineering role.</p>
           </div>
           <nav aria-label="Case study contact options" className="case-conversion-links">
-            <Link href="/contact"><span>Discuss a project</span><span aria-hidden="true">↗</span></Link>
-            <Link href="/resume"><span>Request my engineering CV</span><span aria-hidden="true">↗</span></Link>
-            <Link href="/work"><span>Explore more case studies</span><span aria-hidden="true">↗</span></Link>
+            <Link prefetch={false} href="/contact"><span>Discuss a project</span><span aria-hidden="true">↗</span></Link>
+            <Link prefetch={false} href="/resume"><span>Request my engineering CV</span><span aria-hidden="true">↗</span></Link>
+            <Link prefetch={false} href="/work"><span>Explore more case studies</span><span aria-hidden="true">↗</span></Link>
           </nav>
         </div>
       </section>
 
       <footer className="case-cinema-next">
         <div className="case-cinema-container">
-          <Link href={`/work/${next.slug}`} className="case-cinema-next-link">
+          <Link prefetch={false} href={`/work/${next.slug}`} className="case-cinema-next-link">
             <span>NEXT CASE / {String(((index + 1) % projects.length) + 1).padStart(2, "0")}</span>
             <strong>{next.title}</strong>
             <span aria-hidden="true">↗</span>
