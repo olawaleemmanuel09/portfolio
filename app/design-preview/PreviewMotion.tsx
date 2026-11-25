@@ -51,7 +51,7 @@ export default function PreviewMotion() {
     menu?.addEventListener("keydown", escapeMenu);
     // A named details group allows zero selected panels. Preserve the active
     // item without blocking native selection of a different project.
-    const showcase = root.querySelector(".v2-showcase");
+    const showcase = root.querySelector<HTMLElement>(".v2-showcase");
     const keepSelected = (event: MouseEvent) => {
       const summary = event.target instanceof Element ? event.target.closest("summary") : null;
       if (summary?.parentElement?.matches(".v2-project[open]")) event.preventDefault();

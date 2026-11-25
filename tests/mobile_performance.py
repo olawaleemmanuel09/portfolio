@@ -16,6 +16,8 @@ with sync_playwright() as p:
     page.on("request", lambda request: requests.append(request.url))
     page.goto(origin, wait_until="domcontentloaded", timeout=90000)
     page.locator(".v2-scene-photo").evaluate("el => el.decode()")
+    assert page.locator(".v2-scene-photo").evaluate("el => [el.naturalWidth, el.naturalHeight]") == [512, 768]
+    assert not any("workstation-full.webp" in u for u in requests), "Desktop hero downloaded on mobile"
     assert page.get_by_role("heading", level=1).is_visible()
     assert page.locator(".v2-hero").get_attribute("data-motion") == "static"
     assert page.locator("[data-v2-root]").get_attribute("data-motion-loaded") is None

@@ -56,7 +56,10 @@ export default function PortfolioHome({ preview = false }: { preview?: boolean }
         <div className="v2-stage">
           <div className="v2-desk-world" aria-hidden="true">
             <div className="v2-camera-plane">
-              <Image className="v2-scene-photo" src="/design/workstation-preview.webp" alt="" width={512} height={768} priority unoptimized />
+              <picture className="v2-scene-picture">
+                <source media="(min-width: 1024px) and (pointer: fine)" srcSet="/design/workstation-full.webp" type="image/webp" />
+                <Image className="v2-scene-photo" src="/design/workstation-preview.webp" alt="" width={512} height={768} loading="eager" fetchPriority="high" unoptimized />
+              </picture>
               <div className="v2-monitor-screen">
                 <div className="v2-screen-nav"><b>Olawale Olaonipekun</b><span>Portfolio / 2026</span></div>
                 <div className="v2-screen-layout">

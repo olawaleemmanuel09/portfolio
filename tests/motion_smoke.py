@@ -17,6 +17,9 @@ with sync_playwright() as playwright:
         page.wait_for_function("(expected) => document.querySelector('.v2-hero')?.dataset.motion === expected", arg=expected, timeout=20000)
         assert page.get_by_role("heading", level=1).count() == 1
         assert page.locator(".v2-scene-photo").count() == 1
+        page.locator(".v2-scene-photo").evaluate("el => el.decode()")
+        assert page.locator(".v2-scene-photo").evaluate("el => [el.naturalWidth, el.naturalHeight]") == ([1024, 1536] if width == 1440 else [512, 768])
+        assert page.locator(".v2-scene-photo").evaluate("el => el.currentSrc").endswith("workstation-full.webp" if width == 1440 else "workstation-preview.webp")
         assert page.locator("html.lenis").count() == 0
         assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
         if screens:

@@ -117,7 +117,6 @@ with sync_playwright() as playwright:
     # Regression: the persistent root header must release its scroll lock on Back.
     page = browser.new_page(viewport={"width": 390, "height": 844}, reduced_motion="reduce")
     page.goto(origin, wait_until="domcontentloaded")
-    page.locator(".v2-desktop-nav").count()
     page.locator(".v2-project[open] .v2-project-link").click()
     page.wait_for_url("**/work/*")
     page.get_by_role("button", name="Menu").click()
@@ -125,6 +124,8 @@ with sync_playwright() as playwright:
     page.go_back(wait_until="domcontentloaded")
     page.wait_for_url(origin + "/")
     page.wait_for_function("() => document.body.style.overflow !== 'hidden'")
+    page.evaluate("window.scrollTo(0, 0)")
+    page.wait_for_function("() => scrollY < 5")
     page.mouse.wheel(0, 400)
     page.wait_for_function("() => scrollY > 100")
     page.close()
@@ -160,6 +161,10 @@ with sync_playwright() as playwright:
         assert static_page.get_by_role("link", name="Explore selected work").is_visible()
         assert static_page.get_by_role("heading", level=1).is_visible()
         assert static_page.locator(".v2-project").count() == 6
+        static_page.locator(".v2-project[open] summary").click()
+        assert static_page.locator(".v2-project[open]").count() == 0
+        assert static_page.locator(".v2-project-fallback").is_visible()
+        assert static_page.locator(".v2-showcase").evaluate("el => getComputedStyle(el).minHeight") == "0px"
         assert static_page.evaluate("document.documentElement.scrollWidth <= innerWidth")
         static_page.close()
     # On a cold case-study visit, recordings must remain click-to-play.

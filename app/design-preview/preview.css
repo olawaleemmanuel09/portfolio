@@ -363,3 +363,5 @@
 .v2-showcase:not(:has(.v2-project[open])) { padding-right:0; min-height:0; }
 .v2-showcase:not(:has(.v2-project[open])) .v2-project-fallback { display:block; padding:20px 0; color:var(--v2-muted); font-size:14px; }
 .v2-project[open] summary { cursor:default; }
+
+.v2-scene-picture { position:absolute; inset:0; display:block; }
