@@ -3,8 +3,9 @@ import { useEffect } from "react";
 
 export default function VisiblePlayback() {
   useEffect(() => {
-    const root = document.querySelector<HTMLElement>("[data-v2-root]");
-    if (!root || typeof IntersectionObserver === "undefined") return;
+    const candidate = document.querySelector<HTMLElement>("[data-v2-root]");
+    if (!candidate || typeof IntersectionObserver === "undefined") return;
+    const root: HTMLElement = candidate;
     const media = window.matchMedia("(min-width: 1024px) and (any-pointer: fine) and (prefers-reduced-motion: no-preference)");
     const connection = (navigator as Navigator & { connection?: EventTarget & { saveData?: boolean } }).connection;
     const visible = new Set<HTMLElement>();
