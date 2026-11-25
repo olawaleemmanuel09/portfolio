@@ -26,7 +26,7 @@ export default function PortfolioHome({ preview = false }: { preview?: boolean }
       <header className="v2-header">
         <div className="v2-container v2-header-inner">
           <Link prefetch={false} href={preview ? "/design-preview" : "/"} className="v2-brand">Olawale.</Link>
-          <nav aria-label="Design preview navigation" className="v2-desktop-nav">
+          <nav aria-label="Main navigation" className="v2-desktop-nav">
             <a href="#v2-work">Projects</a>
             <a href="#v2-principle">Approach</a>
             <Link prefetch={false} href="/about">About</Link>
@@ -37,7 +37,7 @@ export default function PortfolioHome({ preview = false }: { preview?: boolean }
           </div>
           <details className="v2-menu">
             <summary>Menu <span aria-hidden="true">+</span></summary>
-            <nav aria-label="Mobile design preview navigation">
+            <nav aria-label="Mobile navigation">
               <a href="#v2-work">Projects</a>
               <a href="#v2-principle">Approach</a>
               <Link prefetch={false} href="/about">About</Link>

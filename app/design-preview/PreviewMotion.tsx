@@ -23,18 +23,18 @@ export default function PreviewMotion() {
       // neutral surface protects contrast while the monitor enters the frame.
       const light = pastHero || (hero.dataset.motion === "ready" && progress >= 0.76);
       const shaded = !light && progress >= 0.40;
-      root.dataset.light = String(light);
-      root.dataset.shaded = String(shaded);
+      if (root.dataset.light !== String(light)) root.dataset.light = String(light);
+      if (root.dataset.shaded !== String(shaded)) root.dataset.shaded = String(shaded);
     };
     const setCameraProgress = (value: number) => { progress = value; paintHeader(); };
-    const observer = new IntersectionObserver(([entry]) => {
+    const observer = typeof IntersectionObserver !== "undefined" ? new IntersectionObserver(([entry]) => {
       pastHero = !entry.isIntersecting && entry.boundingClientRect.bottom <= 64;
       paintHeader();
-    }, { rootMargin: "-64px 0px 0px 0px" });
+    }, { rootMargin: "-64px 0px 0px 0px" }) : undefined;
     pastHero = hero.getBoundingClientRect().bottom <= 64;
-    root.dataset.enhanced = "true";
+    if (observer) root.dataset.enhanced = "true";
     paintHeader();
-    observer.observe(hero);
+    observer?.observe(hero);
     const menu = root.querySelector<HTMLDetailsElement>(".v2-menu");
     const closeMenu = (event: MouseEvent) => {
       if (event.target instanceof Element && event.target.closest("a")) menu?.removeAttribute("open");
@@ -75,7 +75,7 @@ export default function PreviewMotion() {
     return () => {
       disposed = true; generation++;
       stopMotion?.();
-      observer.disconnect();
+      observer?.disconnect();
       desktop.removeEventListener("change", reconcile);
       connection?.removeEventListener?.("change", reconcile);
       menu?.removeEventListener("click", closeMenu);

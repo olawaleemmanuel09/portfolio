@@ -25,21 +25,21 @@ export default function About() {
 
       <div className="mt-20 grid gap-14 lg:grid-cols-[minmax(0,5fr)_minmax(0,4fr)] lg:gap-20">
         <div>
-          <p className="t-body prose-justify">
+          <p className="t-body ">
             I am Olawale Emmanuel Olaonipekun, an AI Engineer focused on growth and automation systems. I build the systems behind
             everyday business operations: orders and payments, lead follow-up,
             sales pipelines, and internal workflows that keep teams moving.
           </p>
-          <p className="t-body prose-justify mt-5 text-muted">
+          <p className="t-body  mt-5 text-muted">
             At FOC I worked on event operations and CEFA cohort access. In commerce,
             I connected ordering and payment confirmation so kitchen staff can act on the same record.
           </p>
-          <p className="t-body prose-justify mt-5 text-muted">
+          <p className="t-body  mt-5 text-muted">
             My focus is the unglamorous part: idempotency, error paths,
             credential handling, and making sure the system still knows what to
             do at 2am when an API breaks.
           </p>
-          <p className="t-body prose-justify mt-5 text-muted">
+          <p className="t-body  mt-5 text-muted">
             I came to this from agriculture, a degree in pasture and range
             management, which is less of a detour than it sounds. Both are
             systems work: inputs, cycles, constraints you do not control, and
@@ -57,7 +57,8 @@ export default function About() {
               width={860}
               height={1075}
               className="w-full"
-              priority
+              sizes="(max-width: 1023px) 100vw, 42vw"
+              loading="lazy"
             />
           </div>
         </div>
@@ -66,24 +67,22 @@ export default function About() {
       <section className="-mx-6 mt-24 border-y border-rule px-6 py-20 md:-mx-8 md:mt-32 md:px-10 md:py-28">
         <div>
           <div className="mb-14">
-            <span className="mask block">
-              <span className="t-h2">How I work</span>
-            </span>
-            <span className="rule-draw mt-6 block h-px w-full bg-rule" />
+            <h2 className="t-h2">How I work</h2>
+            <span className="mt-6 block h-px w-full bg-rule" aria-hidden="true" />
           </div>
         </div>
 
         <ol className="grid gap-x-16 gap-y-0 md:grid-cols-2">
-          {process.map((p, i) => (
-            <div>
+          {process.map((p) => (
+            <li key={p.n}>
               <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-6 border-b border-rule py-8">
                 <span className="t-index text-[var(--color-accent)]">{p.n}</span>
                 <span>
                   <span className="t-h2 block">{p.t}</span>
-                  <span className="t-body prose-justify mt-2 block text-muted">{p.b}</span>
+                  <span className="t-body  mt-2 block text-muted">{p.b}</span>
                 </span>
               </div>
-            </div>
+            </li>
           ))}
         </ol>
       </section>

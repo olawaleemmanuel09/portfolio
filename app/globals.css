@@ -1717,3 +1717,5 @@ a { color: inherit; text-decoration: none; }
  .case-cinema-hero-grid { gap:24px; padding-block:30px; }
  .case-cinema-title { font-size:clamp(2rem,8.5vw,3rem); }
 }
+
+@media(max-width:767px) { .t-body { font-size:1rem; } .prose-justify { text-align:start; hyphens:none; } }

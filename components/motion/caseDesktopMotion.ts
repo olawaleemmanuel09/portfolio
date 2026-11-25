@@ -5,16 +5,7 @@ export function startCaseDesktopMotion(root: HTMLElement) {
     gsap.registerPlugin(ScrollTrigger);
     const media = gsap.matchMedia();
     const ctx = gsap.context(() => {
-      const words = gsap.utils.toArray<HTMLElement>(".case-title-word");
-      const intro = gsap.timeline({ defaults: { ease: "power3.out" } });
-      intro.fromTo(".case-cinema-eyebrow", { autoAlpha: 0, y: 13 }, { autoAlpha: 1, y: 0, duration: .65 }, 0)
-        .fromTo(words, { autoAlpha: 0, yPercent: 116, rotateX: -18, transformPerspective: 850 }, {
-          autoAlpha: 1, yPercent: 0, rotateX: 0, duration: .95, stagger: .055,
-          clearProps: "transform,opacity,visibility",
-        }, .1)
-        .fromTo(".case-cinema-synopsis", { autoAlpha: 0, y: 32 }, { autoAlpha: 1, y: 0, duration: .8 }, .42)
-        .fromTo("[data-case-hero]", { autoAlpha: 0, y: 75 }, { autoAlpha: 1, y: 0, duration: 1.0 }, .23)
-        .fromTo(".case-cinema-facts", { autoAlpha: 0, y: 18 }, { autoAlpha: 1, y: 0, duration: .65 }, .75);
+      // Keep the title, hero visual and delivery qualifiers visible on first paint.
 
       gsap.utils.toArray<HTMLElement>("[data-case-reveal]").forEach((el) => {
         gsap.fromTo(el, { y: 36, opacity: .65 }, {

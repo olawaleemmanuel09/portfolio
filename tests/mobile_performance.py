@@ -21,10 +21,17 @@ with sync_playwright() as p:
     assert page.locator("[data-v2-root]").get_attribute("data-motion-loaded") is None
     assert page.locator("html.lenis").count() == 0
     assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
+    previous = page.evaluate("scrollY")
     for direction in (1, -1, 1, -1):
         # CDP sends genuine touch gestures; no JS-driven scrolling implementation.
         session.send("Input.synthesizeScrollGesture", {"x": 180, "y": 560 if direction == 1 else 160, "yDistance": -440 * direction, "speed": 500, "gestureSourceType": "touch"})
         page.wait_for_timeout(250)
+        current = page.evaluate("scrollY")
+        if direction == 1:
+            assert current > previous, (previous, current)
+        else:
+            assert current < previous, (previous, current)
+        previous = current
     assert not any(".mp4" in u or ".webm" in u for u in requests), "Unexpected video request"
     print("Throttled mobile native gestures completed; resource entries:", page.evaluate("performance.getEntriesByType('resource').length"))
     print("Transferred bytes observed:", page.evaluate("performance.getEntriesByType('resource').reduce((sum,e)=>sum+e.transferSize,0)"))

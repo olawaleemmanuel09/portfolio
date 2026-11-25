@@ -90,9 +90,9 @@ with sync_playwright() as playwright:
         if progress == 0.998:
             assert page.locator(".v2-handoff").evaluate("el => Number(getComputedStyle(el).opacity)") > 0.9
             assert page.locator("[data-v2-root]").get_attribute("data-light") == "true"
-            page.locator(".v2-hero .v2-actions a").first.focus()
+            page.locator(".v2-hero .v2-actions a").first.evaluate("el => el.focus({preventScroll:true})")
             assert page.locator(".v2-hero-inner").evaluate("el => Number(getComputedStyle(el).zIndex)") > 5
-            page.locator(".v2-brand").focus()
+            page.locator(".v2-brand").evaluate("el => el.focus({preventScroll:true})")
         if screens:
             page.screenshot(path=Path(screens) / f"v2-film-{name}-1440.png")
     page.evaluate("window.scrollTo(0, document.querySelector('.v2-principle').offsetTop + 0.85 * (document.querySelector('.v2-principle').offsetHeight - innerHeight))")

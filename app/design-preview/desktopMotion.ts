@@ -20,7 +20,6 @@ export function startDesktopMotion(root: HTMLElement, hero: HTMLElement, stage: 
 
         const context = gsap.context(() => {
           const camera = gsap.timeline({
-            onUpdate: () => setCameraProgress(camera.progress()),
             scrollTrigger: {
               trigger: hero, start: "top top", end: "bottom bottom",
               scrub: 0.55, invalidateOnRefresh: true,
@@ -36,6 +35,8 @@ export function startDesktopMotion(root: HTMLElement, hero: HTMLElement, stage: 
             .to(".v2-hero-shade", { opacity: 0, duration: 0.18, ease: "none" }, 0.39)
             .to(plane, { scale: zoom, x: xZoom, y: yZoom, ease: "power2.inOut", duration: 0.32 }, 0.58)
             .to(".v2-handoff", { opacity: 1, duration: 0.10, ease: "none" }, 0.90);
+
+          camera.eventCallback("onUpdate", () => setCameraProgress(camera.progress()));
 
           const narrative = gsap.timeline({
             scrollTrigger: {

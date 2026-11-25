@@ -174,7 +174,7 @@
 .v2-project-stack { font-size: 12px; color: var(--v2-muted); margin-top: 12px; }
 .v2-product-window { aspect-ratio: 16 / 10; min-height: 0; }
 .v2-product-window img { max-height: 100%; width: 100%; height: 100%; object-fit: contain; min-height: 0; }
-.v2-showcase { min-height: max(560px, 42vw); }
+.v2-showcase { min-height: 600px; }
 .v2-adoption { background: var(--v2-paper); padding-block: clamp(48px, 7vw, 96px); }
 .v2-adoption-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; align-items: center; }
 .v2-adoption h2,.v2-about h2 { font-size: clamp(28px,3.6vw,44px); font-weight: 500; line-height: 1.15; letter-spacing: -.025em; }
@@ -198,3 +198,6 @@
   .v2-adoption dl { gap: 8px; }
   .v2-adoption dl > div { padding-left: 8px; }
 }
+
+/* Small-screen motion stays static even if the device reports a fine pointer. */
+@media(max-width:1023px) { .v2-header .v2-button { min-height:44px; } }
