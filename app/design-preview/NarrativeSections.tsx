@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { getProject } from "@/lib/data/projects";
 
 // Copy from the deployed site's narrative, independent of its former layout.
 const cases = [
@@ -52,30 +53,35 @@ const principles = [
 export function BusinessChallenges() {
   return (
     <section id="systems" className="v2-challenges v2-container" aria-labelledby="v2-challenges-title">
-      <div className="v2-section-intro">
-        <p className="v2-eyebrow">02 / THE SYSTEMS STUDIO</p>
-        <h2 id="v2-challenges-title">Choose the <span>problem.</span></h2>
-        <p className="v2-section-description">Three different operational constraints. Explore why the systems exist, what was engineered and what the evidence actually supports.</p>
+      <div className="v2-feature-heading" data-v2-reveal>
+        <div><p className="v2-eyebrow">SYSTEMS STUDIO</p><h2 id="v2-challenges-title">Choose the problem.</h2></div>
+        <p>Three different operational constraints. Explore why the systems exist, what was engineered and what the evidence actually supports.</p>
       </div>
-      <div className="v2-challenge-list">
-        {cases.map((item, index) => (
-          <details className="v2-challenge" name="v2-business-challenges" open={index === 0} key={item.slug}>
-            <summary><span><small>{item.category}</small><strong>{item.title}</strong></span><span className="v2-project-toggle" aria-hidden="true"/></summary>
-            <div className="v2-challenge-body">
-              <figure className="v2-narrative-media">
-                <Image src={item.image} alt={item.alt} width={1280} height={670} sizes="(max-width: 900px) 90vw, 50vw" loading="lazy"/>
-                <figcaption>Conceptual system map · Not a live screenshot</figcaption>
+      <div className="v2-system-showcase">
+        <nav className="v2-system-index" aria-label="Explore operational systems">
+          {cases.map(item => <a key={item.slug} href={"#system-" + item.slug}>{item.category}<span aria-hidden="true">↘</span></a>)}
+        </nav>
+        <div className="v2-system-rows">
+          {cases.map(item => {
+            const project = getProject(item.slug);
+            const src = project?.preview ?? item.image;
+            const media = project?.media.find(m => m.src === src);
+            return <article id={"system-" + item.slug} className="v2-challenge v2-system-row" key={item.slug}>
+              <figure className="v2-system-image" data-v2-reveal>
+                <Image src={src} alt={media?.alt ?? (src === item.image ? item.alt : item.title + " project capture")} width={1280} height={760} sizes="(max-width: 900px) 90vw, 39vw" loading="lazy" />
+                <figcaption>{media?.caption ?? (src.startsWith("/architecture/") ? "Conceptual system map · Not a live screenshot" : "Documented project capture · Verification in case study")}</figcaption>
               </figure>
-              <div className="v2-challenge-copy">
+              <div className="v2-system-copy" data-v2-reveal>
                 <p className="v2-eyebrow">{item.label}</p>
-                <dl><div><dt>The friction</dt><dd>{item.problem}</dd></div><div><dt>The engineered response</dt><dd>{item.response}</dd></div><div><dt>The evidence boundary</dt><dd>{item.evidence}</dd></div></dl>
+                <h3>{item.title}</h3>
+                <p>{item.problem}</p><p>{item.response}</p>
+                <p className="v2-system-boundary">{item.evidence}</p>
                 <Link prefetch={false} href={"/work/" + item.slug} className="v2-project-link">Read the complete case study ↗</Link>
               </div>
-            </div>
-          </details>
-        ))}
+            </article>;
+          })}
+        </div>
       </div>
-      <p className="v2-archive-note">These are project narratives and conceptual diagrams, not simulated live dashboards.</p>
     </section>
   );
 }
@@ -84,7 +90,7 @@ export function EngineeringLab() {
   return (
     <section id="engineering-lab" className="v2-editorial-band" aria-labelledby="v2-lab-title">
       <div className="v2-container v2-editorial-grid">
-        <div className="v2-editorial-copy">
+        <div className="v2-editorial-copy" data-v2-reveal>
           <p className="v2-eyebrow">04 / OPEN WORK</p>
           <h2 id="v2-lab-title">Show the <span>actual build.</span></h2>
           <p>A capstone is useful when the logic is inspectable. SmartBook shows booking intake, validation, reminders and cancellation paths—not a fabricated predictive model.</p>
@@ -109,7 +115,7 @@ export function WorkingMethod() {
         <h2 id="v2-method-title">Less theatre. <span>More responsibility.</span></h2>
         <p className="v2-section-description">I work at the point where conversations, business decisions and software meet. The difficult part is rarely the first successful demo; it is making the next hundred decisions trustworthy.</p>
       </div>
-      <div className="v2-method-grid">
+      <div className="v2-method-grid" data-v2-reveal>
         <ol className="v2-method-list">
           {principles.map(([number, title, description]) => (
             <li key={number}><span>{number}</span><div><h3>{title}</h3><p>{description}</p></div></li>

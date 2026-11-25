@@ -28,6 +28,9 @@ with sync_playwright() as playwright:
                 assert page.locator("header:visible").count() == 1
                 assert page.locator(".v2-adoption").count() == 1
                 assert page.locator(".v2-challenge").count() == 3
+                assert page.locator(".v2-system-index a").count() == 3
+                assert page.locator(".v2-brand").inner_text() == "Olawale Olaonipekun"
+                assert page.locator(".v2-product-scene").count() == 6
                 assert page.locator("#engineering-lab").count() == 1
                 assert page.locator(".v2-method-list li").count() == 3
                 if javascript:

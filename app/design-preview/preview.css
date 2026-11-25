@@ -269,3 +269,48 @@
   .v2-hero .v2-button { font-size:14px; padding-inline:12px; }
   .v2-challenge-body { gap:20px; }
 }
+
+/* Reference recording 00:35–00:47: product stage and indexed media-led rows. */
+.v2-brand { font-size:clamp(15px,1.55vw,20px); letter-spacing:-.035em; }
+.v2-screen-nav b { font-size:1.8cqw; }
+.v2-product-intro { margin-bottom:46px; }
+.v2-project[open] { background:#faf9f7; }
+.v2-product-scene { width:62%; background:transparent; padding:0; }
+.v2-product-window { display:flex; flex-direction:column; justify-content:center; align-items:stretch; aspect-ratio:4/3; padding:clamp(18px,3vw,42px); gap:14px; background:radial-gradient(ellipse at 14% 15%,#faf8f4 0,transparent 55%),linear-gradient(135deg,#e7e3dc,#d4cec4); overflow:hidden; }
+.v2-scene-record { display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; font-size:11px; line-height:1.35; color:#4d4943; }
+.v2-product-capture { flex:1; min-height:0; display:grid; place-items:center; }
+.v2-product-capture img { width:auto; height:auto; max-height:100%; max-width:100%; object-fit:contain; box-shadow:0 12px 30px #382c2319; }
+.v2-scene-link { font-size:12px; color:#3a3733; text-align:right; text-decoration:underline; text-underline-offset:3px; }
+.v2-scene-link a { display:inline-flex; min-height:44px; align-items:center; }
+.v2-product-scene figcaption { padding-inline:4px; }
+@media(min-width:901px) { .v2-showcase { min-height:clamp(470px,44vw,680px); } }
+.v2-feature-heading { display:grid; grid-template-columns:minmax(0,1.3fr) minmax(0,.7fr); gap:36px; align-items:end; margin-bottom:40px; }
+.v2-feature-heading h2 { font-size:clamp(32px,3.7vw,48px); font-weight:500; font-variation-settings:"wdth" 100,"wght" 500; line-height:1.12; letter-spacing:-.032em; }
+.v2-feature-heading > p { color:var(--v2-muted); font-size:15px; line-height:1.6; max-width:46ch; }
+.v2-system-showcase { display:grid; grid-template-columns:minmax(160px,.29fr) minmax(0,1fr); gap:18px; align-items:start; }
+.v2-system-index { position:sticky; top:86px; border-top:1px solid var(--v2-border); }
+.v2-system-index a { display:flex; justify-content:space-between; align-items:center; gap:8px; min-height:58px; padding:12px; border-bottom:1px solid var(--v2-border); font-size:12px; font-weight:500; }
+.v2-system-index a:hover,.v2-system-index a:focus-visible { color:var(--v2-accent); background:var(--v2-paper); }
+.v2-system-row { display:grid; grid-template-columns:minmax(0,1.55fr) minmax(0,1fr); align-items:stretch; gap:20px; padding:0 0 36px; margin-bottom:22px; scroll-margin-top:84px; }
+.v2-system-image { min-width:0; background:linear-gradient(135deg,#f6f4ef,#e4e0d8); padding:clamp(12px,2vw,24px); margin:0; display:flex; flex-direction:column; justify-content:center; gap:12px; }
+.v2-system-image img { width:100%; height:auto; max-height:360px; object-fit:contain; }
+.v2-system-image figcaption { color:#5e5850; font-size:12px; line-height:1.5; }
+.v2-system-copy { padding:18px 4px; min-width:0; }
+.v2-system-copy h3 { font-size:clamp(19px,2vw,26px); line-height:1.24; font-weight:500; letter-spacing:-.025em; }
+.v2-system-copy p:not(.v2-eyebrow) { font-size:14px; line-height:1.55; color:var(--v2-muted); margin-top:14px; }
+.v2-system-copy .v2-system-boundary { border-top:1px solid var(--v2-border); padding-top:14px; font-size:12px!important; }
+@media(max-width:900px) {
+ .v2-showcase { padding-right:0; }
+ .v2-product-scene { width:100%; position:static; padding:0 12px 18px; }
+ .v2-product-window { aspect-ratio:auto; min-height:250px; padding:14px; }
+ .v2-product-capture img { width:100%; height:auto; max-height:320px; }
+ .v2-product-capture.v2-tall-capture img { width:auto; max-width:100%; max-height:320px; }
+ .v2-feature-heading,.v2-system-showcase,.v2-system-row { grid-template-columns:minmax(0,1fr); }
+ .v2-feature-heading { gap:12px; }
+ .v2-system-index { position:static; display:flex; flex-wrap:wrap; gap:8px; border:0; }
+ .v2-system-index a { flex:1 1 120px; min-height:44px; border:1px solid var(--v2-border); }
+ .v2-system-row { gap:10px; padding-bottom:20px; }
+ .v2-system-copy { padding:8px 0; }
+ .v2-system-copy h3 { font-size:21px; }
+}
+@media(max-width:767px) { .v2-brand { font-size:18px; } }

@@ -132,6 +132,11 @@ with sync_playwright() as playwright:
     assert page.locator(".v2-hero-copy").evaluate("el => Number(getComputedStyle(el).opacity)") > 0.9
     assert page.locator("[data-v2-root]").get_attribute("data-light") == "false"
     assert not errors, errors
+    page.locator(".v2-project summary").nth(1).click()
+    assert page.locator(".v2-project").nth(1).locator(".v2-product-capture").is_visible()
+    page.wait_for_timeout(600)
+    assert page.locator(".v2-project").nth(1).locator(".v2-product-capture").evaluate("el => Number(getComputedStyle(el).opacity)") > .95
+    assert page.locator(".v2-system-index a").count() == 3
     page.close()
     for width, save in ((390, False), (1440, True)):
         page = browser.new_page(viewport={"width": width, "height": 900}, reduced_motion="no-preference")

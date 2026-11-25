@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { featured } from "@/lib/data/projects";
 import PreviewMotion from "./PreviewMotion";
+import ProjectScene from "./ProjectScene";
 import { BusinessChallenges, EngineeringLab, WorkingMethod } from "./NarrativeSections";
 import "./preview.css";
 
@@ -26,7 +27,7 @@ export default function PortfolioHome({ preview = false }: { preview?: boolean }
       <PreviewMotion />
       <header className="v2-header">
         <div className="v2-container v2-header-inner">
-          <Link prefetch={false} href={preview ? "/design-preview" : "/"} className="v2-brand">Olawale.</Link>
+          <Link prefetch={false} href={preview ? "/design-preview" : "/"} className="v2-brand">Olawale Olaonipekun</Link>
           <nav aria-label="Main navigation" className="v2-desktop-nav">
             <a href="#v2-work">Projects</a>
             <a href="#v2-principle">Approach</a>
@@ -55,7 +56,7 @@ export default function PortfolioHome({ preview = false }: { preview?: boolean }
             <div className="v2-camera-plane">
               <Image className="v2-scene-photo" src="/design/workstation-preview.webp" alt="" width={512} height={768} priority unoptimized />
               <div className="v2-monitor-screen">
-                <div className="v2-screen-nav"><b>Olawale.</b><span>Portfolio / 2026</span></div>
+                <div className="v2-screen-nav"><b>Olawale Olaonipekun</b><span>Portfolio / 2026</span></div>
                 <div className="v2-screen-layout">
                   <aside><b>Projects</b><span>Overview</span><span>Engineering</span><span>Case studies</span></aside>
                   <div className="v2-screen-body">
@@ -119,10 +120,9 @@ export default function PortfolioHome({ preview = false }: { preview?: boolean }
           <dl>{adoption.metrics.map(metric => <div key={metric.label}><dt>{metric.label}</dt><dd>{metric.value}</dd></div>)}</dl>
         </div>
       </section> : null}
-      <BusinessChallenges />
       <section id="v2-work" className="v2-work v2-container" aria-labelledby="v2-work-title">
-        <div className="v2-section-intro">
-          <p className="v2-eyebrow">03 / SELECTED WORK</p>
+        <div className="v2-section-intro v2-product-intro" data-v2-reveal>
+          <p className="v2-eyebrow">SELECTED WORK</p>
           <h2 id="v2-work-title">A different problem. <span>Every time.</span></h2>
           <p className="v2-section-description">These are the systems behind actual operational constraints. Each story distinguishes the work delivered from the next release gate.</p>
           <Link prefetch={false} href="/work" className="v2-button v2-accent-button">See the complete project archive</Link>
@@ -138,16 +138,12 @@ export default function PortfolioHome({ preview = false }: { preview?: boolean }
               <p className="v2-project-stack">{project.stack.slice(0, 3).join(" · ")}</p>
               <Link prefetch={false} className="v2-project-link" href={"/work/" + project.slug}>Explore case study <span aria-hidden="true">↗</span></Link>
             </div>
-            {project.preview && <figure className="v2-product-scene">
-              <div className="v2-product-window">
-                <Image src={project.preview} width={1280} height={760} alt={project.media?.find(m => m.src === project.preview)?.alt ?? project.title + " project evidence"} sizes="(max-width: 900px) 90vw, 60vw" loading="lazy" />
-              </div>
-              <figcaption>{project.media?.find(m => m.src === project.preview)?.caption ?? "Project visual — see the case study for source and verification context."}</figcaption>
-            </figure>}
+            <ProjectScene project={project} />
           </details>)}
         </div>
         <p className="v2-archive-note">Six featured systems / seventeen projects in the archive.</p>
       </section>
+      <BusinessChallenges />
       <EngineeringLab />
       <WorkingMethod />
       <section className="v2-contact">

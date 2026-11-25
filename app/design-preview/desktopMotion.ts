@@ -58,6 +58,21 @@ export function startDesktopMotion(root: HTMLElement, hero: HTMLElement, stage: 
               yPercent: 0, duration: 0.12, stagger: { amount: 0.17 }, ease: "power2.out",
             }, 0.69)
             .to({}, { duration: 0.02 }, 0.98);
+          root.querySelectorAll<HTMLElement>("[data-v2-reveal]").forEach(element => {
+            gsap.fromTo(element, { y: 22 }, { y: 0, ease: "none",
+              scrollTrigger: { trigger: element, start: "top 95%", end: "top 65%", scrub: 0.35, invalidateOnRefresh: true }
+            });
+          });
+          const showcases = Array.from(root.querySelectorAll<HTMLDetailsElement>(".v2-project"));
+          const onToggle = (event: Event) => {
+            const panel = event.currentTarget as HTMLDetailsElement;
+            if (!panel.open) return;
+            const capture = panel.querySelector(".v2-product-capture");
+            if (capture) context.add(() => gsap.fromTo(capture, { y: 14, opacity: 0.65 }, { y: 0, opacity: 1, duration: 0.45, ease: "power2.out", overwrite: true }));
+            ScrollTrigger.refresh();
+          };
+          showcases.forEach(panel => panel.addEventListener("toggle", onToggle));
+          return () => { showcases.forEach(panel => panel.removeEventListener("toggle", onToggle)); };
         }, root);
 
 

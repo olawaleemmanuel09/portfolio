@@ -36,7 +36,7 @@ export default function Header() {
     {!home && <>
       <header className="v2-interior-header">
         <div className="v2-interior-header-inner">
-          <Link href="/" prefetch={false} className="v2-interior-brand">Olawale.</Link>
+          <Link href="/" prefetch={false} className="v2-interior-brand">Olawale Olaonipekun</Link>
           <nav className="v2-interior-nav" aria-label="Main navigation">
             {links.map(l => <Link prefetch={false} key={l.href} href={l.href}>{l.label}</Link>)}
           </nav>
@@ -46,7 +46,7 @@ export default function Header() {
         </div>
       </header>
       <dialog ref={menu} aria-label="Navigation" id="menu" onClose={() => setOpen(false)} className="v2-interior-dialog">
-        <div className="v2-interior-dialog-top"><span>Olawale.</span><button onClick={() => menu.current?.close()} type="button">Close ×</button></div>
+        <div className="v2-interior-dialog-top"><span>Olawale Olaonipekun</span><button onClick={() => menu.current?.close()} type="button">Close ×</button></div>
         <nav>{[{href:"/",label:"Home"},...links,...actions].map(l => <Link prefetch={false} key={l.href} href={l.href} onClick={() => menu.current?.close()}>{l.label}</Link>)}</nav>
       </dialog>
     </>}
