@@ -1719,3 +1719,44 @@ a { color: inherit; text-decoration: none; }
 }
 
 @media(max-width:767px) { .t-body { font-size:1rem; } .prose-justify { text-align:start; hyphens:none; } }
+
+/* Reference-led archive and case evidence surfaces. */
+.v2-interior-brand { font-size:clamp(16px,1.5vw,20px); white-space:nowrap; }
+@media(min-width:900px) and (max-width:1150px) { .v2-interior-header-inner { width:calc(100% - 48px); gap:12px; } .v2-interior-nav { gap:13px; font-size:13px; } .v2-interior-actions a { padding-inline:8px; font-size:13px; } }
+.v2-archive { width:min(calc(100% - clamp(40px,11vw,144px)),1200px); margin-inline:auto; padding:120px 0 88px; }
+.v2-archive-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:42px 24px; }
+.v2-archive-entry { display:flex; flex-direction:column; min-width:0; color:inherit; }
+.v2-archive-visual { display:grid; place-items:center; aspect-ratio:4/3; padding:clamp(14px,2.5vw,32px); overflow:hidden; background:linear-gradient(135deg,#f7f5f0,#e4dfd6); }
+.v2-archive-image { min-width:0; width:100%; max-height:100%; display:grid; place-items:center; }
+.v2-archive-image img { width:auto; max-width:100%; height:auto; max-height:290px; object-fit:contain; }
+.v2-archive-copy { padding:20px 0 0; display:flex; flex-direction:column; flex:1; }
+.v2-archive-copy h3 { font-weight:500; font-variation-settings:"wdth" 100,"wght" 500; }
+.v2-archive-copy > div:last-child { margin-top:18px; }
+.case-cinema-page .case-cinema-cover { background:white; }
+.case-cinema-page .case-cinema-hero-grid { grid-template-columns:minmax(0,1fr); gap:32px; }
+.case-cinema-page .case-cinema-story { max-width:780px; }
+.case-cinema-page .case-cinema-hero-media .case-hero-panel { border:0; border-radius:0; background:linear-gradient(135deg,#f7f5f0,#e4dfd6); }
+.case-cinema-page .case-cinema-hero-media .case-hero-panel > a > div { max-width:900px; margin:auto; border:0; border-radius:0; background:transparent; }
+.case-cinema-page .case-cinema-hero-media .case-hero-panel img { max-height:540px; object-fit:contain; }
+.case-cinema-page .case-cinema-proof,.case-cinema-page .case-cinema-next { background:#faf9f7; color:#252525; }
+.case-cinema-page .case-cinema-proof-head > p,.case-cinema-page .case-cinema-proof .case-cinema-index,.case-cinema-page .case-cinema-proof-label { color:#646464; }
+.case-cinema-page .case-cinema-implementation,.case-cinema-page .case-cinema-verification { background:#fff; color:#252525; border-color:#e5e3df; }
+.case-cinema-page .case-cinema-implementation-row,.case-cinema-page .case-cinema-verification-row { border-color:#e5e3df; color:#252525; }
+.case-cinema-page .case-cinema-implementation-row :is(p,h3,span),.case-cinema-page .case-cinema-verification-row :is(p,h3,span),.case-cinema-page .case-cinema-publication { color:#494949; }
+.case-cinema-page .case-cinema-next-link { color:#252525; border-color:#e5e3df; }
+.case-cinema-page .case-cinema-next-link:hover strong,.case-cinema-page .case-cinema-next-link > span:last-child { color:#5638d0; }
+.v2-case-evidence-scenes { display:grid; gap:28px; }
+.case-cinema-page .v2-case-evidence-scene { border:0; border-bottom:1px solid #e5e3df; display:grid; grid-template-columns:minmax(0,1.55fr) minmax(0,1fr); align-items:center; gap:0 28px; padding-bottom:24px; }
+.v2-case-evidence-scene > div:first-child { grid-column:1/-1; background:transparent; border:0; padding-inline:0; }
+.v2-case-evidence-scene .evidence-image-region { background:linear-gradient(135deg,#f7f5f0,#e4dfd6); padding:clamp(14px,3vw,34px); }
+.v2-case-evidence-scene .evidence-image-link { border:0; background:transparent; }
+.v2-case-evidence-scene figcaption { padding:16px 0; }
+.v2-case-evidence-scene img { max-height:520px; object-fit:contain; }
+.case-cinema-page .evidence-theatre-index { margin-bottom:24px; }
+.case-cinema-page .evidence-theatre-index-link { background:#fff; border-color:#e5e3df; }
+@media(max-width:767px) {
+ .v2-archive { padding-top:96px; }
+ .v2-archive-grid { grid-template-columns:minmax(0,1fr); gap:28px; }
+ .case-cinema-page .v2-case-evidence-scene { grid-template-columns:minmax(0,1fr); gap:8px; }
+ .case-cinema-page .case-cinema-hero-grid { gap:16px; }
+}

@@ -67,8 +67,7 @@ export function startDesktopMotion(root: HTMLElement, hero: HTMLElement, stage: 
           const onToggle = (event: Event) => {
             const panel = event.currentTarget as HTMLDetailsElement;
             if (!panel.open) return;
-            const capture = panel.querySelector(".v2-product-capture");
-            if (capture) context.add(() => gsap.fromTo(capture, { y: 14, opacity: 0.65 }, { y: 0, opacity: 1, duration: 0.45, ease: "power2.out", overwrite: true }));
+            // CSS handles the visible capture entry; refresh the camera/story bounds.
             ScrollTrigger.refresh();
           };
           showcases.forEach(panel => panel.addEventListener("toggle", onToggle));

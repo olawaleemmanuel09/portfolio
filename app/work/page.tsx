@@ -20,7 +20,7 @@ export default async function Work({ searchParams }: {
     { id: "lab", title: "Engineering lab", note: "Experiments, capstones and reproducible workflow ideas.", items: visible.filter((p) => labSlugs.has(p.slug)) },
   ].filter((group) => group.items.length > 0);
   return (
-    <div className="mx-auto max-w-[1280px] px-6 pb-24 pt-28 md:px-8 md:pt-36">
+    <div className="v2-archive">
       <p className="text-[0.7rem] font-bold uppercase tracking-[0.17em] text-[var(--color-accent-deep)]">Project archive / Engineering evidence</p>
       <h1 className="mt-5 max-w-[16ch] text-[clamp(2.1rem,4vw,3.5rem)] font-medium leading-[1.04] tracking-[-0.04em]">Systems and the decisions behind them.</h1>
       <p className="mt-6 max-w-[66ch] text-[1.05rem] leading-[1.7] text-muted">
@@ -47,13 +47,13 @@ export default async function Work({ searchParams }: {
             <h2 className="text-[clamp(1.7rem,2.6vw,2.55rem)] font-semibold tracking-[-0.026em]">{group.title}</h2>
             <p className="max-w-[44ch] text-sm leading-[1.6] text-muted">{group.note}</p>
           </div>
-          <ul className="grid gap-6 md:grid-cols-2 lg:gap-8">
+          <ul className="v2-archive-grid">
             {group.items.map((p) => (
               <li key={p.slug} className="min-w-0">
-                <Link prefetch={false} className="work-index-card group flex h-full flex-col overflow-hidden rounded-none border border-rule bg-white" href={"/work/" + p.slug}>
-                  <div className="work-index-preview flex aspect-[16/9] items-center justify-center overflow-hidden px-4 py-5 sm:px-7">
+                <Link prefetch={false} className="work-index-card v2-archive-entry group" href={"/work/" + p.slug}>
+                  <div className="work-index-preview v2-archive-visual">
                     {p.preview ? (
-                      <div className="w-full max-w-[550px] overflow-hidden rounded-md border border-[#dedbe5] bg-white ">
+                      <div className="v2-archive-image">
                         <Image src={p.preview} alt="" width={1280} height={670} sizes="(max-width: 768px) 100vw, 45vw" className="h-auto w-full" />
                       </div>
                     ) : (
@@ -63,7 +63,7 @@ export default async function Work({ searchParams }: {
                       </div>
                     )}
                   </div>
-                  <div className="flex flex-1 flex-col px-6 pb-6 pt-6">
+                  <div className="v2-archive-copy">
                     <p className="text-[0.7rem] font-bold uppercase tracking-[0.11em] text-muted">{p.statusLabel}</p>
                     <h3 className="mt-3 text-[1.5rem] font-semibold leading-[1.17] tracking-[-0.027em] group-hover:text-[var(--color-accent-deep)]">{p.title}</h3>
                     <p className="mt-3 text-[0.94rem] leading-[1.65] text-muted">{p.summary}</p>
