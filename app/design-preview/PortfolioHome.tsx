@@ -2,6 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { featured } from "@/lib/data/projects";
 import PreviewMotion from "./PreviewMotion";
+import ProblemExplorer from "@/components/sections/ProblemExplorer";
+import MoreWork from "@/components/sections/MoreWork";
+import AboutPreview from "@/components/sections/AboutPreview";
 import "./preview.css";
 
 const tools = ["n8n", "OpenAI", "Claude", "Supabase", "Gemini", "Python"];
@@ -73,12 +76,12 @@ export default function PortfolioHome({ preview = false }: { preview?: boolean }
           <div className="v2-hero-shade" aria-hidden="true" />
           <div className="v2-container v2-hero-inner">
             <div className="v2-hero-copy">
-              <p className="v2-role">AI Automation Engineer</p>
-              <h1 id="v2-title">AI systems for<br className="v2-desktop-break" /> business operations.</h1>
-              <p>I build AI workflows, integrations and software that help teams get work done.</p>
+              <p className="v2-role">AI Engineer — Growth &amp; Automation Systems</p>
+              <h1 id="v2-title">Business problems.<br />Working systems.</h1>
+              <p>When customer enquiries are missed, operations become difficult to oversee, or teams lose track of work, I build the systems that address it. I connect AI, APIs and operational workflows with the records and controls a business needs.</p>
               <div className="v2-actions">
-                <a className="v2-button" href="#v2-work">Explore my work</a>
-                <Link prefetch={false} href="/contact" className="v2-button v2-secondary">Discuss a project</Link>
+                <a className="v2-button" href="#v2-work">Explore selected work</a>
+                <Link prefetch={false} href="/contact" className="v2-button v2-secondary">Discuss a problem</Link>
               </div>
             </div>
             <Link prefetch={false} className="v2-proof-preview" href="/work/cefa">
@@ -102,28 +105,38 @@ export default function PortfolioHome({ preview = false }: { preview?: boolean }
             {fragments.map(([n, label]) => <div className="v2-fragment" key={n}><span>{n}</span>{label}</div>)}
           </div>
           <div className="v2-story-first">
-            <h2><Words text="Customer enquiries, payments and team updates often live in separate tools." /></h2>
-            <p><Words text="The work falls between them." /></p>
+            <h2><Words text="A useful system doesn’t just reply." /></h2>
+            <p><Words text="The technology is only useful when the business can act on it." /></p>
           </div>
           <div className="v2-story-resolution">
-            <h2><Words text="I connect the systems behind the work." />{" "}<Words accent text="One connected workflow." /></h2>
-            <p><Words text="Clear records. People in control." /></p>
+            <h2><Words text="It preserves context, gives people control and" />{" "}<Words accent text="keeps work moving." /></h2>
+            
           </div>
         </div>
       </section>
 
+      {adoption?.metrics?.length ? <section className="v2-adoption" aria-labelledby="v2-adoption-heading">
+        <div className="v2-container v2-adoption-grid">
+          <div><p className="v2-eyebrow">ONE VERIFIED SNAPSHOT</p><h2 id="v2-adoption-heading">Real records. <span>No inflated reach.</span></h2><p>CEFA learning programme · database snapshot, 24 November 2026. These are counts, not claims of revenue or concurrent users.</p><Link prefetch={false} href="/work/cefa" className="v2-project-link">See the programme case ↗</Link></div>
+          <dl>{adoption.metrics.map(metric => <div key={metric.label}><dt>{metric.label}</dt><dd>{metric.value}</dd></div>)}</dl>
+        </div>
+      </section> : null}
+      <ProblemExplorer />
       <section id="v2-work" className="v2-work v2-container" aria-labelledby="v2-work-title">
         <div className="v2-section-intro">
-          <p className="v2-eyebrow">Selected work</p>
-          <h2 id="v2-work-title">Systems that solve<br className="v2-desktop-break" /> <span>real business problems.</span></h2>
-          <Link prefetch={false} href="/work" className="v2-button v2-accent-button">View all projects</Link>
+          <p className="v2-eyebrow">03 / SELECTED WORK</p>
+          <h2 id="v2-work-title">A different problem. <span>Every time.</span></h2>
+          <p className="v2-section-description">These are the systems behind actual operational constraints. Each story distinguishes the work delivered from the next release gate.</p>
+          <Link prefetch={false} href="/work" className="v2-button v2-accent-button">See the complete project archive</Link>
         </div>
         <div className="v2-showcase">
           {cases.map((project, index) => <details className="v2-project" name="portfolio-v2-projects" open={index === 0} key={project.slug} id={"v2-" + project.slug}>
             <summary><span>{project.title}</span><span className="v2-project-toggle" aria-hidden="true" /></summary>
             <div className="v2-project-copy">
               <p className="v2-project-status">{project.statusLabel}</p>
-              <p>{project.summary}</p>
+              <p className="v2-project-constraint">THE BUSINESS CONSTRAINT</p>
+              <p>{project.problem[0]}</p>
+              <p className="v2-project-summary">{project.summary}</p>
               <p className="v2-project-stack">{project.stack.slice(0, 3).join(" · ")}</p>
               <Link prefetch={false} className="v2-project-link" href={"/work/" + project.slug}>Explore case study <span aria-hidden="true">↗</span></Link>
             </div>
@@ -135,24 +148,19 @@ export default function PortfolioHome({ preview = false }: { preview?: boolean }
             </figure>}
           </details>)}
         </div>
+        <p className="v2-archive-note">Six featured systems / seventeen projects in the archive.</p>
       </section>
-      {adoption?.metrics?.length ? <section className="v2-adoption" aria-labelledby="v2-adoption-heading">
-        <div className="v2-container v2-adoption-grid">
-          <div><p className="v2-eyebrow">Verified operating snapshot</p><h2 id="v2-adoption-heading">Built for actual users.</h2><p>CEFA programme records · {adoption.metricsAsOf}. A dated snapshot, not a current user count.</p><Link prefetch={false} href="/work/cefa" className="v2-project-link">Read the evidence ↗</Link></div>
-          <dl>{adoption.metrics.map(metric => <div key={metric.label}><dt>{metric.label}</dt><dd>{metric.value}</dd></div>)}</dl>
-        </div>
-      </section> : null}
-      <section className="v2-about v2-container">
-        <p className="v2-eyebrow">About</p>
-        <h2>Olawale Emmanuel Olaonipekun.</h2>
-        <p>AI Engineer — Growth &amp; Automation Systems. I design, build and test business applications, API integrations and workflows, with clear records and human control.</p>
-        <div className="v2-actions"><Link prefetch={false} href="/about" className="v2-project-link">About my approach ↗</Link><Link prefetch={false} href="/resume" className="v2-project-link">Request my CV ↗</Link><Link prefetch={false} href="/work#lab" className="v2-project-link">Engineering lab ↗</Link></div>
-      </section>
+      <MoreWork />
+      <AboutPreview />
       <section className="v2-contact">
         <div className="v2-container">
-          <p className="v2-eyebrow">Work together</p>
-          <h2>What would you like to automate?</h2>
-          <Link prefetch={false} href="/contact" className="v2-button v2-accent-button">Get in touch ↗</Link>
+          <p className="v2-eyebrow">06 / COLLABORATION</p>
+          <h2>What's slowing <span>your business down?</span></h2>
+          <p>Open to AI engineering roles and projects with a real operational problem to solve.</p>
+          <div className="v2-actions">
+            <Link prefetch={false} href="/contact" className="v2-button v2-accent-button">Discuss a project ↗</Link>
+            <Link prefetch={false} href="/resume" className="v2-project-link">Request my engineering CV ↗</Link>
+          </div>
         </div>
       </section>
     </div>

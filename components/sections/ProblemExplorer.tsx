@@ -89,7 +89,7 @@ export default function ProblemExplorer() {
               <span>{chosen.label}</span>
             </div>
             <div className="studio-stage-image">
-              <Image src={chosen.image} alt={chosen.alt} width={1280} height={670}
+              <Image loading="lazy" src={chosen.image} alt={chosen.alt} width={1280} height={670}
                 sizes="(max-width: 1023px) 100vw, 53vw"
                 className="studio-stage-img" />
               <span className="studio-stage-caption">CONCEPTUAL SYSTEM MAP · NOT A LIVE SCREENSHOT</span>
@@ -108,7 +108,7 @@ export default function ProblemExplorer() {
                 <p>{chosen.evidence}</p>
               </div>
             </div>
-            <Link href={`/work/${chosen.slug}`} className="studio-stage-link">
+            <Link prefetch={false} href={`/work/${chosen.slug}`} className="studio-stage-link">
               Read the complete case study <span aria-hidden="true">↗</span>
             </Link>
           </div>

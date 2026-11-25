@@ -201,3 +201,38 @@
 
 /* Small-screen motion stays static even if the device reports a fine pointer. */
 @media(max-width:1023px) { .v2-header .v2-button { min-height:44px; } }
+
+/* Preserve the published narrative while adapting the presentation. */
+.portfolio-v2 { --studio-paper:var(--v2-paper); --studio-ink:var(--v2-ink); --studio-purple:var(--v2-accent); --studio-line:var(--v2-border); }
+.v2-hero-copy > p:not(.v2-role) { max-width:56ch; }
+.v2-adoption h2 span,.v2-contact h2 span { color:var(--v2-accent); }
+.v2-section-description,.v2-archive-note { margin-top:18px; color:var(--v2-muted); font-size:15px; line-height:1.6; }
+.v2-project-constraint { font-size:11px; color:var(--v2-accent); margin-bottom:6px; font-weight:500; }
+.v2-project-summary { margin-top:10px; }
+.v2-contact p:not(.v2-eyebrow) { color:var(--v2-muted); max-width:60ch; line-height:1.6; }
+.portfolio-v2 .studio-container { width:min(calc(100% - clamp(40px,11vw,144px)),1200px); margin-inline:auto; padding-inline:0; }
+.portfolio-v2 .studio-explorer,.portfolio-v2 .studio-lab,.portfolio-v2 .studio-about { padding-block:clamp(56px,8vw,100px); }
+.portfolio-v2 .studio-section-heading h2,.portfolio-v2 .studio-lab h2,.portfolio-v2 .studio-about h2 { font-size:clamp(30px,3.7vw,48px); font-weight:500; font-variation-settings:"wdth" 100,"wght" 500; line-height:1.14; letter-spacing:-.032em; }
+.portfolio-v2 .studio-section-heading h2 em,.portfolio-v2 .studio-lab h2 em,.portfolio-v2 .studio-about h2 em { font:inherit; color:var(--v2-accent); }
+.portfolio-v2 .studio-explorer-shell,.portfolio-v2 .studio-explorer-options { border-color:var(--v2-border); }
+.portfolio-v2 .studio-explorer-options { background:var(--v2-paper); }
+.portfolio-v2 .studio-problem-option { transition:none; }
+.portfolio-v2 .studio-problem-option[aria-current="true"] { background:white; color:var(--v2-ink); border-bottom:1px solid var(--v2-accent); }
+.portfolio-v2 .studio-problem-option[aria-current="true"] small,.portfolio-v2 .studio-problem-option[aria-current="true"] .studio-problem-number { color:var(--v2-accent); }
+.portfolio-v2 .studio-problem-label strong,.portfolio-v2 .studio-method-list h3 { font-weight:500; font-variation-settings:"wdth" 100,"wght" 500; }
+.portfolio-v2 .studio-stage-image,.portfolio-v2 .studio-lab-figure,.portfolio-v2 .studio-about-portrait { background:var(--v2-paper); border-color:var(--v2-border); }
+.portfolio-v2 .studio-about-portrait { max-width:400px; }
+.portfolio-v2 .studio-text-link { min-height:44px; }
+.portfolio-v2 .studio-explorer,.portfolio-v2 .studio-lab { scroll-margin-top:64px; }
+@media(max-width:767px) {
+ .portfolio-v2 .studio-container { width:calc(100% - 40px); }
+ .portfolio-v2 .studio-section-heading,.portfolio-v2 .studio-explorer-shell,.portfolio-v2 .studio-lab-layout,.portfolio-v2 .studio-about-layout,.portfolio-v2 .studio-stage-notes { grid-template-columns:minmax(0,1fr); }
+ .portfolio-v2 .studio-explorer-options { border-right:none; }
+ .portfolio-v2 .studio-problem-option { min-height:56px; }
+ .portfolio-v2 .studio-stage-notes { gap:12px; }
+ .portfolio-v2 .studio-about-portrait { max-width:280px; }
+ .v2-hero-inner { padding-top:100px; }
+ .v2-hero h1 { max-width:16ch; font-size:clamp(32px,8.2vw,44px); }
+ .v2-role { font-size:12px; white-space:normal; }
+ .v2-hero-copy > p:not(.v2-role) { line-height:1.5; }
+}

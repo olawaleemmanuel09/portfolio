@@ -23,10 +23,10 @@ export default function AboutPreview() {
               </li>
             ))}
           </ol>
-          <Link href="/about" className="studio-text-link">About my approach <span aria-hidden="true">↗</span></Link>
+          <Link prefetch={false} href="/about" className="studio-text-link">About my approach <span aria-hidden="true">↗</span></Link>
         </div>
         <figure className="studio-about-portrait">
-          <Image src="/work/headshot.jpg" alt="Portrait of the portfolio owner" width={860} height={1075}
+          <Image loading="lazy" src="/work/headshot.jpg" alt="Portrait of the portfolio owner" width={860} height={1075}
             sizes="(max-width: 1023px) 100vw, 40vw" className="w-full h-auto" />
           <figcaption>AI ENGINEERING / BUSINESS SYSTEMS / 2026</figcaption>
         </figure>

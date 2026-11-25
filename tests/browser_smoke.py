@@ -23,10 +23,13 @@ with sync_playwright() as playwright:
                 assert page.locator(".v2-scene-photo").count() == 1
                 assert page.locator(".v2-project").count() == 6
                 assert page.locator(".v2-project[open]").count() == 1
-                assert page.get_by_role("link", name="Explore my work").get_attribute("href") == "#v2-work"
+                assert page.get_by_role("link", name="Explore selected work").get_attribute("href") == "#v2-work"
                 assert page.locator(".v2-hero .v2-button").first.evaluate("el => getComputedStyle(el).backgroundColor") == "rgb(255, 255, 255)"
                 assert page.locator("header:visible").count() == 1
                 assert page.locator(".v2-adoption").count() == 1
+                assert page.locator(".studio-problem-option").count() == 3
+                assert page.locator(".studio-lab").count() == 1
+                assert page.locator(".studio-method-list li").count() == 3
                 if javascript:
                     page.locator(".v2-project summary").nth(1).click()
                     assert page.locator(".v2-project").nth(1).get_attribute("open") is not None
@@ -137,7 +140,7 @@ with sync_playwright() as playwright:
         resp = static_page.goto(origin, wait_until="domcontentloaded", timeout=45000)
         assert resp is not None and resp.status == 200
         assert static_page.locator(".v2-hero").get_attribute("data-motion") == "static"
-        assert static_page.get_by_role("link", name="Explore my work").is_visible()
+        assert static_page.get_by_role("link", name="Explore selected work").is_visible()
         assert static_page.get_by_role("heading", level=1).is_visible()
         assert static_page.locator(".v2-project").count() == 6
         assert static_page.evaluate("document.documentElement.scrollWidth <= innerWidth")

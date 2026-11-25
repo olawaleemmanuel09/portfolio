@@ -21,17 +21,19 @@ with sync_playwright() as p:
     assert page.locator("[data-v2-root]").get_attribute("data-motion-loaded") is None
     assert page.locator("html.lenis").count() == 0
     assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
-    previous = page.evaluate("scrollY")
+    # Dispatch an explicit finger-down/move/up sequence to the page rather
+    # than relying on the headless synthetic gesture helper to hit the scroller.
+    assert page.evaluate("document.scrollingElement.scrollHeight > innerHeight * 2")
     for direction in (1, -1, 1, -1):
-        # CDP sends genuine touch gestures; no JS-driven scrolling implementation.
-        session.send("Input.synthesizeScrollGesture", {"x": 180, "y": 560 if direction == 1 else 160, "yDistance": -440 * direction, "speed": 500, "gestureSourceType": "touch"})
-        page.wait_for_timeout(250)
-        current = page.evaluate("scrollY")
-        if direction == 1:
-            assert current > previous, (previous, current)
-        else:
-            assert current < previous, (previous, current)
-        previous = current
+        previous = page.evaluate("scrollY")
+        start = 500 if direction == 1 else 210
+        session.send("Input.dispatchTouchEvent", {"type":"touchStart","touchPoints":[{"x":180,"y":start}]})
+        for step in range(1, 13):
+            session.send("Input.dispatchTouchEvent", {"type":"touchMove","touchPoints":[{"x":180,"y":start - direction * step * 20}]})
+            page.wait_for_timeout(35)
+        session.send("Input.dispatchTouchEvent", {"type":"touchEnd","touchPoints":[]})
+        page.wait_for_function("([previous,direction]) => (scrollY-previous)*direction > 20", arg=[previous,direction], timeout=10000)
+        page.wait_for_timeout(700)
     assert not any(".mp4" in u or ".webm" in u for u in requests), "Unexpected video request"
     print("Throttled mobile native gestures completed; resource entries:", page.evaluate("performance.getEntriesByType('resource').length"))
     print("Transferred bytes observed:", page.evaluate("performance.getEntriesByType('resource').reduce((sum,e)=>sum+e.transferSize,0)"))

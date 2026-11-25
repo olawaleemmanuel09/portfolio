@@ -36,9 +36,17 @@ test("sitemap pages render with a single heading and canonical link", async () =
 test("landing page and job case distinguish role, flagship and workflow editions", async () => {
   const home = await (await fetch(origin)).text();
   assert.match(home, /AI Engineer — Growth &amp; Automation Systems/);
-  assert.match(home, /AI systems for/);
+  assert.match(home, /Business problems\./);
+  assert.match(home, /Working systems\./);
+  assert.match(home, /No inflated reach/);
+  assert.match(home, /ONE VERIFIED SNAPSHOT/);
+  assert.match(home, /Choose the/);
+  assert.match(home, /Every time/);
+  assert.match(home, /actual build/);
+  assert.match(home, /More responsibility/);
+  assert.match(home, /your business down/);
   assert.match(home, /My projects/);
-  assert.match(home, /Verified operating snapshot/);
+  assert.match(home, /database snapshot, 24 November 2026/);
   assert.match(home, /href="\/work\/cefa"/);
   assert.match(home, /v2-scene-photo/);
   const job = await (await fetch(origin + "/work/ai-job-scraper")).text();
