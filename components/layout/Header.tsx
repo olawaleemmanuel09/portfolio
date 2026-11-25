@@ -15,6 +15,14 @@ const actions = [{ href: "/resume", label: "View CV" }, { href: "/contact", labe
 export default function Header() {
   const pathname = usePathname();
   const home = pathname === "/" || pathname === "/design-preview";
+  return <>
+    <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:bg-ink focus:px-4 focus:py-2 focus:text-paper">Skip to content</a>
+    {!home && <InteriorHeader key={pathname} />}
+  </>;
+}
+
+// A route change unmounts the menu owner and releases its scroll lock.
+function InteriorHeader() {
   const [open, setOpen] = useState(false);
   const menu = useRef<HTMLDialogElement>(null);
   useEffect(() => {
@@ -29,11 +37,8 @@ export default function Header() {
     desktop.addEventListener("change", close);
     return () => desktop.removeEventListener("change", close);
   }, []);
-  useEffect(() => { menu.current?.close(); }, [pathname]);
 
   return <>
-    <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:bg-ink focus:px-4 focus:py-2 focus:text-paper">Skip to content</a>
-    {!home && <>
       <header className="v2-interior-header">
         <div className="v2-interior-header-inner">
           <Link href="/" prefetch={false} className="v2-interior-brand">Olawale Olaonipekun</Link>
@@ -49,6 +54,5 @@ export default function Header() {
         <div className="v2-interior-dialog-top"><span>Olawale Olaonipekun</span><button onClick={() => menu.current?.close()} type="button">Close ×</button></div>
         <nav>{[{href:"/",label:"Home"},...links,...actions].map(l => <Link prefetch={false} key={l.href} href={l.href} onClick={() => menu.current?.close()}>{l.label}</Link>)}</nav>
       </dialog>
-    </>}
   </>;
 }

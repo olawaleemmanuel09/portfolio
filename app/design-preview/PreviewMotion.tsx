@@ -25,6 +25,8 @@ export default function PreviewMotion() {
       const shaded = !light && progress >= 0.40;
       if (root.dataset.light !== String(light)) root.dataset.light = String(light);
       if (root.dataset.shaded !== String(shaded)) root.dataset.shaded = String(shaded);
+      const faded = hero.dataset.motion === "ready" && progress >= 0.39;
+      if (root.dataset.heroFaded !== String(faded)) root.dataset.heroFaded = String(faded);
     };
     const setCameraProgress = (value: number) => { progress = value; paintHeader(); };
     const observer = typeof IntersectionObserver !== "undefined" ? new IntersectionObserver(([entry]) => {
@@ -47,6 +49,14 @@ export default function PreviewMotion() {
     };
     menu?.addEventListener("click", closeMenu);
     menu?.addEventListener("keydown", escapeMenu);
+    // A named details group allows zero selected panels. Preserve the active
+    // item without blocking native selection of a different project.
+    const showcase = root.querySelector(".v2-showcase");
+    const keepSelected = (event: MouseEvent) => {
+      const summary = event.target instanceof Element ? event.target.closest("summary") : null;
+      if (summary?.parentElement?.matches(".v2-project[open]")) event.preventDefault();
+    };
+    showcase?.addEventListener("click", keepSelected);
     const connection = (navigator as Navigator & { connection?: Connection }).connection;
     const desktop = window.matchMedia("(min-width: 1024px) and (min-height: 480px) and (any-pointer: fine) and (prefers-reduced-motion: no-preference)");
     const reconcile = async () => {
@@ -83,6 +93,7 @@ export default function PreviewMotion() {
       disposed = true; generation++;
       stopMotion?.();
       observer?.disconnect();
+      showcase?.removeEventListener("click", keepSelected);
       desktop.removeEventListener("change", reconcile);
       connection?.removeEventListener?.("change", reconcile);
       menu?.removeEventListener("click", closeMenu);
@@ -90,6 +101,7 @@ export default function PreviewMotion() {
       delete root.dataset.enhanced; delete root.dataset.light; delete root.dataset.shaded;
       delete root.dataset.motionLoaded;
       delete root.dataset.motionMode;
+      delete root.dataset.heroFaded;
     };
   }, []);
   return null;

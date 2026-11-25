@@ -114,6 +114,20 @@ with sync_playwright() as playwright:
             page.locator("#menu").get_by_role("link", name="Engineering lab").click()
             page.wait_for_url("**/work#lab")
         page.close()
+    # Regression: the persistent root header must release its scroll lock on Back.
+    page = browser.new_page(viewport={"width": 390, "height": 844}, reduced_motion="reduce")
+    page.goto(origin, wait_until="domcontentloaded")
+    page.locator(".v2-desktop-nav").count()
+    page.locator(".v2-project[open] .v2-project-link").click()
+    page.wait_for_url("**/work/*")
+    page.get_by_role("button", name="Menu").click()
+    page.wait_for_function("() => document.body.style.overflow === 'hidden'")
+    page.go_back(wait_until="domcontentloaded")
+    page.wait_for_url(origin + "/")
+    page.wait_for_function("() => document.body.style.overflow !== 'hidden'")
+    page.mouse.wheel(0, 400)
+    page.wait_for_function("() => scrollY > 100")
+    page.close()
     # Full project-catalog route coverage supplements the viewport checks.
     # Keep slugs explicit so a rename requires an intentional test update.
     slugs = [

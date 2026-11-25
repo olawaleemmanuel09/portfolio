@@ -137,6 +137,9 @@ with sync_playwright() as playwright:
     page.wait_for_timeout(600)
     assert page.locator(".v2-project").nth(1).locator(".v2-product-capture").evaluate("el => Number(getComputedStyle(el).opacity)") > .95
     assert page.locator(".v2-system-index a").count() == 3
+    page.locator(".v2-project[open] summary").click()
+    assert page.locator(".v2-project[open]").count() == 1
+    assert page.locator(".v2-project").nth(1).get_attribute("open") is not None
     page.locator(".v2-project").nth(1).locator(".v2-product-window").scroll_into_view_if_needed()
     page.wait_for_function("() => document.querySelector('.v2-project[open] .v2-product-window')?.dataset.playing === 'true'")
     assert page.locator(".v2-project[open] .v2-primary-capture").evaluate("el => getComputedStyle(el).animationName") == "v2-evidence-drift"
@@ -144,6 +147,10 @@ with sync_playwright() as playwright:
     page.wait_for_function("() => document.querySelector('.v2-tools-marquee')?.dataset.playing === 'true'")
     assert page.locator(".v2-tools-track").evaluate("el => getComputedStyle(el).animationName") == "v2-tools-flow"
     page.wait_for_function("() => document.querySelector('.v2-project[open] .v2-product-window')?.dataset.playing === 'false'")
+    assert page.locator(".v2-project[open] .v2-primary-capture").evaluate("el => getComputedStyle(el).animationPlayState") == "paused"
+    page.locator(".v2-project[open] .v2-product-window").scroll_into_view_if_needed()
+    page.wait_for_function("() => document.querySelector('.v2-project[open] .v2-product-window')?.dataset.playing === 'true'")
+    assert page.locator(".v2-project[open] .v2-primary-capture").evaluate("el => getComputedStyle(el).animationPlayState") == "running"
     # Observe the route wipe before navigation: no delay or lock is introduced.
     page.evaluate("""() => { window.projectPhases = []; const el = document.querySelector('[data-project-transition]'); new MutationObserver(() => window.projectPhases.push(el.dataset.phase)).observe(el, {attributes:true,attributeFilter:['data-phase']}); }""")
     page.locator(".v2-project[open] .v2-project-link").click()
