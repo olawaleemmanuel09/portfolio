@@ -88,5 +88,34 @@ with sync_playwright() as playwright:
     page.wait_for_function("() => document.querySelector('[data-case-study]')?.dataset.caseMotion === 'static'")
     assert page.locator("html.lenis").count() == 0
     page.close()
+
+    # Isolated V2 direction study: real reversible monitor camera and static fallback.
+    page = browser.new_page(viewport={"width": 1440, "height": 900}, reduced_motion="no-preference")
+    page.goto(origin + "/design-preview", wait_until="domcontentloaded", timeout=45000)
+    hero = page.locator(".v2-hero")
+    page.wait_for_function("() => document.querySelector('.v2-hero')?.dataset.motion === 'ready'", timeout=20000)
+    assert page.locator(".v2-monitor-screen").count() == 1
+    world = page.locator(".v2-desk-world")
+    initial = world.evaluate("el => getComputedStyle(el).transform")
+    page.evaluate("window.scrollTo(0, document.querySelector('.v2-hero').offsetHeight - innerHeight - 5)")
+    page.wait_for_timeout(1500)
+    assert world.evaluate("el => getComputedStyle(el).transform") != initial
+    screen = page.locator(".v2-monitor-screen").bounding_box()
+    assert screen is not None and screen["width"] >= 1440 and screen["height"] >= 900, screen
+    if screens:
+        page.screenshot(path=Path(screens) / "v2-monitor-zoom-1440.png")
+    page.evaluate("window.scrollTo(0, 0)")
+    page.wait_for_timeout(1500)
+    assert page.locator(".v2-hero-copy").evaluate("el => Number(getComputedStyle(el).opacity)") > 0.9
+    page.close()
+    for width, save in ((390, False), (1440, True)):
+        page = browser.new_page(viewport={"width": width, "height": 900}, reduced_motion="no-preference")
+        if save:
+            page.add_init_script("Object.defineProperty(navigator, 'connection', { configurable: true, value: { saveData: true } })")
+        page.goto(origin + "/design-preview", wait_until="domcontentloaded", timeout=45000)
+        assert page.locator(".v2-hero").get_attribute("data-motion") == "static"
+        assert page.get_by_role("heading", level=1).is_visible()
+        assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
+        page.close()
     browser.close()
 print("Normal-motion home and case-study browser checks passed.")

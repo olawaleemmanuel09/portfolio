@@ -167,5 +167,26 @@ with sync_playwright() as playwright:
     assert page.locator("video").get_attribute("preload") == "none"
     assert not video_requests, "Unexpected video transfer before playback"
     page.close()
+
+    for width, js in ((320, False), (390, True), (768, True), (1366, True), (1440, True)):
+        preview = browser.new_page(viewport={"width": width, "height": 900}, reduced_motion="reduce", java_script_enabled=js)
+        response = preview.goto(origin + "/design-preview", wait_until="domcontentloaded", timeout=45000)
+        assert response is not None and response.status == 200
+        assert preview.get_by_role("heading", level=1).count() == 1
+        assert preview.locator(".v2-project").count() == 6
+        assert preview.locator(".v2-hero").get_attribute("data-motion") == "static"
+        assert preview.locator("meta[name=robots]").get_attribute("content") == "noindex, nofollow"
+        assert preview.evaluate("document.documentElement.scrollWidth <= innerWidth"), width
+        assert preview.locator(".v2-project img:not([alt])").count() == 0
+        if js and width == 390:
+            menu = preview.locator(".v2-menu summary")
+            menu.click()
+            assert preview.locator(".v2-menu").get_attribute("open") is not None
+            preview.keyboard.press("Escape")
+            assert preview.locator(".v2-menu").get_attribute("open") is None
+            assert menu.evaluate("el => el === document.activeElement")
+        if screens and width in (390,1440):
+            preview.screenshot(path=Path(screens) / f"v2-static-{width}.png", full_page=True)
+        preview.close()
     browser.close()
 print("Passed responsive portfolio checks, studio interaction, 17 case routes, reduced-motion and mobile keyboard navigation.")

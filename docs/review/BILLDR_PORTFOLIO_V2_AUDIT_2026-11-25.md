@@ -23,3 +23,6 @@ Dedicated noindex route on branch; original CSS desk study rather than finished 
 
 ## Current limitations
 The route is an initial interactive direction study, not a pixel-accurate finished remake. No new photographic asset, fresh live browser replay of Billdr, local Next.js dependency docs/build, physical-device tests, or visual sign-off performed in this GitHub-only session. Independent CI and Codex review required.
+
+### Geometry and test follow-up
+Camera destination now uses untransformed layout dimensions, screen-center translation, a 12% overscan beyond the bezel, and neutral rotation during the push. Hidden copy is not mouse-clickable, but focused links restore visibility. Added browser acceptance assertions for static/no-JS, mobile menu Escape, noindex, project count, overflow, and desktop camera coverage/reversal. Tests have not yet been executed in this session; actual CI and visual artifacts remain required.
