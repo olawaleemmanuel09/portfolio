@@ -35,6 +35,8 @@ with sync_playwright() as p:
         page.wait_for_function("([previous,direction]) => (scrollY-previous)*direction > 20", arg=[previous,direction], timeout=10000)
         page.wait_for_timeout(700)
     assert not any(".mp4" in u or ".webm" in u for u in requests), "Unexpected video request"
+    assert page.locator("[data-v2-playback][data-playing=true]").count() == 0
+    assert page.locator(".v2-extra-capture img").count() == 0
     print("Throttled mobile native gestures completed; resource entries:", page.evaluate("performance.getEntriesByType('resource').length"))
     print("Transferred bytes observed:", page.evaluate("performance.getEntriesByType('resource').reduce((sum,e)=>sum+e.transferSize,0)"))
     page.close()

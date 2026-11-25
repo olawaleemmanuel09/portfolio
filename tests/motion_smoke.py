@@ -137,6 +137,20 @@ with sync_playwright() as playwright:
     page.wait_for_timeout(600)
     assert page.locator(".v2-project").nth(1).locator(".v2-product-capture").evaluate("el => Number(getComputedStyle(el).opacity)") > .95
     assert page.locator(".v2-system-index a").count() == 3
+    page.locator(".v2-project").nth(1).locator(".v2-product-window").scroll_into_view_if_needed()
+    page.wait_for_function("() => document.querySelector('.v2-project[open] .v2-product-window')?.dataset.playing === 'true'")
+    assert page.locator(".v2-project[open] .v2-primary-capture").evaluate("el => getComputedStyle(el).animationName") == "v2-evidence-drift"
+    page.evaluate("window.scrollTo(0, 0)")
+    page.wait_for_function("() => document.querySelector('.v2-tools-marquee')?.dataset.playing === 'true'")
+    assert page.locator(".v2-tools-track").evaluate("el => getComputedStyle(el).animationName") == "v2-tools-flow"
+    page.wait_for_function("() => document.querySelector('.v2-project[open] .v2-product-window')?.dataset.playing === 'false'")
+    # Observe the route wipe before navigation: no delay or lock is introduced.
+    page.evaluate("""() => { window.projectPhases = []; const el = document.querySelector('[data-project-transition]'); new MutationObserver(() => window.projectPhases.push(el.dataset.phase)).observe(el, {attributes:true,attributeFilter:['data-phase']}); }""")
+    page.locator(".v2-project[open] .v2-project-link").click()
+    page.wait_for_url("**/work/*")
+    page.wait_for_function("() => window.projectPhases?.includes('cover')", timeout=5000)
+    page.wait_for_function("() => document.querySelector('[data-project-transition]')?.dataset.phase === 'idle'")
+    assert page.locator(".case-cinema-hero-grid").count() == 1
     page.close()
     for width, save in ((390, False), (1440, True)):
         page = browser.new_page(viewport={"width": width, "height": 900}, reduced_motion="no-preference")

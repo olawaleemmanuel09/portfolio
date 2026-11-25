@@ -347,3 +347,8 @@
 @media(max-width:1023px) { .v2-extra-capture { display:none; } .v2-tools .v2-tools-track ul { flex-wrap:wrap; justify-content:flex-start; gap:14px 24px; } }
 @media(max-width:900px) { .v2-primary-capture { height:auto; } .v2-primary-capture img { max-height:320px; max-width:100%; } }
 @media(prefers-reduced-motion:reduce) { .v2-tools-track,.v2-primary-capture,.v2-extra-capture { animation:none!important; } }
+
+/* Ensure short laptop/tablet widths keep the evidence stage in normal flow. */
+@media(min-width:901px) and (max-width:1100px) { .v2-header-inner { gap:12px; } .v2-desktop-nav { gap:18px; } .v2-brand { font-size:16px; } }
+.v2-word-mask { margin-right:.12em; }
+.v2-story-stage h2 .v2-word-mask { white-space:nowrap; }

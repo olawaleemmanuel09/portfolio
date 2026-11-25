@@ -38,6 +38,7 @@ export function startDesktopMotion(root: HTMLElement, hero: HTMLElement, stage: 
 
           camera.eventCallback("onUpdate", () => setCameraProgress(camera.progress()));
 
+          gsap.set(".v2-story-resolution", { opacity: 0 });
           const narrative = gsap.timeline({
             scrollTrigger: {
               trigger: story, start: "top top", end: "bottom bottom",
@@ -53,7 +54,7 @@ export function startDesktopMotion(root: HTMLElement, hero: HTMLElement, stage: 
             }, 0.10)
             .to(".v2-story-first", { opacity: 0, y: -20, duration: 0.15, ease: "none" }, 0.49)
             .to(".v2-fragment", { opacity: 0, scale: 0.38, duration: 0.18, ease: "power2.in" }, 0.51)
-            .fromTo(".v2-story-resolution", { opacity: 0 }, { opacity: 1, duration: 0.10 }, 0.68)
+            .to(".v2-story-resolution", { opacity: 1, duration: 0.10 }, 0.68)
             .fromTo(".v2-story-resolution .v2-word", { yPercent: 110 }, {
               yPercent: 0, duration: 0.12, stagger: { amount: 0.17 }, ease: "power2.out",
             }, 0.69)
