@@ -155,7 +155,7 @@ export default function PortfolioHome({ preview = false }: { preview?: boolean }
       <section className="v2-contact">
         <div className="v2-container">
           <p className="v2-eyebrow">06 / COLLABORATION</p>
-          <h2>What's slowing <span>your business down?</span></h2>
+          <h2>What&apos;s slowing <span>your business down?</span></h2>
           <p>Open to AI engineering roles and projects with a real operational problem to solve.</p>
           <div className="v2-actions">
             <Link prefetch={false} href="/contact" className="v2-button v2-accent-button">Discuss a project ↗</Link>
