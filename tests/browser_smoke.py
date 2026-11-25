@@ -27,9 +27,9 @@ with sync_playwright() as playwright:
                 assert page.locator(".v2-hero .v2-button").first.evaluate("el => getComputedStyle(el).backgroundColor") == "rgb(255, 255, 255)"
                 assert page.locator("header:visible").count() == 1
                 assert page.locator(".v2-adoption").count() == 1
-                assert page.locator(".studio-problem-option").count() == 3
-                assert page.locator(".studio-lab").count() == 1
-                assert page.locator(".studio-method-list li").count() == 3
+                assert page.locator(".v2-challenge").count() == 3
+                assert page.locator("#engineering-lab").count() == 1
+                assert page.locator(".v2-method-list li").count() == 3
                 if javascript:
                     page.locator(".v2-project summary").nth(1).click()
                     assert page.locator(".v2-project").nth(1).get_attribute("open") is not None

@@ -23,6 +23,33 @@ with sync_playwright() as playwright:
             page.screenshot(path=Path(screens) / f"motion-hero-{width}.png")
         page.close()
 
+    # Reproduce a realistic narrow-height laptop on an estimated 3G link.
+    # Network type is not a motion preference: the loaded desktop scene must work.
+    page = browser.new_page(viewport={"width": 1366, "height": 550}, reduced_motion="no-preference")
+    page.add_init_script("Object.defineProperty(navigator, 'connection', {configurable:true, value:Object.assign(new EventTarget(), {effectiveType:'3g', saveData:false})})")
+    page.goto(origin, wait_until="domcontentloaded", timeout=45000)
+    page.wait_for_function("() => document.querySelector('[data-v2-root]')?.dataset.motionMode === 'cinematic'", timeout=20000)
+    hero = page.locator(".v2-hero")
+    assert hero.get_attribute("data-motion") == "ready"
+    assert page.locator(".v2-principle").get_attribute("data-motion") == "ready"
+    assert page.locator(".v2-hero-copy").evaluate("el => el.getBoundingClientRect().bottom <= document.querySelector('.v2-hero-foot').getBoundingClientRect().top + 1")
+    assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
+    plane = page.locator(".v2-camera-plane")
+    initial = plane.evaluate("el => getComputedStyle(el).transform")
+    page.mouse.wheel(0, 700)
+    page.wait_for_function("() => scrollY > 400")
+    page.wait_for_timeout(1000)
+    assert plane.evaluate("el => getComputedStyle(el).transform") != initial
+    page.evaluate("() => { navigator.connection.effectiveType = '2g'; navigator.connection.dispatchEvent(new Event('change')); }")
+    assert hero.get_attribute("data-motion") == "ready"
+    page.mouse.wheel(0, -900)
+    page.wait_for_function("() => scrollY < 5")
+    page.wait_for_timeout(1000)
+    assert page.locator(".v2-hero-copy").evaluate("el => Number(getComputedStyle(el).opacity)") > .95
+    if screens:
+        page.screenshot(path=Path(screens) / "v2-laptop-3g-1366x550.png")
+    page.close()
+
     # Case studies must have motion *with* JavaScript and keep every evidence
     # qualifier readable without any animation dependency.
     for width in (390, 1440):

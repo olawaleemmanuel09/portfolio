@@ -48,23 +48,30 @@ export default function PreviewMotion() {
     menu?.addEventListener("click", closeMenu);
     menu?.addEventListener("keydown", escapeMenu);
     const connection = (navigator as Navigator & { connection?: Connection }).connection;
-    const desktop = window.matchMedia("(min-width: 1024px) and (min-height: 600px) and (pointer: fine) and (prefers-reduced-motion: no-preference)");
+    const desktop = window.matchMedia("(min-width: 1024px) and (min-height: 480px) and (any-pointer: fine) and (prefers-reduced-motion: no-preference)");
     const reconcile = async () => {
       const ticket = ++generation;
-      const eligible = desktop.matches && !connection?.saveData && !["slow-2g", "2g", "3g"].includes(connection?.effectiveType ?? "");
+      // The desktop camera uses one small image, not a streaming video.
+      // Estimated network type must not turn off an already loaded sequence.
+      const eligible = desktop.matches && !connection?.saveData;
       if (!eligible) {
         stopMotion?.(); stopMotion = undefined;
         hero.dataset.motion = "static"; story.dataset.motion = "static";
         setCameraProgress(0);
+        root.dataset.motionMode = connection?.saveData ? "save-data" : "static-device-or-preference";
         return;
       }
       if (stopMotion) return;
       try {
+        root.dataset.motionMode = "loading";
         const { startDesktopMotion } = await import("./desktopMotion");
         if (disposed || ticket !== generation || stopMotion) return;
         stopMotion = startDesktopMotion(root, hero, stage, plane, screen, story, setCameraProgress);
         root.dataset.motionLoaded = "true";
-      } catch {
+        root.dataset.motionMode = "cinematic";
+      } catch (error) {
+        console.warn("Cinematic enhancement unavailable", error);
+        root.dataset.motionMode = "load-error";
         hero.dataset.motion = "static"; story.dataset.motion = "static";
         setCameraProgress(0);
       }
@@ -82,6 +89,7 @@ export default function PreviewMotion() {
       menu?.removeEventListener("keydown", escapeMenu);
       delete root.dataset.enhanced; delete root.dataset.light; delete root.dataset.shaded;
       delete root.dataset.motionLoaded;
+      delete root.dataset.motionMode;
     };
   }, []);
   return null;

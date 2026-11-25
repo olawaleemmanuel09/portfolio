@@ -38,6 +38,8 @@ test("landing page and job case distinguish role, flagship and workflow editions
   assert.match(home, /AI Engineer — Growth &amp; Automation Systems/);
   assert.match(home, /Business problems\./);
   assert.match(home, /Working systems\./);
+  assert.match(home, /I connect AI, APIs and business workflows to solve operational problems/);
+  assert.doesNotMatch(home, /class="studio-explorer"|class="studio-lab"|class="studio-about"/);
   assert.match(home, /No inflated reach/);
   assert.match(home, /ONE VERIFIED SNAPSHOT/);
   assert.match(home, /Choose the/);

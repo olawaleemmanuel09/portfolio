@@ -2,9 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { featured } from "@/lib/data/projects";
 import PreviewMotion from "./PreviewMotion";
-import ProblemExplorer from "@/components/sections/ProblemExplorer";
-import MoreWork from "@/components/sections/MoreWork";
-import AboutPreview from "@/components/sections/AboutPreview";
+import { BusinessChallenges, EngineeringLab, WorkingMethod } from "./NarrativeSections";
 import "./preview.css";
 
 const tools = ["n8n", "OpenAI", "Claude", "Supabase", "Gemini", "Python"];
@@ -78,7 +76,7 @@ export default function PortfolioHome({ preview = false }: { preview?: boolean }
             <div className="v2-hero-copy">
               <p className="v2-role">AI Engineer — Growth &amp; Automation Systems</p>
               <h1 id="v2-title">Business problems.<br />Working systems.</h1>
-              <p>When customer enquiries are missed, operations become difficult to oversee, or teams lose track of work, I build the systems that address it. I connect AI, APIs and operational workflows with the records and controls a business needs.</p>
+              <p>I connect AI, APIs and business workflows to solve operational problems, with the records and controls teams need.</p>
               <div className="v2-actions">
                 <a className="v2-button" href="#v2-work">Explore selected work</a>
                 <Link prefetch={false} href="/contact" className="v2-button v2-secondary">Discuss a problem</Link>
@@ -121,7 +119,7 @@ export default function PortfolioHome({ preview = false }: { preview?: boolean }
           <dl>{adoption.metrics.map(metric => <div key={metric.label}><dt>{metric.label}</dt><dd>{metric.value}</dd></div>)}</dl>
         </div>
       </section> : null}
-      <ProblemExplorer />
+      <BusinessChallenges />
       <section id="v2-work" className="v2-work v2-container" aria-labelledby="v2-work-title">
         <div className="v2-section-intro">
           <p className="v2-eyebrow">03 / SELECTED WORK</p>
@@ -136,7 +134,7 @@ export default function PortfolioHome({ preview = false }: { preview?: boolean }
               <p className="v2-project-status">{project.statusLabel}</p>
               <p className="v2-project-constraint">THE BUSINESS CONSTRAINT</p>
               <p>{project.problem[0]}</p>
-              <p className="v2-project-summary">{project.summary}</p>
+              {project.metrics?.length ? <p className="v2-project-metric">{project.metrics[0].value} {project.metrics[0].label.toLowerCase()} · {project.metricsAsOf}</p> : null}
               <p className="v2-project-stack">{project.stack.slice(0, 3).join(" · ")}</p>
               <Link prefetch={false} className="v2-project-link" href={"/work/" + project.slug}>Explore case study <span aria-hidden="true">↗</span></Link>
             </div>
@@ -150,8 +148,8 @@ export default function PortfolioHome({ preview = false }: { preview?: boolean }
         </div>
         <p className="v2-archive-note">Six featured systems / seventeen projects in the archive.</p>
       </section>
-      <MoreWork />
-      <AboutPreview />
+      <EngineeringLab />
+      <WorkingMethod />
       <section className="v2-contact">
         <div className="v2-container">
           <p className="v2-eyebrow">06 / COLLABORATION</p>
