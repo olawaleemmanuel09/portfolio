@@ -5,6 +5,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import ProjectTransition from "@/components/motion/ProjectTransition";
 
 const archivo = localFont({
   src: "./fonts/Archivo-var.woff2",
@@ -31,6 +32,7 @@ export default function RootLayout({
     <html lang="en" className={archivo.variable}>
       <body>
         <Header />
+        <ProjectTransition />
         <main id="main">{children}</main>
         <Footer />
       </body>

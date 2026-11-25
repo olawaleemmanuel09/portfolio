@@ -3,6 +3,7 @@ import Link from "next/link";
 import { featured } from "@/lib/data/projects";
 import PreviewMotion from "./PreviewMotion";
 import ProjectScene from "./ProjectScene";
+import VisiblePlayback from "./VisiblePlayback";
 import { BusinessChallenges, EngineeringLab, WorkingMethod } from "./NarrativeSections";
 import "./preview.css";
 
@@ -25,6 +26,7 @@ export default function PortfolioHome({ preview = false }: { preview?: boolean }
   return (
     <div className="portfolio-v2" data-v2-root>
       <PreviewMotion />
+      <VisiblePlayback />
       <header className="v2-header">
         <div className="v2-container v2-header-inner">
           <Link prefetch={false} href={preview ? "/design-preview" : "/"} className="v2-brand">Olawale Olaonipekun</Link>
@@ -91,7 +93,7 @@ export default function PortfolioHome({ preview = false }: { preview?: boolean }
           <div className="v2-hero-foot">
             <div className="v2-container v2-tools">
               <span className="v2-tools-label">Built with</span>
-              <ul>{tools.map(tool => <li key={tool}>{tool}</li>)}</ul>
+              <div className="v2-tools-marquee" data-v2-playback><div className="v2-tools-track"><ul>{tools.map(tool => <li key={tool}>{tool}</li>)}</ul><ul aria-hidden="true" className="v2-tools-duplicate">{tools.map(tool => <li key={tool}>{tool}</li>)}</ul></div></div>
             </div>
           </div>
           <div className="v2-handoff" aria-hidden="true" />

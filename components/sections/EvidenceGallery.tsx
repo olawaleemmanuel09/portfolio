@@ -82,13 +82,13 @@ export default function EvidenceGallery({ project }: { project: Project }) {
         ))}
       </nav>
 
-      <div className="v2-case-evidence-scenes">
+      <div className="grid gap-6 md:grid-cols-2 md:gap-8">
         {project.media.map((m, i) => {
           const architecture = m.src.startsWith("/architecture/");
           const prominent = i === 0;
           const visualLabel = typeOfEvidence(m.src);
           return (
-            <figure key={m.src} id={`case-evidence-figure-${i+1}`} data-case-reveal className="evidence-panel evidence-theatre-figure v2-case-evidence-scene">
+            <figure key={m.src} id={`case-evidence-figure-${i+1}`} data-case-reveal className={`evidence-panel evidence-theatre-figure min-w-0 overflow-hidden border border-[#e1dce9] bg-white ${prominent ? "md:col-span-2" : ""}`}>
               <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#eae7ee] bg-[#faf9fd] px-4 py-3 sm:px-6">
                 <span className="text-[0.64rem] font-bold uppercase tracking-[0.12em] text-[#574578]">{visualLabel}</span>
                 <span className="text-[0.64rem] font-medium tabular-nums text-[#70697d]">{String(i + 1).padStart(2,"0")} / {String(count).padStart(2,"0")}</span>
