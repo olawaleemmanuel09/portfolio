@@ -9,7 +9,11 @@ with sync_playwright() as p:
         errors=[]
         page.on("pageerror",lambda err:errors.append(str(err)))
         page.goto(origin,wait_until="domcontentloaded")
-        page.wait_for_function("() => document.querySelector('.v2-principle').dataset.storyProgress !== undefined")
+        try:
+            page.wait_for_function("() => document.querySelector('.v2-principle').dataset.storyProgress !== undefined", timeout=20000)
+        except Exception:
+            print("WebKit startup diagnostics", width, height, errors, page.evaluate("""() => { const r=document.querySelector('[data-v2-root]'), s=document.querySelector('.v2-principle'), stage=s.querySelector('.v2-story-stage');return {viewport:[innerWidth,innerHeight], mode:r.dataset.motionMode, story:{...s.dataset}, stageHeight:stage.clientHeight, stagePosition:getComputedStyle(stage).position, textHeight:s.querySelector('.v2-story-first').getBoundingClientRect().height, media:matchMedia('(max-width:1023px)').matches, reduced:matchMedia('(prefers-reduced-motion: reduce)').matches}}"""))
+            raise
         story=page.locator(".v2-principle")
         assert story.locator(".v2-story-stage").evaluate("el => getComputedStyle(el).position")=="sticky"
         def phase(f):
@@ -31,6 +35,15 @@ with sync_playwright() as p:
         assert scene.locator(".v2-mobile-visual img").evaluate("el=>el.getBoundingClientRect().width>0")
         assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
         assert not errors,errors
+        page.close()
+    # The static path is also part of the release contract.
+    for js in (True,False):
+        page=browser.new_page(viewport={"width":320,"height":480},is_mobile=True,has_touch=True,reduced_motion="reduce",java_script_enabled=js)
+        page.goto(origin,wait_until="domcontentloaded")
+        assert page.locator(".v2-principle").get_attribute("data-motion")=="static"
+        assert page.locator(".v2-fragment-icon:visible").count()==0
+        assert page.locator(".v2-fragment-label:visible").count()==6
+        assert page.locator(".v2-fragment-label").evaluate_all("els=>els.every(el=>el.clientWidth>24 && el.scrollWidth<=el.clientWidth+1)")
         page.close()
     browser.close()
 print("WebKit mobile storyboard checks passed")

@@ -170,7 +170,8 @@ with sync_playwright() as playwright:
         assert static_page.locator(".v2-project-fallback").is_visible()
         # Check actual wasted layout space, not a computed CSS value that can
         # differ across browser implementations.
-        assert static_page.locator(".v2-showcase").evaluate("el => el.clientHeight <= Array.from(el.children).filter(c => getComputedStyle(c).display !== 'none').reduce((n,c) => n+c.getBoundingClientRect().height,0)+24"), "Empty showcase retains unused stage space"
+        actual=static_page.locator(".v2-showcase").evaluate("""el => ({height:el.clientHeight,minHeight:getComputedStyle(el).minHeight,children:Array.from(el.children).filter(c=>getComputedStyle(c).display!=='none').map(c=>({height:c.getBoundingClientRect().height,tag:c.tagName}))})""")
+        assert actual["height"] <= sum(c["height"] for c in actual["children"])+24, actual
         assert static_page.evaluate("document.documentElement.scrollWidth <= innerWidth")
         static_page.close()
     # On a cold case-study visit, recordings must remain click-to-play.

@@ -23,7 +23,11 @@ export function startMobileMotion(root: HTMLElement, hero: HTMLElement, story: H
   nodes.forEach(el => reveals.observe(el));
   // Enable sticky only where the full copy can fit. A very short landscape
   // viewport remains a readable normal-flow narrative.
-  const eligible = window.matchMedia("(max-width: 1023px) and (min-height: 480px), (any-pointer: coarse) and (not (any-pointer: fine)) and (min-height: 480px)");
+  // Separate simple queries for WebKit; do not rely on a nested negation
+  // or the browser chrome-dependent media-query height at the exact boundary.
+  const narrow = window.matchMedia("(max-width: 1023px)");
+  const coarse = window.matchMedia("(any-pointer: coarse)");
+  const fine = window.matchMedia("(any-pointer: fine)");
   let active = false, frame = 0, disposed = false, pinned = false, last = -1;
   let anchors: { x: number; y: number }[] = [];
   let stageWidth = 0, stageHeight = 0;
@@ -79,19 +83,22 @@ export function startMobileMotion(root: HTMLElement, hero: HTMLElement, story: H
   }
   function schedule() { if (!disposed && !frame && pinned) frame=requestAnimationFrame(render); }
   function configure() {
-    const next=eligible.matches;
+    const next=(narrow.matches || (coarse.matches && !fine.matches)) && window.innerHeight>=400;
     if (next!==pinned) {
       pinned=next;last=-1;
       story.dataset.motion=next?"mobile":"static";
-      if (!next) clear();
+      if (!next) { clear(); story.dataset.storyFallback="viewport"; }
     }
     if (pinned) {
       stageWidth=stage!.clientWidth;stageHeight=stage!.clientHeight;
       anchors=fragments.map(el=>({x:el.offsetLeft+el.offsetWidth/2,y:el.offsetTop+el.offsetHeight/2}));
-      // Zoomed text must not be clipped inside the bounded story.
-      if (first!.scrollHeight > stageHeight*.72 || resolution!.scrollHeight > stageHeight*.72) {
+      // Measure the actual text boxes, not scrollHeight (which can include
+      // masked glyph overflow in WebKit). Leave a margin for the header.
+      const textHeight=Math.max(first!.getBoundingClientRect().height,resolution!.getBoundingClientRect().height);
+      if (stageHeight<240 || textHeight>stageHeight-28) {
         pinned=false;story.dataset.motion="static";clear();
-      }
+        story.dataset.storyFallback="text-fit";
+      } else { delete story.dataset.storyFallback; }
       last=-1;
     }
     schedule();
@@ -105,14 +112,16 @@ export function startMobileMotion(root: HTMLElement, hero: HTMLElement, story: H
   window.addEventListener("resize",configure,{passive:true});
   const onPageShow=()=>{last=-1;schedule();};
   window.addEventListener("pageshow",onPageShow);
-  eligible.addEventListener("change",configure);
+  [narrow,coarse,fine].forEach(query=>query.addEventListener("change",configure));
   configure();
+  void document.fonts?.ready.then(()=>{if(!disposed) configure();});
   return ()=>{
     disposed=true;cancelAnimationFrame(frame);
     window.removeEventListener("scroll",onScroll);
     window.removeEventListener("resize",configure);
     window.removeEventListener("pageshow",onPageShow);
-    eligible.removeEventListener("change",configure);
+    [narrow,coarse,fine].forEach(query=>query.removeEventListener("change",configure));
+    delete story.dataset.storyFallback;
     reveals.disconnect();watcher.disconnect();
     nodes.forEach(el=>delete el.dataset.mobileReveal);
     clear();
