@@ -39,6 +39,7 @@ jobs:
           python tests/motion_smoke.py || status=1
           python tests/mobile_performance.py || status=1
           python tests/mobile_webkit.py || status=1
+          python tests/responsive_alignment.py || status=1
           exit "$status"
       - name: Save responsive design screenshots
         if: always()

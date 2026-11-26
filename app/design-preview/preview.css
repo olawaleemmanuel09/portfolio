@@ -653,3 +653,24 @@
    position:static; width:100%; max-width:760px; margin:0 auto 20px;
  }
 }
+
+/* Post-launch responsive audit: metric values share a baseline regardless
+   of label wrapping. Flex layout works in Safari without grid subgrid. */
+.v2-adoption-grid > * { min-width:0; }
+.v2-adoption dl { align-items:stretch; margin:0; }
+.v2-adoption dl > div { display:flex; flex-direction:column; min-width:0; }
+.v2-adoption dt { flex:1 0 auto; line-height:1.4; overflow-wrap:break-word; }
+.v2-adoption dd { margin:8px 0 0; line-height:1.05; font-variant-numeric:tabular-nums; }
+.portfolio-v2 .v2-button { max-width:100%; }
+@media(max-width:1023px), (any-pointer:coarse) and (not (any-pointer:fine)) {
+ .v2-adoption-grid { grid-template-columns:minmax(0,1fr); }
+ .v2-adoption dl { gap:8px; }
+ .v2-adoption dl > div { padding-left:10px; }
+ .v2-adoption dt { font-size:clamp(11px,3vw,13px); }
+ .v2-adoption dd { font-size:clamp(27px,7.5vw,38px); }
+ .portfolio-v2 .v2-button { white-space:normal; text-align:center; overflow-wrap:break-word; }
+}
+@media(max-width:359px) {
+ .v2-adoption dl > div { padding-left:7px; }
+ .v2-adoption dl { gap:6px; }
+}
