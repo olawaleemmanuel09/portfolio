@@ -57,7 +57,16 @@ export default async function CaseStudy({
         description: project.summary,
         author: { "@id": personId },
         isPartOf: { "@id": websiteId },
+        publisher: { "@id": personId },
+        ...(project.preview && /\.(?:jpe?g|png|webp)$/i.test(project.preview) ? { image: absoluteUrl(project.preview) } : {}),
         inLanguage: "en",
+      }, {
+        "@type": "BreadcrumbList", "@id": absoluteUrl("/work/" + project.slug + "#breadcrumbs"),
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl("/") },
+          { "@type": "ListItem", position: 2, name: "Engineering case studies", item: absoluteUrl("/work") },
+          { "@type": "ListItem", position: 3, name: project.title, item: absoluteUrl("/work/" + project.slug) },
+        ],
       }] }} />
       <CaseStudyMotion slug={project.slug} />
       <div className="case-cinema-cover">

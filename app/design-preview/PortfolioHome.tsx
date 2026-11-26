@@ -110,11 +110,11 @@ export default function PortfolioHome({ preview = false }: { preview?: boolean }
             {fragments.map(([n, label, kind]) => <div className="v2-fragment" key={n} data-kind={kind}><span className="v2-fragment-number">{n}</span><span className="v2-fragment-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">{kind === "message" ? <><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 7 8 6 8-6"/></> : kind === "sheet" ? <><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 9h16M4 15h16M10 9v12M15 9v12"/></> : kind === "bell" ? <><path d="M18 8a6 6 0 0 0-12 0v5l-2 3h16l-2-3zM10 20h4"/></> : <><path d="M6 3h8l4 4v14H6zM14 3v5h5M9 13h6M9 17h6"/></>}</svg></span><span className="v2-fragment-label">{label}</span></div>)}
           </div>
           <div className="v2-story-first">
-            <h2><Words text="A useful system doesn’t just reply." /></h2>
+            <h2 aria-label="A useful system doesn’t just reply."><Words text="A useful system doesn’t just reply." /></h2>
             <p><Words text="The technology is only useful when the business can act on it." /></p>
           </div>
           <div className="v2-story-resolution">
-            <h2><Words text="It preserves context, gives people control and" />{" "}<Words accent text="keeps work moving." /></h2>
+            <h2 aria-label="It preserves context, gives people control and keeps work moving."><Words text="It preserves context, gives people control and" />{" "}<Words accent text="keeps work moving." /></h2>
             
           </div>
         </div>

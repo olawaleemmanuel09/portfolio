@@ -7,12 +7,15 @@ with sync_playwright() as p:
     for width,height in ((320,480),(375,667),(390,844)):
         page=browser.new_page(viewport={"width":width,"height":height},is_mobile=True,has_touch=True,device_scale_factor=2,reduced_motion="no-preference")
         errors=[]
+        failed=[]
         page.on("pageerror",lambda err:errors.append(str(err)))
+        page.on("requestfailed",lambda req:failed.append((req.url,req.failure)))
+        page.on("console",lambda msg:errors.append(msg.text) if msg.type=="error" else None)
         page.goto(origin,wait_until="domcontentloaded")
         try:
             page.wait_for_function("() => document.querySelector('.v2-principle').dataset.storyProgress !== undefined", timeout=20000)
         except Exception:
-            print("WebKit startup diagnostics", width, height, errors, page.evaluate("""() => { const r=document.querySelector('[data-v2-root]'), s=document.querySelector('.v2-principle'), stage=s.querySelector('.v2-story-stage');return {viewport:[innerWidth,innerHeight], mode:r.dataset.motionMode, story:{...s.dataset}, stageHeight:stage.clientHeight, stagePosition:getComputedStyle(stage).position, textHeight:s.querySelector('.v2-story-first').getBoundingClientRect().height, media:matchMedia('(max-width:1023px)').matches, reduced:matchMedia('(prefers-reduced-motion: reduce)').matches}}"""))
+            print("WebKit startup diagnostics", width, height, errors, failed, page.evaluate("""() => { const r=document.querySelector('[data-v2-root]'), s=document.querySelector('.v2-principle'), stage=s.querySelector('.v2-story-stage');return {viewport:[innerWidth,innerHeight], mode:r.dataset.motionMode, story:{...s.dataset}, stageHeight:stage.clientHeight, stagePosition:getComputedStyle(stage).position, textHeight:s.querySelector('.v2-story-first').getBoundingClientRect().height, media:matchMedia('(max-width:1023px)').matches, reduced:matchMedia('(prefers-reduced-motion: reduce)').matches}}"""))
             raise
         story=page.locator(".v2-principle")
         assert story.locator(".v2-story-stage").evaluate("el => getComputedStyle(el).position")=="sticky"

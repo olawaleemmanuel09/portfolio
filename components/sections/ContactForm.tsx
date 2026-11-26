@@ -38,12 +38,16 @@ export default function ContactForm() {
     sending.current = true;
     setState("sending");
 
+    // AbortSignal.timeout is absent in older Safari versions. Use the
+    // widely supported AbortController so older phones can submit normally.
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 15000);
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
-        signal: AbortSignal.timeout(15000),
+        signal: controller.signal,
       });
 
       if (!res.ok) {
@@ -58,6 +62,7 @@ export default function ContactForm() {
       setMessage("That did not send. Try again, or email me directly.");
       setState("error");
     } finally {
+      window.clearTimeout(timeout);
       sending.current = false;
     }
   }

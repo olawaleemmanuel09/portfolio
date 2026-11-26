@@ -33,7 +33,7 @@ export default function RootLayout({
       <body>
         <Header />
         <ProjectTransition />
-        <main id="main">{children}</main>
+        <main id="main" tabIndex={-1}>{children}</main>
         <Footer />
       </body>
     </html>

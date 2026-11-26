@@ -33,7 +33,9 @@ const securityHeaders = [
       "frame-ancestors 'none'",
       "base-uri 'self'",
       "object-src 'none'",
-      "upgrade-insecure-requests",
+      // Hosted Vercel traffic is HTTPS. On the standalone HTTP test server,
+      // WebKit may upgrade local CSS/JS requests to HTTPS and never hydrate.
+      ...(process.env.VERCEL === "1" || process.env.VERCEL_ENV ? ["upgrade-insecure-requests"] : []),
     ].join("; "),
   },
 ];
@@ -49,6 +51,12 @@ const nextConfig: NextConfig = {
         // Preview deployments are not canonical search destinations.
         ...(process.env.VERCEL_ENV === "preview" ? [{ key: "X-Robots-Tag", value: "noindex, nofollow" }] : []),
       ],
+    }, {
+      source: "/design-preview",
+      headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+    }, {
+      source: "/api/:path*",
+      headers: [{ key: "Cache-Control", value: "no-store" }, { key: "X-Robots-Tag", value: "noindex, nofollow" }],
     }];
   },
 };

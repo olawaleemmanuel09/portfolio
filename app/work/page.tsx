@@ -1,7 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
-import { pageMetadata, shortName } from "@/lib/seo";
+import { absoluteUrl, pageMetadata, shortName, websiteId } from "@/lib/seo";
+import JsonLd from "@/components/seo/JsonLd";
 import { projects } from "@/lib/data/projects";
 
 export const metadata: Metadata = pageMetadata("/work", "Engineering Case Studies | " + shortName, "Explore AI automation, CRM integrations, commerce and operational systems. Case studies distinguish verified evidence, delivery status and pending work.", "/work/headshot.jpg");
@@ -21,6 +22,12 @@ export default async function Work({ searchParams }: {
   ].filter((group) => group.items.length > 0);
   return (
     <div className="v2-archive">
+      {!activeStage && <JsonLd data={{ "@context": "https://schema.org", "@graph": [{
+        "@type": "CollectionPage", "@id": absoluteUrl("/work#collection"), url: absoluteUrl("/work"),
+        name: "Engineering case studies", isPartOf: { "@id": websiteId }, mainEntity: { "@id": absoluteUrl("/work#projects") }, inLanguage: "en",
+      }, { "@type": "ItemList", "@id": absoluteUrl("/work#projects"), numberOfItems: projects.length,
+        itemListElement: collections.flatMap(group => group.items).map((project, index) => ({ "@type": "ListItem", position: index + 1, name: project.title, url: absoluteUrl("/work/" + project.slug) })),
+      }] }} /> }
       <p className="text-[0.7rem] font-bold uppercase tracking-[0.17em] text-[var(--color-accent-deep)]">Project archive / Engineering evidence</p>
       <h1 className="mt-5 max-w-[16ch] text-[clamp(2.1rem,4vw,3.5rem)] font-medium leading-[1.04] tracking-[-0.04em]">Systems and the decisions behind them.</h1>
       <p className="mt-6 max-w-[66ch] text-[1.05rem] leading-[1.7] text-muted">

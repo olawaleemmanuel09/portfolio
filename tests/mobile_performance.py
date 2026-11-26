@@ -43,7 +43,9 @@ with sync_playwright() as p:
     assert page.locator(".v2-extra-capture img").count() == 0
     assert page.locator(".v2-mobile-detail img").count() == 0
     print("Throttled mobile native gestures completed; resource entries:", page.evaluate("performance.getEntriesByType('resource').length"))
-    print("Transferred bytes observed:", page.evaluate("performance.getEntriesByType('resource').reduce((sum,e)=>sum+e.transferSize,0)"))
+    transferred=page.evaluate("performance.getEntriesByType('resource').reduce((sum,e)=>sum+e.transferSize,0)")
+    print("Transferred bytes observed:", transferred)
+    assert transferred <= 1500000, f"Constrained hero/gesture resource budget exceeded: {transferred}"
     page.close()
     # Also check actual story gestures on the same slow connection with
     # normal motion enabled; Save-Data alone cannot validate the experience.

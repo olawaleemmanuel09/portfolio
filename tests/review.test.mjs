@@ -216,3 +216,23 @@ test("rotating addresses cannot reset the independent aggregate provider budget"
   time = 600001;
   assert.equal(limit("new-visitor"), false);
 });
+
+test("launch discovery schema and preview isolation", async () => {
+  const archive = await (await fetch(origin + "/work")).text();
+  const graph = jsonLd(archive).flatMap(item => item["@graph"] ?? []);
+  const list = graph.find(item => item["@type"] === "ItemList");
+  assert.equal(list?.numberOfItems, 17);
+  assert.equal(list?.itemListElement.length, 17);
+  assert.equal(new Set(list.itemListElement.map(item => item.url)).size, 17);
+  const caseGraph = jsonLd(await (await fetch(origin + "/work/cefa")).text()).flatMap(item => item["@graph"] ?? []);
+  const crumbs = caseGraph.find(item => item["@type"] === "BreadcrumbList");
+  assert.equal(crumbs?.itemListElement.length, 3);
+  assert.match(crumbs.itemListElement[2].item, /\/work\/cefa$/);
+  const preview = await fetch(origin + "/design-preview");
+  assert.match(preview.headers.get("x-robots-tag") ?? "", /noindex/);
+  const api = await fetch(origin + "/api/contact", {method:"POST"});
+  assert.match(api.headers.get("cache-control") ?? "", /no-store/);
+  assert.match(api.headers.get("x-robots-tag") ?? "", /noindex/);
+  const home = await fetch(origin);
+  assert.doesNotMatch(home.headers.get("content-security-policy") ?? "", /upgrade-insecure-requests/, "HTTP lab must not upgrade asset requests");
+});

@@ -15,12 +15,14 @@ export const person = {
   "@type": "Person",
   "@id": personId,
   name: personName,
+  alternateName: shortName,
   url: absoluteUrl("/about"),
   jobTitle,
   image: absoluteUrl("/work/headshot.jpg"),
   sameAs: [
     "https://github.com/olawaleemmanuel09",
     "https://www.linkedin.com/in/olawale-olaonipekun-0505303b4",
+    "https://x.com/LaoniAI",
   ],
 };
 
@@ -63,7 +65,7 @@ export function pageMetadata(path: string, title: string, description: string, i
     openGraph: {
       type: article ? "article" : "website",
       url, title, description, siteName: personName,
-      ...(image ? { images: [{ url: absoluteUrl(image) }] } : {}),
+      ...(image ? { images: [{ url: absoluteUrl(image), alt: title }] } : {}),
     },
     twitter: {
       card: image ? "summary_large_image" : "summary",
