@@ -171,26 +171,43 @@ with sync_playwright() as playwright:
         assert page.get_by_role("heading", level=1).is_visible()
         assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
         page.close()
-    # Normal mobile motion with native scroll: camera reverses, marquee and evidence animate.
-    page = browser.new_page(viewport={"width":390,"height":844}, is_mobile=True, has_touch=True, reduced_motion="no-preference")
-    page.goto(origin, wait_until="domcontentloaded")
-    page.wait_for_function("() => document.querySelector('[data-v2-root]')?.dataset.motionMode === 'mobile'")
-    page.wait_for_function("() => document.querySelector('.v2-tools-marquee')?.dataset.playing === 'true'")
-    assert page.locator(".v2-tools-track").evaluate("el => getComputedStyle(el).animationPlayState") == "running"
-    plane = page.locator(".v2-camera-plane")
-    page.wait_for_timeout(100)
-    initial = plane.evaluate("el => getComputedStyle(el).transform")
-    page.evaluate("window.scrollTo(0, (document.querySelector('.v2-hero').offsetHeight-document.querySelector('.v2-stage').offsetHeight)*.65)")
-    page.wait_for_function("() => Number(getComputedStyle(document.querySelector('.v2-hero-copy')).opacity) < .1")
-    assert plane.evaluate("el => getComputedStyle(el).transform") != initial
-    page.evaluate("window.scrollTo(0, 0)")
-    page.wait_for_function("() => Number(getComputedStyle(document.querySelector('.v2-hero-copy')).opacity) > .95")
-    page.locator(".v2-project[open] .v2-product-window").scroll_into_view_if_needed()
-    page.wait_for_function("() => document.querySelector('.v2-project[open] .v2-product-window')?.dataset.playing === 'true'")
-    assert page.locator(".v2-project[open] .v2-primary-capture").evaluate("el => getComputedStyle(el).animationName") == "v2-mobile-evidence"
-    assert page.locator(".v2-extra-capture img").count() == 0
-    assert page.locator("[data-v2-root]").get_attribute("data-motion-loaded") is None
-    assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
-    page.close()
+    # Mobile reference flow: real touch context, no pinned hero, all six
+    # demonstrations available, animated narrative and reversible playback.
+    for width,height in ((320,480),(390,844),(430,932)):
+        page = browser.new_page(viewport={"width":width,"height":height}, is_mobile=True, has_touch=True, reduced_motion="no-preference")
+        errors = []
+        page.on("pageerror", lambda error: errors.append(str(error)))
+        page.goto(origin, wait_until="domcontentloaded")
+        page.wait_for_function("() => document.querySelector('[data-v2-root]')?.dataset.motionMode === 'mobile'")
+        assert page.locator(".v2-stage").evaluate("el => getComputedStyle(el).position") == "relative"
+        assert page.locator(".v2-handoff").is_hidden()
+        assert page.locator(".v2-hero-copy").evaluate("el => Number(getComputedStyle(el).opacity)") == 1
+        assert page.locator(".v2-mobile-project:visible").count() == 6
+        assert page.locator(".v2-showcase").is_hidden()
+        page.locator(".v2-tools-marquee").scroll_into_view_if_needed()
+        page.wait_for_function("() => document.querySelector('.v2-tools-marquee')?.dataset.playing === 'true'")
+        assert page.locator(".v2-tools-track").evaluate("el => getComputedStyle(el).animationPlayState") == "running"
+        assert page.locator(".v2-tools-marquee").evaluate("el => el.getBoundingClientRect().bottom <= innerHeight + 1")
+        page.locator(".v2-story-first").scroll_into_view_if_needed()
+        page.wait_for_function("() => document.querySelector('.v2-story-first')?.dataset.mobileReveal === 'true'")
+        assert page.locator(".v2-fragment:visible").count() == 6
+        assert page.locator(".v2-story-stage").evaluate("el => el.offsetHeight < 2 * innerHeight")
+        scene = page.locator(".v2-mobile-scene").first
+        scene.scroll_into_view_if_needed()
+        page.wait_for_function("() => document.querySelector('.v2-mobile-scene')?.dataset.playing === 'true'")
+        assert scene.locator(".v2-mobile-visual").evaluate("el => getComputedStyle(el).animationPlayState") == "running"
+        scene.locator("img").evaluate("el => el.decode()")
+        page.evaluate("window.scrollTo(0, 0)")
+        page.wait_for_function("() => document.querySelector('.v2-mobile-scene')?.dataset.playing === 'false'")
+        assert scene.locator(".v2-mobile-visual").evaluate("el => getComputedStyle(el).animationPlayState") == "paused"
+        scene.scroll_into_view_if_needed()
+        page.wait_for_function("() => document.querySelector('.v2-mobile-scene')?.dataset.playing === 'true'")
+        assert page.locator(".v2-extra-capture img").count() == 0
+        assert page.locator("[data-v2-root]").get_attribute("data-motion-loaded") is None
+        assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
+        assert not errors, errors
+        if screens:
+            page.screenshot(path=Path(screens) / f"v2-mobile-project-{width}.png")
+        page.close()
     browser.close()
 print("Normal-motion home and case-study browser checks passed.")

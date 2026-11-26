@@ -4,6 +4,7 @@ import { featured } from "@/lib/data/projects";
 import PreviewMotion from "./PreviewMotion";
 import ProjectScene from "./ProjectScene";
 import VisiblePlayback from "./VisiblePlayback";
+import MobileProjects from "./MobileProjects";
 import { BusinessChallenges, EngineeringLab, WorkingMethod } from "./NarrativeSections";
 import "./preview.css";
 
@@ -147,6 +148,7 @@ export default function PortfolioHome({ preview = false }: { preview?: boolean }
           </details>)}
           <p className="v2-project-fallback">Select a project above to inspect its visual record, or <Link prefetch={false} href="/work" className="v2-project-link">browse every case study</Link>.</p>
         </div>
+        <MobileProjects projects={cases} />
         <p className="v2-archive-note">Six featured systems / seventeen projects in the archive.</p>
       </section>
       <BusinessChallenges />

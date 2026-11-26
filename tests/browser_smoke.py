@@ -33,7 +33,11 @@ with sync_playwright() as playwright:
                 assert page.locator(".v2-product-scene").count() == 6
                 assert page.locator("#engineering-lab").count() == 1
                 assert page.locator(".v2-method-list li").count() == 3
-                if javascript:
+                if width < 1024:
+                    assert page.locator(".v2-mobile-project:visible").count() == 6
+                    assert page.locator(".v2-showcase").is_hidden()
+                    assert page.locator(".v2-mobile-project .v2-project-link:visible").count() == 6
+                if javascript and width >= 1024:
                     page.locator(".v2-project summary").nth(1).click()
                     assert page.locator(".v2-project").nth(1).get_attribute("open") is not None
                     assert page.locator(".v2-project[open]").count() == 1
@@ -117,7 +121,7 @@ with sync_playwright() as playwright:
     # Regression: the persistent root header must release its scroll lock on Back.
     page = browser.new_page(viewport={"width": 390, "height": 844}, reduced_motion="reduce")
     page.goto(origin, wait_until="domcontentloaded")
-    page.locator(".v2-project[open] .v2-project-link").click()
+    page.locator(".v2-mobile-project .v2-project-link").first.click()
     page.wait_for_url("**/work/*")
     page.get_by_role("button", name="Menu").click()
     page.wait_for_function("() => document.body.style.overflow === 'hidden'")
@@ -191,7 +195,10 @@ with sync_playwright() as playwright:
         assert preview.locator(".v2-scene-photo").count() == 1
         assert preview.locator(".v2-project[open]").count() == 1
         assert preview.locator(".v2-hero .v2-button").first.evaluate("el => getComputedStyle(el).backgroundColor") == "rgb(255, 255, 255)"
-        if js:
+        if width < 1024:
+            assert preview.locator(".v2-mobile-project:visible").count() == 6
+            assert preview.locator(".v2-showcase").is_hidden()
+        if js and width >= 1024:
             preview.locator(".v2-project summary").nth(1).click()
             assert preview.locator(".v2-project").nth(1).get_attribute("open") is not None
             assert preview.locator(".v2-project[open]").count() == 1

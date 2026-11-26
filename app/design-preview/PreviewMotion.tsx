@@ -23,11 +23,11 @@ export default function PreviewMotion() {
     const paintHeader = () => {
       // Match rendered scrub progress, not raw scroll position. An opaque
       // neutral surface protects contrast while the monitor enters the frame.
-      const light = pastHero || ((hero.dataset.motion === "ready" || hero.dataset.motion === "mobile") && progress >= 0.76);
+      const light = pastHero || (hero.dataset.motion === "ready" && progress >= 0.76);
       const shaded = !light && progress >= 0.40;
       if (root.dataset.light !== String(light)) root.dataset.light = String(light);
       if (root.dataset.shaded !== String(shaded)) root.dataset.shaded = String(shaded);
-      const faded = (hero.dataset.motion === "ready" || hero.dataset.motion === "mobile") && progress >= 0.39;
+      const faded = hero.dataset.motion === "ready" && progress >= 0.39;
       if (root.dataset.heroFaded !== String(faded)) root.dataset.heroFaded = String(faded);
     };
     const setCameraProgress = (value: number) => { progress = value; paintHeader(); };
@@ -61,7 +61,7 @@ export default function PreviewMotion() {
     showcase?.addEventListener("click", keepSelected);
     const connection = (navigator as Navigator & { connection?: Connection }).connection;
     const desktop = window.matchMedia("(min-width: 1024px) and (min-height: 480px) and (any-pointer: fine) and (prefers-reduced-motion: no-preference)");
-    const mobile = window.matchMedia("(prefers-reduced-motion: no-preference) and (min-height: 480px)");
+    const mobile = window.matchMedia("(prefers-reduced-motion: no-preference)");
     const reconcile = async () => {
       const ticket = ++generation;
       // The desktop camera uses one small image, not a streaming video.
@@ -70,7 +70,7 @@ export default function PreviewMotion() {
       if (!eligible) {
         stopMotion?.(); stopMotion = undefined;
         if (mobile.matches && !connection?.saveData) {
-          if (!stopMobile) stopMobile = startMobileMotion(root, hero, stage, plane, screen, story, setCameraProgress);
+          if (!stopMobile) stopMobile = startMobileMotion(root, hero, story);
           root.dataset.motionMode = "mobile";
         } else {
           stopMobile?.(); stopMobile = undefined;

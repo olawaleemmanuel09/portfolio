@@ -22,6 +22,8 @@ with sync_playwright() as p:
     assert page.locator(".v2-hero").get_attribute("data-motion") == "static"
     assert page.locator("[data-v2-root]").get_attribute("data-motion-loaded") is None
     assert page.locator("html.lenis").count() == 0
+    assert page.locator(".v2-stage").evaluate("el => getComputedStyle(el).position") == "relative"
+    assert page.locator(".v2-mobile-project:visible").count() == 6
     assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
     # Dispatch an explicit finger-down/move/up sequence to the page rather
     # than relying on the headless synthetic gesture helper to hit the scroller.
