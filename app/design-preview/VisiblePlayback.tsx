@@ -6,7 +6,7 @@ export default function VisiblePlayback() {
     const candidate = document.querySelector<HTMLElement>("[data-v2-root]");
     if (!candidate || typeof IntersectionObserver === "undefined") return;
     const root: HTMLElement = candidate;
-    const media = window.matchMedia("(min-width: 1024px) and (any-pointer: fine) and (prefers-reduced-motion: no-preference)");
+    const media = window.matchMedia("(prefers-reduced-motion: no-preference)");
     const connection = (navigator as Navigator & { connection?: EventTarget & { saveData?: boolean } }).connection;
     const visible = new Set<HTMLElement>();
     const nodes = Array.from(root.querySelectorAll<HTMLElement>("[data-v2-playback]"));

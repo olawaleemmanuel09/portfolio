@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { startMobileMotion } from "./mobileMotion";
 
 type Connection = EventTarget & { saveData?: boolean; effectiveType?: string };
 
@@ -18,14 +19,15 @@ export default function PreviewMotion() {
     let disposed = false;
     let generation = 0;
     let stopMotion: (() => void) | undefined;
+    let stopMobile: (() => void) | undefined;
     const paintHeader = () => {
       // Match rendered scrub progress, not raw scroll position. An opaque
       // neutral surface protects contrast while the monitor enters the frame.
-      const light = pastHero || (hero.dataset.motion === "ready" && progress >= 0.76);
+      const light = pastHero || ((hero.dataset.motion === "ready" || hero.dataset.motion === "mobile") && progress >= 0.76);
       const shaded = !light && progress >= 0.40;
       if (root.dataset.light !== String(light)) root.dataset.light = String(light);
       if (root.dataset.shaded !== String(shaded)) root.dataset.shaded = String(shaded);
-      const faded = hero.dataset.motion === "ready" && progress >= 0.39;
+      const faded = (hero.dataset.motion === "ready" || hero.dataset.motion === "mobile") && progress >= 0.39;
       if (root.dataset.heroFaded !== String(faded)) root.dataset.heroFaded = String(faded);
     };
     const setCameraProgress = (value: number) => { progress = value; paintHeader(); };
@@ -59,6 +61,7 @@ export default function PreviewMotion() {
     showcase?.addEventListener("click", keepSelected);
     const connection = (navigator as Navigator & { connection?: Connection }).connection;
     const desktop = window.matchMedia("(min-width: 1024px) and (min-height: 480px) and (any-pointer: fine) and (prefers-reduced-motion: no-preference)");
+    const mobile = window.matchMedia("(prefers-reduced-motion: no-preference) and (min-height: 480px)");
     const reconcile = async () => {
       const ticket = ++generation;
       // The desktop camera uses one small image, not a streaming video.
@@ -66,11 +69,18 @@ export default function PreviewMotion() {
       const eligible = desktop.matches && !connection?.saveData;
       if (!eligible) {
         stopMotion?.(); stopMotion = undefined;
-        hero.dataset.motion = "static"; story.dataset.motion = "static";
-        setCameraProgress(0);
-        root.dataset.motionMode = connection?.saveData ? "save-data" : "static-device-or-preference";
+        if (mobile.matches && !connection?.saveData) {
+          if (!stopMobile) stopMobile = startMobileMotion(root, hero, stage, plane, screen, story, setCameraProgress);
+          root.dataset.motionMode = "mobile";
+        } else {
+          stopMobile?.(); stopMobile = undefined;
+          hero.dataset.motion = "static"; story.dataset.motion = "static";
+          setCameraProgress(0);
+          root.dataset.motionMode = connection?.saveData ? "save-data" : "static-device-or-preference";
+        }
         return;
       }
+      stopMobile?.(); stopMobile = undefined;
       if (stopMotion) return;
       try {
         root.dataset.motionMode = "loading";
@@ -88,13 +98,16 @@ export default function PreviewMotion() {
     };
     void reconcile();
     desktop.addEventListener("change", reconcile);
+    mobile.addEventListener("change", reconcile);
     connection?.addEventListener?.("change", reconcile);
     return () => {
       disposed = true; generation++;
       stopMotion?.();
+      stopMobile?.();
       observer?.disconnect();
       showcase?.removeEventListener("click", keepSelected);
       desktop.removeEventListener("change", reconcile);
+      mobile.removeEventListener("change", reconcile);
       connection?.removeEventListener?.("change", reconcile);
       menu?.removeEventListener("click", closeMenu);
       menu?.removeEventListener("keydown", escapeMenu);

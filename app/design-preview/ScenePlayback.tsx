@@ -10,11 +10,14 @@ export default function ScenePlayback({ media }: { media: Media }) {
   useEffect(() => {
     const parent = host.current?.closest<HTMLElement>("[data-v2-playback]");
     if (!parent) return;
-    const check = () => { if (parent.dataset.playing === "true") setMounted(true); };
+    // Mobile animates the existing primary image; do not download the extra capture.
+    const desktop = window.matchMedia("(min-width: 1024px) and (any-pointer: fine)");
+    const check = () => { if (desktop.matches && parent.dataset.playing === "true") setMounted(true); };
     const observer = new MutationObserver(check);
     observer.observe(parent, { attributes: true, attributeFilter: ["data-playing"] });
+    desktop.addEventListener("change", check);
     check();
-    return () => observer.disconnect();
+    return () => { observer.disconnect(); desktop.removeEventListener("change", check); };
   }, []);
   return <div ref={host} className="v2-extra-capture" data-ready={ready ? "true" : "false"}>
     {mounted && <figure>

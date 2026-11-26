@@ -365,3 +365,35 @@
 .v2-project[open] summary { cursor:default; }
 
 .v2-scene-picture { position:absolute; inset:0; display:block; }
+
+/* Mobile motion: short native scroll camera, no desktop timeline or extra
+   image requests. Content remains in normal flow without JS or Save-Data. */
+.v2-hero[data-motion="mobile"] { height:calc(max(570px,100svh) + 82svh); }
+.v2-hero[data-motion="mobile"] .v2-stage { position:sticky; top:0; height:max(570px,100svh); min-height:0; }
+.v2-hero[data-motion="mobile"] .v2-camera-plane { top:0; bottom:auto; left:0; transform-origin:0 0; }
+.v2-hero[data-motion="mobile"] .v2-monitor-screen { display:block; }
+@media(max-width:767px) {
+ .v2-hero[data-motion="mobile"] .v2-hero-inner { padding-top:90px; padding-bottom:20px; }
+ .v2-hero[data-motion="mobile"] .v2-role { margin-bottom:16px; }
+ .v2-hero[data-motion="mobile"] .v2-hero-copy > p:not(.v2-role) { margin-top:12px; }
+ .v2-hero[data-motion="mobile"] .v2-actions { margin-top:16px; }
+}
+@media(max-width:1023px), (any-pointer:coarse) and (not (any-pointer:fine)) {
+ .v2-extra-capture { display:none; }
+ @media(prefers-reduced-motion:no-preference) {
+  [data-playback-enabled="true"] .v2-tools-marquee .v2-tools-track { width:max-content; animation:v2-tools-flow 19s linear infinite; animation-play-state:paused; }
+  [data-playback-enabled="true"] .v2-tools .v2-tools-track ul { width:max-content; padding-right:32px; gap:32px; flex-wrap:nowrap; }
+  [data-playback-enabled="true"] .v2-tools .v2-tools-track .v2-tools-duplicate { display:flex; }
+  [data-playback-enabled="true"] .v2-project[open] .v2-primary-capture { animation:v2-mobile-evidence 7s ease-in-out infinite; animation-play-state:paused; }
+  [data-playback-enabled="true"] .v2-tools-marquee[data-playing="true"] .v2-tools-track,
+  [data-playback-enabled="true"] .v2-project[open] .v2-product-window[data-playing="true"] .v2-primary-capture { animation-play-state:running; }
+ }
+}
+@keyframes v2-mobile-evidence { 0%,100% { transform:translate3d(0,0,0); } 50% { transform:translate3d(0,-5px,0) scale(.98); } }
+@media(prefers-reduced-motion:no-preference) {
+ [data-motion-mode="mobile"] [data-mobile-reveal="true"] { animation:v2-mobile-reveal .5s ease-out both; }
+ [data-motion-mode="mobile"] .v2-project[open] .v2-product-capture { animation:v2-mobile-reveal .35s ease-out both; }
+}
+@keyframes v2-mobile-reveal { from { opacity:.78; transform:translate3d(0,12px,0); } to { opacity:1; transform:translate3d(0,0,0); } }
+/* Explicit fallback wins over the reserved desktop stage height. */
+.portfolio-v2 .v2-showcase:not(:has(.v2-project[open])) { min-height:0!important; padding-right:0; }

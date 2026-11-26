@@ -13,7 +13,7 @@ with sync_playwright() as playwright:
     for width in (390, 1440):
         page = browser.new_page(viewport={"width": width, "height": 900}, reduced_motion="no-preference")
         page.goto(origin, wait_until="domcontentloaded", timeout=45000)
-        expected = "ready" if width == 1440 else "static"
+        expected = "ready" if width == 1440 else "mobile"
         page.wait_for_function("(expected) => document.querySelector('.v2-hero')?.dataset.motion === expected", arg=expected, timeout=20000)
         assert page.get_by_role("heading", level=1).count() == 1
         assert page.locator(".v2-scene-photo").count() == 1
@@ -64,7 +64,7 @@ with sync_playwright() as playwright:
         assert resp is not None and resp.status == 200
         page.wait_for_function(
             "(expected) => document.querySelector('[data-case-study]')?.dataset.caseMotion === expected",
-            arg="ready" if width == 1440 else "static", timeout=20000
+            arg="ready" if width == 1440 else "mobile", timeout=20000
         )
         page.wait_for_timeout(1450)
         assert page.locator(".case-title-word").count() >= 2
@@ -167,9 +167,30 @@ with sync_playwright() as playwright:
         if save:
             page.add_init_script("Object.defineProperty(navigator, 'connection', { configurable: true, value: { saveData: true } })")
         page.goto(origin + "/design-preview", wait_until="domcontentloaded", timeout=45000)
-        assert page.locator(".v2-hero").get_attribute("data-motion") == "static"
+        page.wait_for_function("(expected) => document.querySelector('.v2-hero')?.dataset.motion === expected", arg="static" if save else "mobile")
         assert page.get_by_role("heading", level=1).is_visible()
         assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
         page.close()
+    # Normal mobile motion with native scroll: camera reverses, marquee and evidence animate.
+    page = browser.new_page(viewport={"width":390,"height":844}, is_mobile=True, has_touch=True, reduced_motion="no-preference")
+    page.goto(origin, wait_until="domcontentloaded")
+    page.wait_for_function("() => document.querySelector('[data-v2-root]')?.dataset.motionMode === 'mobile'")
+    page.wait_for_function("() => document.querySelector('.v2-tools-marquee')?.dataset.playing === 'true'")
+    assert page.locator(".v2-tools-track").evaluate("el => getComputedStyle(el).animationPlayState") == "running"
+    plane = page.locator(".v2-camera-plane")
+    page.wait_for_timeout(100)
+    initial = plane.evaluate("el => getComputedStyle(el).transform")
+    page.evaluate("window.scrollTo(0, (document.querySelector('.v2-hero').offsetHeight-document.querySelector('.v2-stage').offsetHeight)*.65)")
+    page.wait_for_function("() => Number(getComputedStyle(document.querySelector('.v2-hero-copy')).opacity) < .1")
+    assert plane.evaluate("el => getComputedStyle(el).transform") != initial
+    page.evaluate("window.scrollTo(0, 0)")
+    page.wait_for_function("() => Number(getComputedStyle(document.querySelector('.v2-hero-copy')).opacity) > .95")
+    page.locator(".v2-project[open] .v2-product-window").scroll_into_view_if_needed()
+    page.wait_for_function("() => document.querySelector('.v2-project[open] .v2-product-window')?.dataset.playing === 'true'")
+    assert page.locator(".v2-project[open] .v2-primary-capture").evaluate("el => getComputedStyle(el).animationName") == "v2-mobile-evidence"
+    assert page.locator(".v2-extra-capture img").count() == 0
+    assert page.locator("[data-v2-root]").get_attribute("data-motion-loaded") is None
+    assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
+    page.close()
     browser.close()
 print("Normal-motion home and case-study browser checks passed.")
