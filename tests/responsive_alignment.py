@@ -45,6 +45,11 @@ with sync_playwright() as p:
                 assert response and response.status==200,(name,width,path)
                 page.evaluate("document.fonts.ready")
                 viewport(page,path,width)
+                if path=="/contact":
+                    company=page.get_by_label("Company (optional)",exact=True)
+                    assert company.count()==1 and company.is_visible()
+                    assert company.get_attribute("required") is None
+                    assert company.get_attribute("autocomplete")=="organization"
                 if path in ("/","/work/cefa"):
                     selector=".v2-adoption dl" if path=="/" else ".case-cinema-metrics-list"
                     metrics(page,selector)
@@ -60,6 +65,24 @@ with sync_playwright() as p:
             page.wait_for_function("()=>['mobile','cinematic'].includes(document.querySelector('[data-v2-root]').dataset.motionMode)",timeout=20000)
             page.evaluate("document.fonts.ready")
             metrics(page,".v2-adoption dl")
+            page.close()
+        # Verify blank company is accepted by the actual client submission
+        # path, using a mocked endpoint (no external email or provider quota).
+        for width,height in ((393,852),(1440,900)):
+            page=browser.new_page(viewport={"width":width,"height":height},is_mobile=width<768,has_touch=width<768,reduced_motion="reduce")
+            submitted=[]
+            def accept(route):
+                submitted.append(route.request.post_data_json)
+                route.fulfill(status=200,content_type="application/json",body='{"ok":true}')
+            page.route("**/api/contact",accept)
+            page.goto(origin+"/contact",wait_until="domcontentloaded")
+            page.get_by_label("Name",exact=True).fill("Portfolio QA")
+            page.get_by_label("Email",exact=True).fill("qa@example.com")
+            page.get_by_label("Message",exact=True).fill("Synthetic contact form regression test.")
+            assert page.get_by_label("Company (optional)",exact=True).input_value()==""
+            page.get_by_role("button",name="Send message").click()
+            page.get_by_text("Message received.",exact=True).wait_for()
+            assert len(submitted)==1 and submitted[0].get("company","")=="",submitted
             page.close()
         browser.close()
         print(f"{name}: responsive alignment audit passed")

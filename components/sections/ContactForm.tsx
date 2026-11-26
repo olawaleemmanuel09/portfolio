@@ -164,8 +164,7 @@ function Field({
   return (
     <div className="grid gap-2">
       <label htmlFor={name} className="t-small text-muted">
-        {label}
-        {!required && <span className="ml-1.5 text-muted">optional</span>}
+        {label}{!required && " (optional)"}
       </label>
       <input
         id={name}
