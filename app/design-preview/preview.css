@@ -569,3 +569,65 @@
  .portfolio-v2 .v2-showcase:has(> .v2-project[open]) { min-height:clamp(470px,44vw,680px); }
  .portfolio-v2 .v2-showcase:not(:has(> .v2-project[open])) { min-height:0!important;padding-right:0; }
 }
+
+/* Final mobile polish: a calm reference-style bridge and photographic
+   presentation using our existing original artwork (no new media transfer). */
+.v2-mobile-story-bridge { display:none; }
+@media(max-width:1023px), (any-pointer:coarse) and (not (any-pointer:fine)) {
+ .v2-principle[data-motion="mobile"] .v2-story-first,
+ .v2-principle[data-motion="mobile"] .v2-story-resolution { width:min(100%,28rem); }
+ .v2-principle[data-motion="mobile"] .v2-story-stage h2,
+ .v2-principle[data-motion="mobile"] .v2-story-stage p { text-wrap:balance; }
+ .v2-principle[data-motion="mobile"] .v2-fragment:nth-child(3) { top:29%;left:-4%; }
+ .v2-principle[data-motion="mobile"] .v2-fragment:nth-child(4) { top:29%;right:-4%; }
+ .v2-principle[data-motion="mobile"] .v2-fragment:nth-child(5) { bottom:10%;left:9%; }
+ .v2-principle[data-motion="mobile"] .v2-fragment:nth-child(6) { bottom:7%;right:10%; }
+ .v2-principle[data-motion="mobile"] .v2-fragment-label { font-size:11px; }
+ .v2-mobile-story-bridge { display:flex; align-items:center; justify-content:center; padding:0 20px 36px; background:var(--v2-paper); }
+ .v2-mobile-story-bridge a { font-size:13px; }
+ .v2-adoption { padding-block:28px; }
+ .v2-adoption-grid { gap:16px; }
+ .v2-adoption h2 { font-size:25px; }
+ .v2-adoption .v2-eyebrow { font-size:10px; margin-bottom:8px; }
+ .v2-adoption p:not(.v2-eyebrow) { font-size:13px; margin-top:8px; }
+ .v2-adoption dt { font-size:11px; }
+ .v2-adoption dd { font-size:27px; }
+ .v2-work .v2-section-intro { margin-bottom:24px; }
+ .v2-work .v2-section-intro .v2-eyebrow { font-size:11px; margin-bottom:10px; }
+ .v2-work .v2-section-description { font-size:14px;line-height:1.5; }
+ .v2-work .v2-section-intro .v2-button { font-size:13px;margin-top:16px; }
+ .v2-mobile-projects { gap:30px; }
+ .v2-mobile-scene { background:#d8d1c6; border-radius:5px; }
+ /* Same locally cached hero photograph, used as a decorative material,
+    not as an assertion about a client's physical workspace. */
+ .v2-mobile-project:is([data-project="web-ordering-and-payments"],[data-project="elion-sales-command-centre"]) .v2-mobile-scene {
+   background-image:linear-gradient(145deg,#62432e36,#32271d55),url("/design/workstation-preview.webp");
+   background-position:center,center 92%;background-size:cover,150% auto;
+ }
+ .v2-mobile-project[data-project="cefa"] .v2-mobile-scene { background:linear-gradient(145deg,#e9e5dc,#c9b9a8); }
+ .v2-mobile-project[data-project="security-workforce-operations"] .v2-mobile-scene { background:linear-gradient(145deg,#dfe3e3,#a7b2b2); }
+ .v2-mobile-project[data-project="elion-homes"] .v2-mobile-scene { background:linear-gradient(145deg,#f1e9dd,#c7b49b); }
+ .v2-mobile-project[data-project="christ-heart-foundation"] .v2-mobile-scene { background:linear-gradient(145deg,#f3e8df,#d9c8bd); }
+ .v2-mobile-scene[data-composition="portrait"] { aspect-ratio:4/3; }
+ .v2-mobile-visual img { border-radius:4px; box-shadow:0 7px 20px #28201826; }
+ .v2-mobile-detail figure { border-radius:4px; }
+ .v2-mobile-detail[data-ready="false"] figure { visibility:hidden; }
+ .v2-mobile-project-copy { padding-inline:12px; }
+ .v2-mobile-project-copy h3 { letter-spacing:-.025em;font-size:19px; }
+ .v2-mobile-status { color:#5e5852; }
+ .v2-mobile-project-copy .v2-project-link { min-height:44px; }
+ .v2-mobile-evidence-note { color:#625e58; }
+ .v2-system-image { background:#efede8; }
+ .v2-system-copy p:not(.v2-eyebrow) { font-size:14px; }
+ .v2-method .v2-section-intro { margin-bottom:24px; }
+}
+@media(max-width:1023px) and (prefers-reduced-motion:no-preference), (any-pointer:coarse) and (not (any-pointer:fine)) and (prefers-reduced-motion:no-preference) {
+ /* Start both timelines on the same frame, even when the secondary image
+    arrives late. A single-image project must not shift into empty space. */
+ [data-playback-enabled="true"] .v2-mobile-detail { animation:v2-mobile-detail-loop 6s ease-in-out infinite; animation-play-state:paused; }
+ [data-playback-enabled="true"] .v2-mobile-scene[data-playing="true"] .v2-mobile-detail { animation-play-state:running; }
+ [data-playback-enabled="true"] .v2-mobile-scene[data-layered="false"] .v2-mobile-visual { animation-name:v2-mobile-single; }
+ [data-playback-enabled="true"] .v2-mobile-scene[data-composition="portrait"][data-layered="true"] .v2-mobile-visual { animation-name:v2-mobile-portrait; }
+}
+@keyframes v2-mobile-single { 0%,100% {transform:scale(1)} 45%,65% {transform:scale(1.055)} }
+@keyframes v2-mobile-portrait { 0%,100% {transform:translate3d(0,0,0) scale(1)} 25%,70% {transform:translate3d(-16%,-2%,0) scale(.94)} }

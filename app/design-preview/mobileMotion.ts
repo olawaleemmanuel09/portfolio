@@ -25,6 +25,8 @@ export function startMobileMotion(root: HTMLElement, hero: HTMLElement, story: H
   // viewport remains a readable normal-flow narrative.
   const eligible = window.matchMedia("(max-width: 1023px) and (min-height: 480px), (any-pointer: coarse) and (not (any-pointer: fine)) and (min-height: 480px)");
   let active = false, frame = 0, disposed = false, pinned = false, last = -1;
+  let anchors: { x: number; y: number }[] = [];
+  let stageWidth = 0, stageHeight = 0;
   const clear = () => {
     [first,resolution,...firstWords,...lastWords,...fragments].forEach(el => {
       el.style.removeProperty("transform"); el.style.removeProperty("opacity");
@@ -41,7 +43,7 @@ export function startMobileMotion(root: HTMLElement, hero: HTMLElement, story: H
   function render() {
     frame = 0;
     if (disposed || !pinned) return;
-    const h = stage!.clientHeight;
+    const h = stageHeight || stage!.clientHeight;
     const rect = story.getBoundingClientRect();
     const travel = Math.max(1, story.offsetHeight-h);
     // Start revealing on entry, then hold the composition under the header.
@@ -49,23 +51,27 @@ export function startMobileMotion(root: HTMLElement, hero: HTMLElement, story: H
     const p = clamp((64+lead-rect.top)/(travel+lead));
     if (Math.abs(p-last)<.0005) return;
     last=p;
-    const firstIn = segment(p,0,.32);
-    const firstOut = smooth(segment(p,.48,.64));
-    const lastIn = segment(p,.66,.91);
+    const firstIn = segment(p,0,.30);
+    const firstOut = smooth(segment(p,.49,.64));
+    const lastIn = segment(p,.63,.85);
     first!.style.opacity = (1-firstOut).toFixed(3);
     first!.style.transform = `translate3d(0,${-firstOut*24}px,0)`;
-    resolution!.style.opacity = p<.65?"0":"1";
+    resolution!.style.opacity = smooth(segment(p,.61,.69)).toFixed(3);
     resolution!.style.transform = `translate3d(0,${(1-smooth(lastIn))*12}px,0)`;
     revealWords(firstWords,firstIn);
     revealWords(lastWords,lastIn);
-    const enter=smooth(segment(p,.12,.37)), gather=smooth(segment(p,.48,.66));
-    const w=stage!.clientWidth;
+    // Each item has its own entrance, then moves towards the actual scene centre.
+    // Geometry is cached on resize, so the scroll frame does not read each item.
+    const gather=smooth(segment(p,.49,.66));
+    const w=stageWidth || stage!.clientWidth;
     fragments.forEach((el,i)=>{
+      const enter=smooth(segment(p,.09+i*.012,.29+i*.012));
       const side=i%2===0?-1:1;
       const vertical=i<2?-1:i>=4?1:0;
-      const x=side*((1-enter)*w*.25-gather*w*.20);
-      const y=vertical*((1-enter)*48-gather*h*.23);
-      el.style.transform=`translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0) scale(${(1-gather*.62).toFixed(3)})`;
+      const anchor=anchors[i] ?? {x:w/2,y:h/2};
+      const x=side*(1-enter)*w*.23+gather*(w/2-anchor.x);
+      const y=vertical*(1-enter)*45+gather*(h/2-anchor.y);
+      el.style.transform=`translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0) scale(${(.82+.18*enter-gather*.62).toFixed(3)})`;
       el.style.opacity=(enter*(1-gather)).toFixed(3);
     });
     story.dataset.storyProgress=p.toFixed(3);
@@ -79,6 +85,15 @@ export function startMobileMotion(root: HTMLElement, hero: HTMLElement, story: H
       story.dataset.motion=next?"mobile":"static";
       if (!next) clear();
     }
+    if (pinned) {
+      stageWidth=stage!.clientWidth;stageHeight=stage!.clientHeight;
+      anchors=fragments.map(el=>({x:el.offsetLeft+el.offsetWidth/2,y:el.offsetTop+el.offsetHeight/2}));
+      // Zoomed text must not be clipped inside the bounded story.
+      if (first!.scrollHeight > stageHeight*.72 || resolution!.scrollHeight > stageHeight*.72) {
+        pinned=false;story.dataset.motion="static";clear();
+      }
+      last=-1;
+    }
     schedule();
   }
   function onScroll() { if(active) schedule(); }
@@ -88,12 +103,15 @@ export function startMobileMotion(root: HTMLElement, hero: HTMLElement, story: H
   watcher.observe(story);
   window.addEventListener("scroll",onScroll,{passive:true});
   window.addEventListener("resize",configure,{passive:true});
+  const onPageShow=()=>{last=-1;schedule();};
+  window.addEventListener("pageshow",onPageShow);
   eligible.addEventListener("change",configure);
   configure();
   return ()=>{
     disposed=true;cancelAnimationFrame(frame);
     window.removeEventListener("scroll",onScroll);
     window.removeEventListener("resize",configure);
+    window.removeEventListener("pageshow",onPageShow);
     eligible.removeEventListener("change",configure);
     reveals.disconnect();watcher.disconnect();
     nodes.forEach(el=>delete el.dataset.mobileReveal);

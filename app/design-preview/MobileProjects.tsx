@@ -19,9 +19,9 @@ export default function MobileProjects({ projects }: { projects: Project[] }) {
         const secondary = project.media.find(m => m.type !== "video" && m.src !== visual && !m.src.startsWith("/architecture/") && !m.src.includes("sign-in"))
           ?? project.media.find(m => m.type !== "video" && m.src !== visual && !m.src.includes("sign-in"));
         return (
-          <article className="v2-mobile-project" key={project.slug}>
+          <article className="v2-mobile-project" key={project.slug} data-project={project.slug}>
             {visual && <figure className="v2-mobile-figure">
-              <div className="v2-mobile-scene" data-v2-playback>
+              <div className="v2-mobile-scene" data-v2-playback data-composition={tall ? "portrait" : "landscape"} data-layered={String(Boolean(secondary))}>
                 <div className="v2-mobile-visual">
                   <Image src={visual} alt={record?.alt ?? project.title + " project visual"} width={tall ? 720 : 1280} height={tall ? 1500 : 760} sizes="(max-width: 767px) calc(100vw - 64px), (max-width: 1023px) 85vw, 1px" loading="lazy" />
                 </div>

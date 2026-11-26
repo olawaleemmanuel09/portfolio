@@ -69,6 +69,8 @@ export default function PreviewMotion() {
       const eligible = desktop.matches && !connection?.saveData;
       if (!eligible) {
         stopMotion?.(); stopMotion = undefined;
+        delete root.dataset.motionLoaded;
+        setCameraProgress(0);
         if (mobile.matches && !connection?.saveData) {
           if (!stopMobile) stopMobile = startMobileMotion(root, hero, story);
           root.dataset.motionMode = "mobile";

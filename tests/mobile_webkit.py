@@ -16,12 +16,19 @@ with sync_playwright() as p:
             story.evaluate("""(el,f)=>{const stage=el.querySelector('.v2-story-stage');const h=stage.clientHeight;const lead=Math.min(180,h*.28);window.scrollTo(0,scrollY+el.getBoundingClientRect().top-64-lead+f*(el.offsetHeight-h+lead))}""",f)
             page.wait_for_function("f=>Math.abs(Number(document.querySelector('.v2-principle').dataset.storyProgress)-f)<.04",arg=f)
         phase(.4)
+        assert story.locator(".v2-story-stage").evaluate("el=>Math.abs(el.getBoundingClientRect().top-64)<3"), (width,height)
         assert story.locator(".v2-story-first .v2-word").last.evaluate("el=>Number(getComputedStyle(el).opacity)")>.95
         phase(.94)
         assert story.locator(".v2-story-resolution").evaluate("el=>Number(getComputedStyle(el).opacity)")>.95
         phase(.15)
         assert story.locator(".v2-story-resolution").evaluate("el=>Number(getComputedStyle(el).opacity)")<.05
         assert page.locator(".v2-mobile-project:visible").count()==6
+        assert page.locator(".v2-mobile-story-bridge a").is_visible()
+        scene=page.locator(".v2-mobile-scene").first
+        scene.scroll_into_view_if_needed()
+        page.wait_for_function("()=>document.querySelector('.v2-mobile-scene').dataset.playing==='true'")
+        assert scene.locator(".v2-mobile-visual").evaluate("el=>getComputedStyle(el).animationPlayState")=="running"
+        assert scene.locator(".v2-mobile-visual img").evaluate("el=>el.getBoundingClientRect().width>0")
         assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
         assert not errors,errors
         page.close()

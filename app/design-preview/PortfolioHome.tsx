@@ -120,6 +120,8 @@ export default function PortfolioHome({ preview = false }: { preview?: boolean }
         </div>
       </section>
 
+      <div className="v2-mobile-story-bridge"><a href="#v2-work" className="v2-button v2-accent-button">Explore the systems ↗</a></div>
+
       {adoption?.metrics?.length ? <section className="v2-adoption" aria-labelledby="v2-adoption-heading">
         <div className="v2-container v2-adoption-grid">
           <div><p className="v2-eyebrow">ONE VERIFIED SNAPSHOT</p><h2 id="v2-adoption-heading">Real records. <span>No inflated reach.</span></h2><p>CEFA learning programme · database snapshot, 24 November 2026. These are counts, not claims of revenue or concurrent users.</p><Link prefetch={false} href="/work/cefa" className="v2-project-link">See the programme case ↗</Link></div>

@@ -45,4 +45,29 @@ with sync_playwright() as p:
     print("Throttled mobile native gestures completed; resource entries:", page.evaluate("performance.getEntriesByType('resource').length"))
     print("Transferred bytes observed:", page.evaluate("performance.getEntriesByType('resource').reduce((sum,e)=>sum+e.transferSize,0)"))
     page.close()
+    # Also check actual story gestures on the same slow connection with
+    # normal motion enabled; Save-Data alone cannot validate the experience.
+    page = browser.new_page(viewport={"width":360,"height":720},is_mobile=True,has_touch=True,device_scale_factor=2,reduced_motion="no-preference")
+    page.add_init_script("Object.defineProperty(navigator, 'connection', {configurable:true,value:{saveData:false,effectiveType:'2g'}})")
+    session=page.context.new_cdp_session(page)
+    session.send("Network.enable")
+    session.send("Network.emulateNetworkConditions",{"offline":False,"latency":300,"downloadThroughput":62500,"uploadThroughput":31250})
+    session.send("Emulation.setCPUThrottlingRate",{"rate":4})
+    page.goto(origin,wait_until="domcontentloaded",timeout=90000)
+    page.wait_for_function("()=>document.querySelector('.v2-principle')?.dataset.storyProgress!==undefined",timeout=90000)
+    page.evaluate("window.scrollTo(0,document.querySelector('.v2-principle').getBoundingClientRect().top+scrollY-64)")
+    page.wait_for_timeout(900)
+    for direction in (1,-1):
+        before=page.evaluate("Number(document.querySelector('.v2-principle').dataset.storyProgress)")
+        start=480 if direction==1 else 240
+        session.send("Input.dispatchTouchEvent",{"type":"touchStart","touchPoints":[{"x":180,"y":start}]})
+        for step in range(1,10):
+            session.send("Input.dispatchTouchEvent",{"type":"touchMove","touchPoints":[{"x":180,"y":start-direction*step*17}]})
+            page.wait_for_timeout(40)
+        session.send("Input.dispatchTouchEvent",{"type":"touchEnd","touchPoints":[]})
+        page.wait_for_function("([before,d])=>(Number(document.querySelector('.v2-principle').dataset.storyProgress)-before)*d>.025",arg=[before,direction],timeout=15000)
+        page.wait_for_timeout(700)
+    assert page.locator("[data-v2-root]").get_attribute("data-motion-loaded") is None
+    assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
+    page.close()
     browser.close()
