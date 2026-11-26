@@ -188,22 +188,29 @@ with sync_playwright() as playwright:
         page.wait_for_function("() => document.querySelector('.v2-tools-marquee')?.dataset.playing === 'true'")
         assert page.locator(".v2-tools-track").evaluate("el => getComputedStyle(el).animationPlayState") == "running"
         assert page.locator(".v2-tools-marquee").evaluate("el => el.getBoundingClientRect().bottom <= innerHeight + 1")
-        page.locator(".v2-story-first").scroll_into_view_if_needed()
-        page.wait_for_function("() => document.querySelector('.v2-story-first')?.dataset.mobileReveal === 'true'")
-        assert page.locator(".v2-fragment:visible").count() == 6
-        # Verify measured scroll-linked transforms rather than animation names alone.
-        page.evaluate("""() => {const el=document.querySelector('.v2-story-first');window.scrollTo(0,scrollY+el.getBoundingClientRect().top-innerHeight*.82)}""")
-        page.wait_for_timeout(180)
+        # Scrub the actual pinned mobile story at multiple scroll positions.
+        story = page.locator(".v2-principle")
+        assert story.locator(".v2-story-stage").evaluate("el => getComputedStyle(el).position") == "sticky"
+        def phase(fraction):
+            story.evaluate("""(el,f) => {const s=el.querySelector('.v2-story-stage'); const h=s.clientHeight; const lead=Math.min(180,h*.28); const y=scrollY+el.getBoundingClientRect().top-64-lead+f*(el.offsetHeight-h+lead);window.scrollTo(0,y)}""",fraction)
+            page.wait_for_function("([f]) => Math.abs(Number(document.querySelector('.v2-principle').dataset.storyProgress)-f)<.04",arg=[fraction],timeout=10000)
+        phase(.14)
         word = page.locator(".v2-story-first .v2-word").last
         early = word.evaluate("el => getComputedStyle(el).transform")
-        page.evaluate("""() => {const el=document.querySelector('.v2-story-first');window.scrollTo(0,scrollY+el.getBoundingClientRect().top-innerHeight*.35)}""")
-        page.wait_for_timeout(180)
+        phase(.40)
         late = word.evaluate("el => getComputedStyle(el).transform")
-        assert early != late, (width, early, late)
-        page.evaluate("""() => {const el=document.querySelector('.v2-story-first');window.scrollTo(0,scrollY+el.getBoundingClientRect().top-innerHeight*.82)}""")
-        page.wait_for_timeout(180)
+        assert early != late, (width,early,late)
+        assert page.locator(".v2-fragment").first.evaluate("el => Number(getComputedStyle(el).opacity)") > .9
+        phase(.60)
+        assert page.locator(".v2-fragment").first.evaluate("el => Number(getComputedStyle(el).opacity)") < .5
+        phase(.94)
+        assert page.locator(".v2-story-resolution").evaluate("el => Number(getComputedStyle(el).opacity)") > .95
+        assert page.locator(".v2-story-first").evaluate("el => Number(getComputedStyle(el).opacity)") < .05
+        if screens: page.screenshot(path=Path(screens) / f"mobile-story-solution-{width}.png")
+        phase(.14)
         assert word.evaluate("el => getComputedStyle(el).transform") != late
-        assert page.locator(".v2-story-stage").evaluate("el => el.offsetHeight < 2 * innerHeight")
+        assert page.locator(".v2-story-resolution").evaluate("el => Number(getComputedStyle(el).opacity)") < .05
+        assert story.locator(".v2-story-stage").evaluate("el => el.clientHeight <= innerHeight")
         scene = page.locator(".v2-mobile-scene").first
         scene.scroll_into_view_if_needed()
         page.wait_for_function("() => document.querySelector('.v2-mobile-scene')?.dataset.playing === 'true'")

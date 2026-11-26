@@ -10,9 +10,9 @@ import "./preview.css";
 
 const tools = ["n8n", "OpenAI", "Claude", "Supabase", "Gemini", "Python"];
 const fragments = [
-  ["01", "Customer enquiry"], ["02", "Payment confirmation"],
-  ["03", "Spreadsheet update"], ["04", "Sales follow-up"],
-  ["05", "Team notification"], ["06", "Service request"],
+  ["01", "Customer enquiry", "message"], ["02", "Payment confirmation", "file"],
+  ["03", "Spreadsheet update", "sheet"], ["04", "Sales follow-up", "message"],
+  ["05", "Team notification", "bell"], ["06", "Service request", "file"],
 ];
 
 function Words({ text, accent = false }: { text: string; accent?: boolean }) {
@@ -107,7 +107,7 @@ export default function PortfolioHome({ preview = false }: { preview?: boolean }
       <section id="v2-principle" className="v2-principle" data-motion="static" aria-label="My engineering approach">
         <div className="v2-story-stage">
           <div className="v2-story-fragments" aria-hidden="true">
-            {fragments.map(([n, label]) => <div className="v2-fragment" key={n}><span>{n}</span>{label}</div>)}
+            {fragments.map(([n, label, kind]) => <div className="v2-fragment" key={n} data-kind={kind}><span className="v2-fragment-number">{n}</span><span className="v2-fragment-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">{kind === "message" ? <><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 7 8 6 8-6"/></> : kind === "sheet" ? <><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 9h16M4 15h16M10 9v12M15 9v12"/></> : kind === "bell" ? <><path d="M18 8a6 6 0 0 0-12 0v5l-2 3h16l-2-3zM10 20h4"/></> : <><path d="M6 3h8l4 4v14H6zM14 3v5h5M9 13h6M9 17h6"/></>}</svg></span><span className="v2-fragment-label">{label}</span></div>)}
           </div>
           <div className="v2-story-first">
             <h2><Words text="A useful system doesn’t just reply." /></h2>

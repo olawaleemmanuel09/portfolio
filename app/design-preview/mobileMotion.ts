@@ -1,64 +1,103 @@
-// Reference mobile storytelling: normal document flow, a reversible scroll
-// scrub within the narrative only. No pinned hero or desktop motion runtime.
-const clamp = (v: number) => Math.min(1, Math.max(0, v));
+// Mobile-only, reference-led narrative. Native scroll drives a bounded sticky
+// story, not the hero. Explicit transforms avoid reliance on CSS math support
+// or CSS scroll timelines on older iOS/WebKit.
+const clamp = (v: number) => Math.max(0, Math.min(1, v));
+const segment = (v: number, a: number, b: number) => clamp((v-a)/(b-a));
+const smooth = (v: number) => v*v*(3-2*v);
 export function startMobileMotion(root: HTMLElement, hero: HTMLElement, story: HTMLElement) {
   hero.dataset.motion = "mobile";
-  story.dataset.motion = "mobile";
-  if (typeof IntersectionObserver === "undefined") return () => {
-    hero.dataset.motion = "static"; story.dataset.motion = "static";
-  };
-  const groups = Array.from(story.querySelectorAll<HTMLElement>(".v2-story-first, .v2-story-resolution"));
-  groups.forEach(group => {
-    const words = Array.from(group.querySelectorAll<HTMLElement>(".v2-word-mask"));
-    words.forEach((word, index) => word.style.setProperty("--v2-word-index", String(index / Math.max(1, words.length - 1))));
-  });
+  const stage = story.querySelector<HTMLElement>(".v2-story-stage");
+  const first = story.querySelector<HTMLElement>(".v2-story-first");
+  const resolution = story.querySelector<HTMLElement>(".v2-story-resolution");
+  if (!stage || !first || !resolution || typeof IntersectionObserver === "undefined") {
+    return () => { hero.dataset.motion = "static"; story.dataset.motion = "static"; };
+  }
+  const firstWords = Array.from(first.querySelectorAll<HTMLElement>(".v2-word"));
+  const lastWords = Array.from(resolution.querySelectorAll<HTMLElement>(".v2-word"));
+  const fragments = Array.from(story.querySelectorAll<HTMLElement>(".v2-fragment"));
   const nodes = Array.from(root.querySelectorAll<HTMLElement>(".v2-mobile-project-copy, [data-v2-reveal]"));
   const reveals = new IntersectionObserver(entries => {
     for (const entry of entries) (entry.target as HTMLElement).dataset.mobileReveal =
       String(entry.isIntersecting && entry.intersectionRatio >= .10);
   }, { threshold: .10 });
   nodes.forEach(el => reveals.observe(el));
-  let active = false, frame = 0, disposed = false;
+  // Enable sticky only where the full copy can fit. A very short landscape
+  // viewport remains a readable normal-flow narrative.
+  const eligible = window.matchMedia("(max-width: 1023px) and (min-height: 480px), (any-pointer: coarse) and (not (any-pointer: fine)) and (min-height: 480px)");
+  let active = false, frame = 0, disposed = false, pinned = false, last = -1;
+  const clear = () => {
+    [first,resolution,...firstWords,...lastWords,...fragments].forEach(el => {
+      el.style.removeProperty("transform"); el.style.removeProperty("opacity");
+    });
+    delete story.dataset.storyProgress; delete story.dataset.storyPhase;
+  };
+  function revealWords(words: HTMLElement[], p: number) {
+    for (let i=0; i<words.length; i++) {
+      const q=smooth(clamp(p*2-i/Math.max(1,words.length-1)));
+      words[i].style.transform = `translate3d(0,${((1-q)*105).toFixed(1)}%,0)`;
+      words[i].style.opacity = q.toFixed(2);
+    }
+  }
   function render() {
     frame = 0;
-    if (disposed) return;
-    const h = Math.max(1, window.innerHeight);
-    // Read all geometry before writing. Word indices are set once; each frame
-    // changes only one custom property per group and one on the story.
-    const bounds = groups.map(group => group.getBoundingClientRect());
+    if (disposed || !pinned) return;
+    const h = stage!.clientHeight;
     const rect = story.getBoundingClientRect();
-    groups.forEach((group, index) => {
-      const box = bounds[index];
-      const p = clamp((h * .94 - box.top) / (h * .53));
-      group.style.setProperty("--v2-story-progress", p.toFixed(3));
-      group.dataset.mobileReveal = String(box.bottom > 0 && box.top < h);
+    const travel = Math.max(1, story.offsetHeight-h);
+    // Start revealing on entry, then hold the composition under the header.
+    const lead = Math.min(180, h*.28);
+    const p = clamp((64+lead-rect.top)/(travel+lead));
+    if (Math.abs(p-last)<.0005) return;
+    last=p;
+    const firstIn = segment(p,0,.32);
+    const firstOut = smooth(segment(p,.48,.64));
+    const lastIn = segment(p,.66,.91);
+    first!.style.opacity = (1-firstOut).toFixed(3);
+    first!.style.transform = `translate3d(0,${-firstOut*24}px,0)`;
+    resolution!.style.opacity = p<.65?"0":"1";
+    resolution!.style.transform = `translate3d(0,${(1-smooth(lastIn))*12}px,0)`;
+    revealWords(firstWords,firstIn);
+    revealWords(lastWords,lastIn);
+    const enter=smooth(segment(p,.12,.37)), gather=smooth(segment(p,.48,.66));
+    const w=stage!.clientWidth;
+    fragments.forEach((el,i)=>{
+      const side=i%2===0?-1:1;
+      const vertical=i<2?-1:i>=4?1:0;
+      const x=side*((1-enter)*w*.25-gather*w*.20);
+      const y=vertical*((1-enter)*48-gather*h*.23);
+      el.style.transform=`translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0) scale(${(1-gather*.62).toFixed(3)})`;
+      el.style.opacity=(enter*(1-gather)).toFixed(3);
     });
-    const travel = clamp((h - rect.top) / Math.max(1, h + rect.height));
-    story.style.setProperty("--v2-fragment-progress", travel.toFixed(3));
+    story.dataset.storyProgress=p.toFixed(3);
+    story.dataset.storyPhase=p<.34?"problem-reveal":p<.48?"problem-hold":p<.66?"converge":"solution";
   }
-  function schedule() { if (!disposed && !frame) frame = requestAnimationFrame(render); }
-  function onScroll() { if (active) schedule(); }
-  const watcher = new IntersectionObserver(([entry]) => {
-    active = entry.isIntersecting;
-    // Set the final/initial state even when a quick swipe skips the whole story.
+  function schedule() { if (!disposed && !frame && pinned) frame=requestAnimationFrame(render); }
+  function configure() {
+    const next=eligible.matches;
+    if (next!==pinned) {
+      pinned=next;last=-1;
+      story.dataset.motion=next?"mobile":"static";
+      if (!next) clear();
+    }
     schedule();
-  }, { rootMargin: "120px 0px 120px 0px" });
+  }
+  function onScroll() { if(active) schedule(); }
+  const watcher=new IntersectionObserver(([entry])=>{
+    active=entry.isIntersecting;schedule();
+  },{rootMargin:"200px 0px 200px 0px"});
   watcher.observe(story);
-  window.addEventListener("scroll", onScroll, { passive: true });
-  window.addEventListener("resize", schedule, { passive: true });
-  schedule();
-  return () => {
-    disposed = true; cancelAnimationFrame(frame);
-    window.removeEventListener("scroll", onScroll);
-    window.removeEventListener("resize", schedule);
-    reveals.disconnect(); watcher.disconnect();
-    nodes.forEach(el => delete el.dataset.mobileReveal);
-    groups.forEach(group => {
-      delete group.dataset.mobileReveal;
-      group.style.removeProperty("--v2-story-progress");
-      group.querySelectorAll<HTMLElement>(".v2-word-mask").forEach(el => el.style.removeProperty("--v2-word-index"));
-    });
-    story.style.removeProperty("--v2-fragment-progress");
-    hero.dataset.motion = "static"; story.dataset.motion = "static";
+  window.addEventListener("scroll",onScroll,{passive:true});
+  window.addEventListener("resize",configure,{passive:true});
+  eligible.addEventListener("change",configure);
+  configure();
+  return ()=>{
+    disposed=true;cancelAnimationFrame(frame);
+    window.removeEventListener("scroll",onScroll);
+    window.removeEventListener("resize",configure);
+    eligible.removeEventListener("change",configure);
+    reveals.disconnect();watcher.disconnect();
+    nodes.forEach(el=>delete el.dataset.mobileReveal);
+    clear();
+    hero.dataset.motion="static";story.dataset.motion="static";
   };
 }

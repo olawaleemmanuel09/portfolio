@@ -27,12 +27,12 @@ export default function MobileProjects({ projects }: { projects: Project[] }) {
                 </div>
                 {secondary && <MobileSceneDetail media={secondary} />}
               </div>
-              <figcaption>{record?.caption ?? (visual.startsWith("/architecture/") ? "Conceptual architecture, not a live screenshot." : "Documented project visual; see the case study for verification context.")}</figcaption>
+              <figcaption className="v2-mobile-evidence-note">{visual.startsWith("/architecture/") ? "Conceptual system map · Not a live dashboard" : record?.type === "video" ? "Approved walkthrough still" : "Documented project capture"}<span className="sr-only">. {record?.caption ?? "Verification details in the case study."}</span></figcaption>
             </figure>}
             <div className="v2-mobile-project-copy">
               <p className="v2-mobile-status">{project.statusLabel}</p>
               <h3>{project.title}</h3>
-              <p>{project.summary}</p>
+              <p>{project.summary.split(/(?<=\.)\s/)[0]}</p>
               <Link prefetch={false} className="v2-project-link" href={"/work/" + project.slug}>Explore case study ↗</Link>
             </div>
           </article>

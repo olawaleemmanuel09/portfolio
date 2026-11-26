@@ -25,7 +25,7 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install playwright==1.56.0
-      - run: python -m playwright install --with-deps chromium
+      - run: python -m playwright install --with-deps chromium webkit
       - name: Browser smoke checks
         env:
           REVIEW_SCREENSHOTS: ${{ runner.temp }}/portfolio-visual-screenshots
@@ -34,9 +34,12 @@ jobs:
           npm run start -- -H 127.0.0.1 -p 3198 &
           trap 'kill $!' EXIT
           curl --retry 15 --retry-connrefused --retry-delay 1 -fsS http://127.0.0.1:3198/ -o /dev/null
-          python tests/browser_smoke.py
-          python tests/motion_smoke.py
-          python tests/mobile_performance.py
+          status=0
+          python tests/browser_smoke.py || status=1
+          python tests/motion_smoke.py || status=1
+          python tests/mobile_performance.py || status=1
+          python tests/mobile_webkit.py || status=1
+          exit "$status"
       - name: Save responsive design screenshots
         if: always()
         uses: actions/upload-artifact@v4
