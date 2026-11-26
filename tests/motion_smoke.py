@@ -191,18 +191,39 @@ with sync_playwright() as playwright:
         page.locator(".v2-story-first").scroll_into_view_if_needed()
         page.wait_for_function("() => document.querySelector('.v2-story-first')?.dataset.mobileReveal === 'true'")
         assert page.locator(".v2-fragment:visible").count() == 6
+        # Verify measured scroll-linked transforms rather than animation names alone.
+        page.evaluate("""() => {const el=document.querySelector('.v2-story-first');window.scrollTo(0,scrollY+el.getBoundingClientRect().top-innerHeight*.82)}""")
+        page.wait_for_timeout(180)
+        word = page.locator(".v2-story-first .v2-word").last
+        early = word.evaluate("el => getComputedStyle(el).transform")
+        page.evaluate("""() => {const el=document.querySelector('.v2-story-first');window.scrollTo(0,scrollY+el.getBoundingClientRect().top-innerHeight*.35)}""")
+        page.wait_for_timeout(180)
+        late = word.evaluate("el => getComputedStyle(el).transform")
+        assert early != late, (width, early, late)
+        page.evaluate("""() => {const el=document.querySelector('.v2-story-first');window.scrollTo(0,scrollY+el.getBoundingClientRect().top-innerHeight*.82)}""")
+        page.wait_for_timeout(180)
+        assert word.evaluate("el => getComputedStyle(el).transform") != late
         assert page.locator(".v2-story-stage").evaluate("el => el.offsetHeight < 2 * innerHeight")
         scene = page.locator(".v2-mobile-scene").first
         scene.scroll_into_view_if_needed()
         page.wait_for_function("() => document.querySelector('.v2-mobile-scene')?.dataset.playing === 'true'")
         assert scene.locator(".v2-mobile-visual").evaluate("el => getComputedStyle(el).animationPlayState") == "running"
-        scene.locator("img").evaluate("el => el.decode()")
+        scene.locator(".v2-mobile-visual img").evaluate("el => el.decode()")
+        visual = scene.locator(".v2-mobile-visual")
+        t1 = visual.evaluate("el => getComputedStyle(el).transform")
+        page.wait_for_timeout(900)
+        assert visual.evaluate("el => getComputedStyle(el).transform") != t1
+        page.wait_for_function("() => document.querySelector('.v2-mobile-scene .v2-mobile-detail')?.dataset.ready === 'true'", timeout=20000)
+        detail = scene.locator(".v2-mobile-detail")
+        assert detail.evaluate("el => getComputedStyle(el).animationPlayState") == "running"
+        page.wait_for_function("() => Number(getComputedStyle(document.querySelector('.v2-mobile-scene .v2-mobile-detail')).opacity) > .5", timeout=8000)
         page.evaluate("window.scrollTo(0, 0)")
         page.wait_for_function("() => document.querySelector('.v2-mobile-scene')?.dataset.playing === 'false'")
         assert scene.locator(".v2-mobile-visual").evaluate("el => getComputedStyle(el).animationPlayState") == "paused"
         scene.scroll_into_view_if_needed()
         page.wait_for_function("() => document.querySelector('.v2-mobile-scene')?.dataset.playing === 'true'")
         assert page.locator(".v2-extra-capture img").count() == 0
+        assert page.locator(".v2-mobile-project img[src*='real-estate-website-mobile-poster']").count() == 1
         assert page.locator("[data-v2-root]").get_attribute("data-motion-loaded") is None
         assert page.evaluate("document.documentElement.scrollWidth <= innerWidth")
         assert not errors, errors
